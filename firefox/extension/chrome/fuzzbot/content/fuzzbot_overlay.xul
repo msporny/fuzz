@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://navigator/content/fuzzbot.css" type="text/css"?>
+
+<overlay id="fuzzbot-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/json2.js"/>
+
+  <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/webservices.js"/>
+
+  <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/fuzzbot.js"/>
+
+  <statusbar id="status-bar">
+    <statusbarpanel class="statusbarpanel-iconic"
+                    id="fuzzbot-status"
+                    context="fuzzbot-status-context-menu"
+                    oncommand="detectSemanticData();">
+      <image id="fuzzbot-status-image" width="16" height="16"
+             src="chrome://fuzzbot/content/fuzzbot16-offline.png"
+             onload="updateFuzzbotStatus();"/>
+      <label id="fuzzbot-status-label" value="offline"/>
+    </statusbarpanel>
+    <menupopup id="fuzzbot-status-context-menu">
+      <menuitem id="fuzzbot-control-label" 
+                label="Start Fuzzbot" oncommand="toggleFuzzbotApplication();"/>
+      <menuseparator/>
+      <menuitem label="Status" oncommand="showStatus();"/>
+    </menupopup>
+  </statusbar>
+
+</overlay> 

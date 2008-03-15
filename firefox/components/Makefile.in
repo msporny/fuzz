@@ -1,0 +1,47 @@
+XULRUNNER = xulrunner
+XPIDL=/usr/lib/xulrunner/xpidl
+XULIDL=/usr/share/idl/xulrunner
+BUILD=../build
+DIST=../dist
+
+CC = g++
+
+#PKG_CONFIG_PATH = "$(DBDIR)/:$(BITMUNKDIR)/"
+
+CFLAGS = `pkg-config --cflags ${XULRUNNER}-plugin ${XULRUNNER}-xpcom`
+CFLAGS += -I$(BUILD) -Wall -g -DXP_UNIX -DMOZILLA_STRICT_API
+
+LDFLAGS = `pkg-config --libs ${XULRUNNER}-plugin ${XULRUNNER}-xpcom`
+
+libs = $(DIST)/fuzzbot-components.so
+fuzzbot_plugin_objects = $(BUILD)/FuzzbotExtension.o
+
+all_objects = $(fuzzbot_plugin_objects)
+
+.PHONY: make_dirs
+
+all: make_dirs $(libs) $(DIST)/IFuzzbotExtension.xpt
+
+make_dirs:
+	mkdir -p ../build
+	mkdir -p ../dist
+
+clean:
+	$(RM) $(BUILD)/* $(DIST)/*
+
+$(BUILD)/FuzzbotExtension.o :: $(BUILD)/IFuzzbotExtension.h
+
+$(DIST)/fuzzbot-components.so: $(fuzzbot_plugin_objects)
+	$(CC) -shared -o $(DIST)/$@ $^ $(LDFLAGS)
+
+$(BUILD)/%.o: %.cpp
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(BUILD)/%.h: %.idl
+	$(XPIDL) -m header -I $(XULIDL)  -o $(basename $@) $<
+
+$(DIST)/%.xpt: %.idl
+	$(XPIDL) -m typelib -I $(XULIDL) -o $(basename $@) $<
+
+%.html: %.idl
+	$(XPIDL) -m doc -I $(XULIDL) -o $(BUILD) $<

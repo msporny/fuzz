@@ -1,0 +1,6 @@
+overlay	chrome://browser/content/browser.xul	chrome://bitmunk/content/bitmunk.xul
+style   chrome://browser/content/browser.xul    chrome://bitmunk/content/bitmunk.css
+style   chrome://global/content/customizeToolbar.xul    chrome://bitmunk/content/bitmunk.css
+content	bitmunk chrome/bitmunk/content/
+locale  bitmunk en-US chrome/bitmunk/locale/en-US/
+
