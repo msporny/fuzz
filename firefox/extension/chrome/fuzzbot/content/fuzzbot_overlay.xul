@@ -19,16 +19,15 @@
                     context="fuzzbot-status-context-menu"
                     oncommand="detectSemanticData();">
       <image id="fuzzbot-status-image" width="16" height="16"
-             src="chrome://fuzzbot/content/fuzzbot16-offline.png"
-             onload="updateFuzzbotStatus();"/>
+             src="chrome://fuzzbot/content/fuzzbot16-offline.png"/>
       <label id="fuzzbot-status-label" value="offline"/>
     </statusbarpanel>
     <menupopup id="fuzzbot-status-context-menu">
       <menuitem id="fuzzbot-control-label" 
                 label="Start Fuzzbot" oncommand="toggleFuzzbotApplication();"/>
       <menuseparator/>
-      <menuitem label="Status" oncommand="showStatus();"/>
+      <menuitem label="Detect" oncommand="detectSemanticData();"/>
     </menupopup>
   </statusbar>
 
-</overlay> 
+</overlay>

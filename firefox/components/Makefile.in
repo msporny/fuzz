@@ -11,7 +11,7 @@ CC = g++
 CFLAGS = `pkg-config --cflags ${XULRUNNER}-plugin ${XULRUNNER}-xpcom`
 CFLAGS += -I$(BUILD) -Wall -g -DXP_UNIX -DMOZILLA_STRICT_API
 
-LDFLAGS = `pkg-config --libs ${XULRUNNER}-plugin ${XULRUNNER}-xpcom`
+LDFLAGS = `pkg-config --libs ${XULRUNNER}-plugin ${XULRUNNER}-xpcom` -lrdfa
 
 libs = $(DIST)/fuzzbot-components.so
 fuzzbot_plugin_objects = $(BUILD)/FuzzbotExtension.o

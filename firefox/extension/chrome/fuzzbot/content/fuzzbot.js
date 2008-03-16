@@ -107,11 +107,20 @@ function updateFuzzbotStatusDisplay(obj)
  */
 function detectSemanticData(obj)
 {
+   _fuzzbotLog("detectSemanticData()");
+   
+   var serializer = new XMLSerializer();
+   var xml = serializer.serializeToString(gBrowser.contentDocument);
    var gPlugin = Components
       .classes["@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"]
       .getService()
       .QueryInterface(
          Components.interfaces.nsIFuzzbotExtension);
-      
-   gPlugin.detectSemanticData("XHTML DATA");
+
+   var rval = gPlugin.processRdfaTriples("http://example.org/file.html", xml);
+
+   if(rval)
+   {
+      _fuzzbotLog("Triples detected!");
+   }
 }

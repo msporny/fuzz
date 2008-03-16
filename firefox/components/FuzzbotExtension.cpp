@@ -19,7 +19,65 @@
 #include "nsIFile.h"
 #include "FuzzbotExtension.h"
 
+#include "rdfa.h"
+#include "rdfa_utils.h"
+
 using namespace std;
+
+// These helper functions are used by this module to provide a link to
+// the librdfa library.
+
+/**
+ * The buffer status struct is used to keep track of where we are in
+ * the current processing buffer.
+ */
+typedef struct buffer_status
+{
+   const char* buffer;
+   unsigned int current_offset;
+   unsigned int total_length;
+} buffer_status;
+
+/**
+ * Processes triples as they come in.
+ *
+ * @param triple the triple that was generated.
+ * @param callback_data a buffer_status struct that contains the
+ *                      current state of the buffer.
+ */
+void process_triple(rdftriple* triple, void* callback_data)
+{
+   rdfa_print_triple(triple);
+   rdfa_free_triple(triple);
+}
+
+/**
+ * Fills the given buffer up to buffer_length if enough data is
+ * contained in the current buffer that is being processed.
+ *
+ * @param buffer the buffer to fill.
+ * @param buffer_length the length of the given buffer.
+ * @param callback_data a buffer_status struct that contains the
+ *                      current state of the buffer.
+ */
+size_t fill_buffer(char* buffer, size_t buffer_length, void* callback_data)
+{
+   size_t rval = 0;
+   buffer_status* bstatus = (buffer_status*)callback_data;
+
+   if((bstatus->current_offset + buffer_length) < bstatus->total_length)
+   {
+      rval = buffer_length;
+      memcpy(buffer, &bstatus->buffer[bstatus->current_offset], buffer_length);
+   }
+   else
+   {
+      rval = bstatus->total_length - bstatus->current_offset;
+      memcpy(buffer, &bstatus->buffer[bstatus->current_offset], rval);
+   }
+   
+   return rval;
+}
 
 /*
  * Magic Firefox macro that creates a default factory constructor for
@@ -44,11 +102,29 @@ nsFuzzbotExtension::~nsFuzzbotExtension()
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char*html, PRBool *_retval)
+NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, PRBool *_retval)
 {
    nsresult rval = NS_ERROR_NOT_IMPLEMENTED;
-  
-   if(0)
+   printf("URI: %s\n", uri);
+   printf("FuzzbotExtension::ProcessRdfaTriples(%s)\n", html);
+
+   rdfacontext* context = rdfa_create_context(uri);
+   buffer_status* status = (buffer_status*)malloc(sizeof(buffer_status));
+   
+   // initialize the callback data
+   status->buffer = html;
+   status->current_offset = 0;
+   status->total_length = strlen(html);
+   context->callback_data = status;
+   
+   // setup the parser
+   rdfa_set_triple_handler(context, &process_triple);
+   rdfa_set_buffer_filler(context, &fill_buffer);
+   rdfa_parse(context);   
+
+   // if complete_incomplete_triples is set, there was at least one
+   // set of triples that was generated.
+   if(context->complete_incomplete_triples)
    {
       rval = NS_OK;
       (*_retval) = PR_TRUE;
@@ -58,6 +134,9 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char*html, PRBool *_r
       rval = NS_ERROR_FAILURE;
       (*_retval) = PR_FALSE;
    }
+
+   // free the context
+   rdfa_free_context(context);
    
    return rval;
 }

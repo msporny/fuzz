@@ -16,7 +16,10 @@
    inkscape:version="0.45.1"
    sodipodi:docbase="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content"
    sodipodi:docname="fuzzbot-offline.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot16-offline.png"
+   inkscape:export-xdpi="2.5648854"
+   inkscape:export-ydpi="2.5648854">
   <defs
      id="defs4">
     <linearGradient
@@ -57,8 +60,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="295.73528"
-     inkscape:cy="678.44749"
+     inkscape:cx="374.1389"
+     inkscape:cy="472.60606"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:window-width="1181"
@@ -82,13 +85,14 @@
      id="layer1">
     <path
        sodipodi:type="arc"
-       style="opacity:1;fill:url(#radialGradient4166);fill-opacity:1.0;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:url(#radialGradient4166);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path2160"
        sodipodi:cx="417.14285"
        sodipodi:cy="528.07648"
        sodipodi:rx="275.71429"
        sodipodi:ry="275.71429"
-       d="M 692.85715 528.07648 A 275.71429 275.71429 0 1 1  141.42856,528.07648 A 275.71429 275.71429 0 1 1  692.85715 528.07648 z" />
+       d="M 692.85715 528.07648 A 275.71429 275.71429 0 1 1  141.42856,528.07648 A 275.71429 275.71429 0 1 1  692.85715 528.07648 z"
+       transform="translate(-1.0101525,-3.5355339)" />
     <path
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 140.66431,522.2852 C 402.81171,692.74852 688.67093,536.34403 688.67093,536.34403"
@@ -119,7 +123,8 @@
        id="path7319" />
     <path
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 558.61435,598.8037 L 439.41635,625.06766"
-       id="path8292" />
+       d="M 563.66511,595.77325 L 438.91128,619.51182"
+       id="path8292"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>
