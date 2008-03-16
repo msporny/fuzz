@@ -14,7 +14,7 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
-   sodipodi:docbase="/home/msporny/work/barcampblacksburg"
+   sodipodi:docbase="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content"
    sodipodi:docname="fuzzbot-offline.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
@@ -95,7 +95,7 @@
        id="path3151" />
     <path
        sodipodi:type="arc"
-       style="opacity:1;fill:#af0000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#eaeaea;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path3173"
        sodipodi:cx="452.54834"
        sodipodi:cy="633.14886"
@@ -105,7 +105,7 @@
        transform="translate(45.456864,-36.365492)" />
     <path
        sodipodi:type="arc"
-       style="opacity:1;fill:#af0000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#f1f1f0;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path4170"
        sodipodi:cx="452.54834"
        sodipodi:cy="633.14886"
@@ -113,5 +113,13 @@
        sodipodi:ry="63.63961"
        d="M 517.1981 633.14886 A 64.649765 63.63961 0 1 1  387.89857,633.14886 A 64.649765 63.63961 0 1 1  517.1981 633.14886 z"
        transform="translate(-133.34014,-37.375632)" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 256.57874,591.73263 L 375.77674,617.99659"
+       id="path7319" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 558.61435,598.8037 L 439.41635,625.06766"
+       id="path8292" />
   </g>
 </svg>

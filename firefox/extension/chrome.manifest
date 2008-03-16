@@ -1,6 +1,5 @@
-overlay	chrome://browser/content/browser.xul	chrome://bitmunk/content/bitmunk.xul
+overlay	chrome://browser/content/browser.xul	chrome://bitmunk/content/bitmunk_overlay.xul
 style   chrome://browser/content/browser.xul    chrome://bitmunk/content/bitmunk.css
 style   chrome://global/content/customizeToolbar.xul    chrome://bitmunk/content/bitmunk.css
-content	bitmunk chrome/bitmunk/content/
-locale  bitmunk en-US chrome/bitmunk/locale/en-US/
-
+content	bitmunk jar:chrome/bitmunk.jar!/content/
+locale  bitmunk en-US jar:chrome/bitmunk.jar!/locale/en-US/

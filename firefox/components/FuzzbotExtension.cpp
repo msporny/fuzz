@@ -44,7 +44,7 @@ nsFuzzbotExtension::~nsFuzzbotExtension()
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(PRInt32 *pid, PRBool *_retval)
+NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char*html, PRBool *_retval)
 {
    nsresult rval = NS_ERROR_NOT_IMPLEMENTED;
   

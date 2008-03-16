@@ -92,7 +92,9 @@ AC_SUBST(WINDOWS_AS)
 AC_SUBST(WINDOWS_DLLWRAP)
 
 # Generating files
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile \
+          firefox/Makefile \
+          firefox/components/Makefile)
 
 # Dump the build configuration for the developer
 echo -e "\n--------- Fuzzbot build environment -----------"

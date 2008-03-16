@@ -5,5 +5,5 @@
 
 [scriptable, uuid(f5ebc90b-56b5-4bce-96c9-d2962c2af7f5)]
 interface nsIFuzzbotExtension : nsISupports {
-  boolean processRdfaTriples(in string);
+  boolean processRdfaTriples(in string html);
 };
