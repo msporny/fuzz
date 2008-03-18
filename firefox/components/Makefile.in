@@ -11,7 +11,7 @@ CC = g++
 CFLAGS = `pkg-config --cflags ${XULRUNNER}-plugin ${XULRUNNER}-xpcom`
 CFLAGS += -I$(BUILD) -Wall -g -DXP_UNIX -DMOZILLA_STRICT_API
 
-LDFLAGS = `pkg-config --libs ${XULRUNNER}-plugin ${XULRUNNER}-xpcom` -lrdfa
+LDFLAGS = `pkg-config --libs ${XULRUNNER}-plugin ${XULRUNNER}-xpcom` /usr/lib/librdfa.a
 
 libs = $(DIST)/fuzzbot-components.so
 fuzzbot_plugin_objects = $(BUILD)/FuzzbotExtension.o
@@ -29,7 +29,7 @@ make_dirs:
 clean:
 	$(RM) $(BUILD)/* $(DIST)/*
 
-$(BUILD)/FuzzbotExtension.o :: $(BUILD)/IFuzzbotExtension.h
+$(BUILD)/FuzzbotExtension.o : $(BUILD)/IFuzzbotExtension.h 
 
 $(DIST)/fuzzbot-components.so: $(fuzzbot_plugin_objects)
 	$(CC) -shared -o $(DIST)/$@ $^ $(LDFLAGS)

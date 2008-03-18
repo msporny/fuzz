@@ -13,6 +13,24 @@
   <script type="application/x-javascript"
           src="chrome://fuzzbot/content/fuzzbot.js"/>
 
+  <!-- Fuzzbot panel -->
+
+  <vbox id="appcontent">
+     <vbox id="fuzzbot-ui" hidden="true" minheight="200">
+     <tree id="fuzzbot-triple-tree" flex="1">
+
+     <treecols>
+       <treecol id="subject" label="Subject" flex="2"/>
+       <treecol id="predicate" label="Predicate" flex="1"/>
+       <treecol id="object" label="Object" flex="2"/>
+     </treecols>
+
+     <treechildren id="fuzzbot-triple-tree-children"/>
+
+     </tree>
+     </vbox>
+  </vbox>
+
   <statusbar id="status-bar">
     <statusbarpanel class="statusbarpanel-iconic"
                     id="fuzzbot-status"
@@ -20,13 +38,12 @@
                     oncommand="detectSemanticData();">
       <image id="fuzzbot-status-image" width="16" height="16"
              src="chrome://fuzzbot/content/fuzzbot16-offline.png"/>
-      <label id="fuzzbot-status-label" value="offline"/>
     </statusbarpanel>
     <menupopup id="fuzzbot-status-context-menu">
       <menuitem id="fuzzbot-control-label" 
-                label="Start Fuzzbot" oncommand="toggleFuzzbotApplication();"/>
+                label="View Triples" oncommand="displayTripleDialog();"/>
       <menuseparator/>
-      <menuitem label="Detect" oncommand="detectSemanticData();"/>
+      <menuitem label="Detect Triples" oncommand="detectSemanticData();"/>
     </menupopup>
   </statusbar>
 

@@ -4,6 +4,9 @@
  * @author Manu Sporny
  */
 
+var gFuzzbotVisible = true;
+var gAvailableTriples = false;
+
 /**
  * Logs a message to the console.
  *
@@ -61,66 +64,81 @@ function updateFuzzbotStatus()
 /**
  * Updates the Firefox display window with the updated status.
  */
-function updateFuzzbotStatusDisplay(obj)
+function updateFuzzbotStatusDisplay(triplesFound)
 {
-   status = "offline";
-
-   // Check to see if the object has a status of online, otherwise
-   // assume the Fuzzbot application is offline.
-   if(obj.status && (obj.status == "online"))
+   statusImage = document.getElementById("fuzzbot-status-image");
+   ui = document.getElementById("fuzzbot-ui");
+   
+   // update the image and the label
+   if(triplesFound)
    {
-      status = "online";
+      statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
+      gFuzzbotVisible = !gFuzzbotVisible;
+      ui.hidden = gFuzzbotVisible;
    }
    else
    {
-      status = "offline";
-      gFuzzbotPid = 0;
-   }
-
-   // if the old status doesn't equal the new status, update the UI
-   if(gFuzzbotStatus != status)
-   {
-      statusImage = document.getElementById("fuzzbot-status-image");
-      statusLabel = document.getElementById("fuzzbot-status-label");
-      controlLabel = document.getElementById("fuzzbot-control-label");
-
-      // update the image and the label
-      if(status == "online")
-      {
-         statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
-         statusLabel.value = "online";
-         controlLabel.label = "Sleeping";
-      }
-      else
-      {
-         statusImage.src = "chrome://fuzzbot/content/fuzzbot16-offline.png";
-         statusLabel.value = "offline";
-         controlLabel.label = "Awake";
-      }
-
-      gFuzzbotStatus = status;
+      statusImage.src = "chrome://fuzzbot/content/fuzzbot16-offline.png";
+      ui.hidden = true;
+      gFuzzbotVisible = false;
    }
 }
+
+// This observer is responsible for detecting triples that are
+// generated via the C++ XPCOM librdfa parser.
+function tripleHandler(subject, predicate, object)
+{
+   gAvailableTriples = true;
+   _fuzzbotLog(subject + " " + predicate + " " + object + " .");
+   
+   tchildren = document.getElementById("fuzzbot-triple-tree-children");
+
+   _fuzzbotLog(tchildren);
+
+   // create Treerow with id (rowid is a global variable so that
+   // we do not use the same id twice)
+   var ti = document.createElement("treeitem");
+   var tr = document.createElement("treerow");
+   var tcs = document.createElement("treecell");
+   var tcp = document.createElement("treecell");
+   var tco = document.createElement("treecell");
+   tcs.setAttribute("label", subject);
+   tcp.setAttribute("label", predicate);
+   tco.setAttribute("label", object);
+   
+   tr.appendChild(tcs);
+   tr.appendChild(tcp);
+   tr.appendChild(tco);
+   ti.appendChild(tr);
+   
+   tchildren.appendChild(ti);
+   
+   return true;
+};
 
 /**
  * Starts a thread to perform semantic data detection on the page.
  */
 function detectSemanticData(obj)
 {
-   _fuzzbotLog("detectSemanticData()");
-   
    var serializer = new XMLSerializer();
+   var url = gBrowser.contentDocument.URL;
    var xml = serializer.serializeToString(gBrowser.contentDocument);
    var gPlugin = Components
       .classes["@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"]
       .getService()
       .QueryInterface(
          Components.interfaces.nsIFuzzbotExtension);
-
-   var rval = gPlugin.processRdfaTriples("http://example.org/file.html", xml);
-
-   if(rval)
+   
+   // clear the current list of children
+   tchildren = document.getElementById("fuzzbot-triple-tree-children");
+   while(tchildren.firstChild)
    {
-      _fuzzbotLog("Triples detected!");
+      tchildren.removeChild(tchildren.firstChild);
    }
+
+   gAvailableTriples = false;
+   var rval = gPlugin.processRdfaTriples(url, xml, tripleHandler);
+
+   updateFuzzbotStatusDisplay(gAvailableTriples);
 }

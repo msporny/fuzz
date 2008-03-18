@@ -1,0 +1,39 @@
+NAME=fuzzbot
+ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ \*.svg
+
+.PHONY: all components help
+
+all: linux-xpi
+
+components:
+	cd components && $(MAKE)
+
+linux-xpi: components
+	$(RM) dist/fuzzbot-linux.xpi
+	mkdir -p extension/platform/Linux_x86-gcc3/content
+	mkdir -p extension/platform/Linux_x86-gcc3/components
+	mkdir -p extension/components
+	cp -a dist/fuzzbot-components.so \
+		extension/platform/Linux_x86-gcc3/components
+	cp -a dist/*.xpt extension/components/
+	-$(RM) extension/chrome/$(NAME).jar
+	cd extension/chrome/$(NAME) && \
+		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
+	cd extension && \
+	zip ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzzbot.js \
+		install.rdf components/*.xpt \
+		`find platform` \
+		$(ZIPEXCLUDE)
+
+clean: clean-xpi
+	rm -rf build
+	rm -rf dist
+
+clean-xpi:
+	$(RM) dist/fuzzbot-linux.xpi
+	$(RM) extension/chrome/$(NAME).jar
+	$(RM) extension/components/*.xpt
+	$(RM) extension/platform/Linux_x86-gcc3/components/*
+	$(RM) -r extension/platform/Linux_x86-gcc3/plugins/*
+	$(RM) -r extension/platform/Linux_x86-gcc3/content/*

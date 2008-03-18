@@ -14,7 +14,9 @@
 #include "nsCOMPtr.h"
 #include "nsIProperties.h"
 #include "nsIServiceManager.h"
+#include "nsServiceManagerUtils.h"
 #include "nsDirectoryServiceDefs.h"
+#include "nsIObserverService.h"
 #include "nsIGenericFactory.h"
 #include "nsIFile.h"
 #include "FuzzbotExtension.h"
@@ -36,6 +38,7 @@ typedef struct buffer_status
    const char* buffer;
    unsigned int current_offset;
    unsigned int total_length;
+   fuzzbotJSTripleHandlerCallback* javascript_callback;
 } buffer_status;
 
 /**
@@ -47,7 +50,19 @@ typedef struct buffer_status
  */
 void process_triple(rdftriple* triple, void* callback_data)
 {
+   buffer_status* status = (buffer_status*)callback_data;
+   
    rdfa_print_triple(triple);
+
+   // Perform a Javascript callback using XPCOM
+   nsCOMPtr<fuzzbotJSTripleHandlerCallback> javascript_callback =
+      status->javascript_callback;
+   PRBool ret = PR_FALSE;
+   //javascript_callback->HandleTriple(
+   //   triple->subject, triple->predicate, triple->object, &ret);
+   javascript_callback->Call(
+      triple->subject, triple->predicate, triple->object, &ret);
+   
    rdfa_free_triple(triple);
 }
 
@@ -102,11 +117,11 @@ nsFuzzbotExtension::~nsFuzzbotExtension()
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, PRBool *_retval)
+NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRBool *_retval)
 {
    nsresult rval = NS_ERROR_NOT_IMPLEMENTED;
-   printf("URI: %s\n", uri);
-   printf("FuzzbotExtension::ProcessRdfaTriples(%s)\n", html);
+   //printf("URI: %s\n", uri);
+   //printf("FuzzbotExtension::ProcessRdfaTriples(%s)\n", html);
 
    rdfacontext* context = rdfa_create_context(uri);
    buffer_status* status = (buffer_status*)malloc(sizeof(buffer_status));
@@ -115,6 +130,7 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char
    status->buffer = html;
    status->current_offset = 0;
    status->total_length = strlen(html);
+   status->javascript_callback = callback;
    context->callback_data = status;
    
    // setup the parser
@@ -131,7 +147,7 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char
    }
    else
    {
-      rval = NS_ERROR_FAILURE;
+      rval = NS_OK;
       (*_retval) = PR_FALSE;
    }
 
