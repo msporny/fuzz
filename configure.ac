@@ -1,30 +1,14 @@
-# Configure script for Digital Bazaar librdfa library
+# Configure script for Digital Bazaar Fuzzbot Firefox extension
 # Usage: Run ./configure once 
-#
+# 
 # Author: Manu Sporny
 
-AC_INIT(fuzzbot, 0.6.1, support@digitalbazaar.com)
+AC_INIT(fuzzbot, 0.7.2, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables
 FUZZBOTDIR=`pwd`
 RELEASE=`date +%Y%m%d`
-
-# Check for particular build options
-AC_ARG_ENABLE([linux],
-               AC_HELP_STRING([--enable-linux],
-                              [compile for linux (default is YES)]),
-              [ac_enable_linux_build=yes], [ac_enable_linux_build=yes])
-
-AC_ARG_ENABLE([windows],
-               AC_HELP_STRING([--enable-windows],
-                              [compile for windows (default is NO)]),
-              [ac_enable_windows_build=yes], [ac_enable_windows_build=no])
-
-AC_ARG_ENABLE([docs],
-               AC_HELP_STRING([--enable-docs],
-                              [build documentation (default is NO)]),
-              [ac_enable_docs_build=yes], [ac_enable_docs_build=no])
 
 echo -e "\n--------- Configuring Fuzzbot build environment -----------"
 
@@ -35,41 +19,23 @@ AC_CANONICAL_BUILD()
 #AC_LANG(C++)
 AC_PROG_INSTALL()
 
-# Check to see if we need to build for linux
-if test "$ac_enable_linux_build" = "yes" ; then
-   AC_PROG_CXX()
-   AC_CHECK_PROG(LINUX_AR, ar, ar, not found)
-   LINUX_CC="$CXX"
-   BUILD_FOR_LINUX="yes"
-fi
+# Get the C compiler for this system
+AC_PROG_CXX()
+AC_CHECK_PROG(AR, ar, ar, not found)
+AC_CHECK_PROG(AS, as, as, not found)
+AC_CHECK_PROG(DLLWRAP, dllwrap, dllwrap, not found)
 
-# Check to see if we need to build for windows
-if test "$ac_enable_windows_build" = "yes" ; then
-   AC_CHECK_PROG(WINDOWS_CC, i586-mingw32msvc-gcc, 
-                 i586-mingw32msvc-g++, not found)
-   AC_CHECK_PROG(WINDOWS_AR, i586-mingw32msvc-ar, 
-                 i586-mingw32msvc-ar, not found)
-   AC_CHECK_PROG(WINDOWS_DLLWRAP, i586-mingw32msvc-dllwrap,
-                 i586-mingw32msvc-dllwrap, not found)
-   AC_CHECK_PROG(WINDOWS_AS, i586-mingw32msvc-as,
-                 i586-mingw32msvc-as, not found)
-   # If the mingw32 compiler wasn't found, use the system default
-   if test "$WINDOWS_CC" = "not found" ; then
-      AC_PROG_CPP()
-      WINDOWS_CC="$CC"
-   fi
-
-   BUILD_FOR_WINDOWS="yes"
-fi
-
-# Check doc build tools
-if test "$ac_enable_docs_build" = "yes"; then
-   AC_CHECK_PROG(HAVE_DOXYGEN, doxygen, yes, no)
-   AC_SUBST(HAVE_DOXYGEN)
-fi
+CC="$CXX"
 
 # Perform compilation environment tests
 #AC_CHECK_HEADERS(iostream)
+
+# Make sure the proper libraries exist
+AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L/usr/lib)
+AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L/usr/lib)
+
+# Set the OS so that we can do certain build modifications if needed
+OS="$build_os"
 
 # Make all the proper substitutions
 AC_SUBST(FUZZBOTDIR)
@@ -79,39 +45,26 @@ VERSION="$PACKAGE_VERSION"
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_SUBST(BUILD_FOR_LINUX)
-AC_SUBST(BUILD_FOR_WINDOWS)
+AC_SUBST(CC)
+AC_SUBST(AR)
+AC_SUBST(AS)
+AC_SUBST(DLLWRAP)
 
-AC_SUBST(LINUX_CC)
-AC_SUBST(WINDOWS_CC)
-
-AC_SUBST(LINUX_AR)
-AC_SUBST(WINDOWS_AR)
-
-AC_SUBST(WINDOWS_AS)
-AC_SUBST(WINDOWS_DLLWRAP)
+AC_SUBST(OS)
 
 # Generating files
 AC_OUTPUT(Makefile \
+          setup/Makefile.base \
           firefox/Makefile \
-          firefox/components/Makefile)
+	  firefox/components/Makefile)
 
 # Dump the build configuration for the developer
 echo -e "\n--------- Fuzzbot build environment -----------"
-echo "Product           : $PACKAGE_STRING-$RELEASE"
-echo "Build system      : $build_cpu-$build_vendor-$build_os"
-if test "$BUILD_FOR_LINUX" = "yes"; then
-   echo "Linux C++ compiler: $LINUX_CC"
-   echo "Linux C++ archiver: $LINUX_AR"
+echo "Product        : $PACKAGE_STRING-$RELEASE"
+echo "Build system   : $build_cpu-$build_vendor-$build_os"
+echo "C++ compiler   : $CC"
+echo "Archiver       : $AR"
+if test "$DLLWRAP" != "not found"; then
+   echo "DLL wrapper    : $DLLWRAP"
 fi
-if test "$BUILD_FOR_WINDOWS" = "yes"; then
-   echo "Win32 C++ compiler: $WINDOWS_CC"
-   echo "Win32 C++ archiver: $WINDOWS_AR"
-   echo "Win32 assembler   : $WINDOWS_AS"
-   echo "Win32 DLL wrapper : $WINDOWS_DLLWRAP"
-fi
-if test "$ac_enable_docs_build" = "yes"; then
-   echo "Documentation     : enabled"
-else
-   echo "Documentation     : disabled (use --enable-docs to enable)"
-fi
+
