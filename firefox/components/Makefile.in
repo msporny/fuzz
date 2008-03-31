@@ -6,15 +6,22 @@ DIST=../dist
 
 CC = g++
 
-CFLAGS = -I/usr/include -I/usr/include/xulrunner/java -I/usr/include/xulrunner/plugin -I/usr/include/nspr -I/usr/include/xulrunner -I/usr/include/xulrunner/xpcom -I/usr/include/xulrunner/string
-CFLAGS += -I$(BUILD) -Wall -g -DMOZILLA_STRICT_API
+CFLAGS = -I/usr/include -I/usr/include/xulrunner/java -I/usr/include/xulrunner/plugin -I/usr/include/nspr -I/usr/include/xulrunner -I/usr/include/xulrunner/xpcom -I/usr/include/xulrunner/string -I$(BUILD) 
+LDFLAGS += -L/usr/lib -L/usr/lib/xulrunner 
+
+ifneq (@RDFA_INCLUDE_DIRECTORY@,/usr/include)
+CFLAGS += -I@RDFA_INCLUDE_DIRECTORY@
+LDFLAGS += -L@RDFA_LIB_DIRECTORY@
+endif
+
+CFLAGS += -Wall -g -DMOZILLA_STRICT_API
 
 ifeq (@OS@,mingw32)
-LDFLAGS = -L/usr/lib -L/usr/lib/xulrunner -lxpcom -lplds4 -lplc4 -lnspr4 -lexpat /usr/lib/rdfa.lib 
+LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lexpat -ltidy @RDFA_LIB_DIRECTORY@/rdfa.lib 
 CFLAGS += -DXP_WIN
 LIBS = $(DIST)/fuzzbot-components.dll
 else
-LDFLAGS = -L/usr/lib/xulrunner -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl /usr/lib/librdfa.a
+LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -ltidy -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a
 LIBS = $(DIST)/fuzzbot-components.so
 CFLAGS += -DXP_UNIX
 endif

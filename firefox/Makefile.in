@@ -1,24 +1,43 @@
 NAME=fuzzbot
 ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ \*.svg
 
-.PHONY: all components help
+.PHONY: all help
 
-all: linux-xpi
+build-executables: build-libraries xpi
+build-directories:
+build-objects:
 
-components:
-	cd components && $(MAKE)
+build-libraries:
+	cd components && $(MAKE) all
 
-linux-xpi: components
+ifeq (@OS@,mingw32)
+xpi: build-libraries xpi-windows
+endif
+ifeq (@OS@,linux-gnu)
+xpi: build-libraries xpi-linux
+endif
+
+xpi-common:
+	cp -a dist/*.xpt extension/components/
+	-$(RM) extension/chrome/$(NAME).jar
+	cd extension/chrome/$(NAME) && \
+		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
+
+xpi-windows: xpi-common
+	$(RM) dist/fuzzbot-windows.xpi
+	mkdir -p extension/platform/Linux_x86-gcc3/content
+	mkdir -p extension/platform/Linux_x86-gcc3/components
+	mkdir -p extension/components
+	cp -a dist/fuzzbot-components.so \
+		extension/platform/Linux_x86-gcc3/components
+
+xpi-linux: xpi-common
 	$(RM) dist/fuzzbot-linux.xpi
 	mkdir -p extension/platform/Linux_x86-gcc3/content
 	mkdir -p extension/platform/Linux_x86-gcc3/components
 	mkdir -p extension/components
 	cp -a dist/fuzzbot-components.so \
 		extension/platform/Linux_x86-gcc3/components
-	cp -a dist/*.xpt extension/components/
-	-$(RM) extension/chrome/$(NAME).jar
-	cd extension/chrome/$(NAME) && \
-		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
 	cd extension && \
 	zip ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
@@ -27,6 +46,7 @@ linux-xpi: components
 		$(ZIPEXCLUDE)
 
 clean: clean-xpi
+	$(MAKE) -C components clean
 	rm -rf build
 	rm -rf dist
 

@@ -3,7 +3,7 @@
 # 
 # Author: Manu Sporny
 
-AC_INIT(fuzzbot, 0.7.2, support@digitalbazaar.com)
+AC_INIT(fuzzbot, 0.7.3, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables
@@ -29,10 +29,21 @@ CC="$CXX"
 
 # Perform compilation environment tests
 #AC_CHECK_HEADERS(iostream)
+RDFA_LIB_DIRECTORY="/usr/lib"
+RDFA_INCLUDE_DIRECTORY="/usr/include"
+EXPAT_LIB_DIRECTORY="/usr/lib"
+EXPAT_INCLUDE_DIRECTORY="/usr/include"
+
+# Check to see where the rdfa parser resides
+if test -e "../librdfa/libs/librdfa.so"; then
+   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+fi
 
 # Make sure the proper libraries exist
-AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L/usr/lib)
-AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L/usr/lib)
+AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L$EXPAT_LIB_DIRECTORY)
+AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$EXPAT_LIB_DIRECTORY)
+AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY)
 
 # Set the OS so that we can do certain build modifications if needed
 OS="$build_os"
@@ -52,9 +63,16 @@ AC_SUBST(DLLWRAP)
 
 AC_SUBST(OS)
 
+# Export the proper include/library build paths
+AC_SUBST(RDFA_LIB_DIRECTORY)
+AC_SUBST(RDFA_INCLUDE_DIRECTORY)
+AC_SUBST(EXPAT_LIB_DIRECTORY)
+AC_SUBST(EXPAT_INCLUDE_DIRECTORY)
+
 # Generating files
 AC_OUTPUT(Makefile \
           setup/Makefile.base \
+          docs/Makefile \
           firefox/Makefile \
 	  firefox/components/Makefile)
 
