@@ -13,6 +13,9 @@ build-libraries:
 ifeq (@OS@,mingw32)
 xpi: build-libraries xpi-windows
 endif
+ifeq (@OS@,darwin)
+xpi: build-libraries xpi-darwin
+endif
 ifeq (@OS@,linux-gnu)
 xpi: build-libraries xpi-linux
 endif
@@ -25,11 +28,29 @@ xpi-common:
 
 xpi-windows: xpi-common
 	$(RM) dist/fuzzbot-windows.xpi
-	mkdir -p extension/platform/Linux_x86-gcc3/content
-	mkdir -p extension/platform/Linux_x86-gcc3/components
+	mkdir -p extension/platform/WINNT_x86-msvc/content
+	mkdir -p extension/platform/WINNT_x86-msvc/components
 	mkdir -p extension/components
-	cp -a dist/fuzzbot-components.so \
-		extension/platform/Linux_x86-gcc3/components
+	cp -a dist/fuzzbot-components.dll \
+		extension/platform/WINNT_x86-msvc/components
+	zip ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzzbot.js \
+		install.rdf components/*.xpt \
+		`find platform` \
+		$(ZIPEXCLUDE)
+
+xpi-darwin: xpi-common
+	$(RM) dist/fuzzbot-darwin.xpi
+	mkdir -p extension/platform/Darwin_ppc-gcc3/content
+	mkdir -p extension/platform/Darwin_ppc-gcc3/components
+	mkdir -p extension/components
+	cp -a dist/fuzzbot-components.dylib \
+		extension/platform/Darwin_ppc-gcc3/components
+	zip ../dist/fuzzbot-darwin.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzzbot.js \
+		install.rdf components/*.xpt \
+		`find platform` \
+		$(ZIPEXCLUDE)
 
 xpi-linux: xpi-common
 	$(RM) dist/fuzzbot-linux.xpi
@@ -46,14 +67,11 @@ xpi-linux: xpi-common
 		$(ZIPEXCLUDE)
 
 clean: clean-xpi
-	$(MAKE) -C components clean
 	rm -rf build
 	rm -rf dist
 
 clean-xpi:
-	$(RM) dist/fuzzbot-linux.xpi
+	$(RM) dist/fuzzbot-*.xpi
 	$(RM) extension/chrome/$(NAME).jar
 	$(RM) extension/components/*.xpt
-	$(RM) extension/platform/Linux_x86-gcc3/components/*
-	$(RM) -r extension/platform/Linux_x86-gcc3/plugins/*
-	$(RM) -r extension/platform/Linux_x86-gcc3/content/*
+	$(RM) -rf extension/platform/*
