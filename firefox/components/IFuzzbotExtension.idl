@@ -10,7 +10,11 @@ interface fuzzbotJSTripleHandlerCallback : nsISupports {
 
 [scriptable, uuid(f5ebc90b-56b5-4bce-96c9-d2962c2af7f5)]
 interface nsIFuzzbotExtension : nsISupports {
-  boolean processRdfaTriples(
+  long processRdfaTriples(
+    in string uri, in string html,
+    in fuzzbotJSTripleHandlerCallback callback);
+   
+  long tidyAndProcessRdfaTriples(
     in string uri, in string html,
     in fuzzbotJSTripleHandlerCallback callback);
 };

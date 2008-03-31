@@ -24,6 +24,9 @@
 #include "rdfa.h"
 #include "rdfa_utils.h"
 
+#include "tidy/tidy.h"
+#include "tidy/buffio.h"
+
 using namespace std;
 
 // These helper functions are used by this module to provide a link to
@@ -117,12 +120,15 @@ nsFuzzbotExtension::~nsFuzzbotExtension()
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRBool *_retval)
+NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRInt32 *_retval)
 {
-   nsresult rval = NS_ERROR_NOT_IMPLEMENTED;
+   nsresult rval = NS_OK;
+   
    //printf("URI: %s\n", uri);
-   //printf("FuzzbotExtension::ProcessRdfaTriples(%s)\n", html);
-
+   FILE* hfile = fopen("/tmp/fuzzbot.html", "w");
+   fprintf(hfile, "%s", html);
+   fclose(hfile);
+   
    rdfacontext* context = rdfa_create_context(uri);
    buffer_status* status = (buffer_status*)malloc(sizeof(buffer_status));
    
@@ -136,23 +142,67 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char
    // setup the parser
    rdfa_set_triple_handler(context, &process_triple);
    rdfa_set_buffer_filler(context, &fill_buffer);
-   rdfa_parse(context);   
-
-   // if complete_incomplete_triples is set, there was at least one
-   // set of triples that was generated.
-   if(context->complete_incomplete_triples)
-   {
-      rval = NS_OK;
-      (*_retval) = PR_TRUE;
-   }
-   else
-   {
-      rval = NS_OK;
-      (*_retval) = PR_FALSE;
-   }
+   (*_retval) = rdfa_parse(context);
 
    // free the context
    rdfa_free_context(context);
+   
+   return rval;
+}
+
+/* boolean processRdfaTriples(); */
+NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRInt32 *_retval)
+{
+   nsresult rval = NS_OK;
+   TidyBuffer output;
+   TidyBuffer errbuf;
+   int rc = -1;
+   Bool ok;
+
+   FILE* hfile = fopen("/tmp/fuzzbot-untidied.html", "w");
+   fprintf(hfile, "%s", html);
+   fclose(hfile);
+   
+   TidyDoc tdoc = tidyCreate();                    // Initialize "document"
+   tidyBufInit(&output);
+   tidyBufInit(&errbuf);
+   printf("Tidying:\n%s\n", html);
+   
+   ok = tidyOptSetBool(tdoc, TidyXhtmlOut, yes);   // Convert to XHTML
+   if(ok)
+      rc = tidySetErrorBuffer( tdoc, &errbuf );    // Capture diagnostics
+   if(rc >= 0)
+      rc = tidyParseString(tdoc, html);            // Parse the input
+   if(rc >= 0)
+      rc = tidyCleanAndRepair(tdoc);               // Tidy it up!
+   if(rc >= 0)
+      rc = tidyRunDiagnostics(tdoc);               // Kvetch
+   if(rc > 1)                                      // If error, force output.
+      rc = (tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1);
+   if(rc >= 0)
+      rc = tidySaveBuffer(tdoc, &output);          // Pretty Print
+   
+   if(rc >= 0)
+   {
+      if(rc > 0)
+      {
+         printf("\nDiagnostics:\n\n%s", errbuf.bp);
+      }
+      printf("\nAnd here is the result:\n\n%s", output.bp);
+   }
+   else
+      printf("A severe error (%d) occurred.\n", rc);
+
+   FILE* tfile = fopen("/tmp/fuzzbot-tidied.html", "w");
+   fprintf(tfile, "%s", (const char*)output.bp);
+   fclose(tfile);
+   
+   (*_retval) = this->ProcessRdfaTriples(
+      uri, (const char*)output.bp, callback, _retval);
+
+   tidyBufFree(&output);
+   tidyBufFree(&errbuf);
+   tidyRelease(tdoc);
    
    return rval;
 }

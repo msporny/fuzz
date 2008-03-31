@@ -4,8 +4,15 @@
  * @author Manu Sporny
  */
 
+/* Global variables that track the state of this plugin */
 var gFuzzbotVisible = true;
 var gAvailableTriples = false;
+
+/* Constants */
+var RDFA_PARSE_WARNING = -2;
+var RDFA_PARSE_FAILED = -1;
+var RDFA_PARSE_UNKNOWN = 0;
+var RDFA_PARSE_SUCCESS = 1;
 
 /**
  * Logs a message to the console.
@@ -117,6 +124,19 @@ function tripleHandler(subject, predicate, object)
 };
 
 /**
+ * Clears the triples that are being shown on the screen.
+ */
+function clearUiTriples()
+{
+   // clear the current list of children
+   tchildren = document.getElementById("fuzzbot-triple-tree-children");
+   while(tchildren.firstChild)
+   {
+      tchildren.removeChild(tchildren.firstChild);
+   }
+}
+
+/**
  * Starts a thread to perform semantic data detection on the page.
  */
 function detectSemanticData(obj)
@@ -124,21 +144,29 @@ function detectSemanticData(obj)
    var serializer = new XMLSerializer();
    var url = gBrowser.contentDocument.URL;
    var xml = serializer.serializeToString(gBrowser.contentDocument);
+
+   _fuzzbotLog(xml);
+   
    var gPlugin = Components
       .classes["@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"]
       .getService()
       .QueryInterface(
          Components.interfaces.nsIFuzzbotExtension);
    
-   // clear the current list of children
-   tchildren = document.getElementById("fuzzbot-triple-tree-children");
-   while(tchildren.firstChild)
-   {
-      tchildren.removeChild(tchildren.firstChild);
-   }
+   clearUiTriples();
 
    gAvailableTriples = false;
    var rval = gPlugin.processRdfaTriples(url, xml, tripleHandler);
 
+   // if the previous parse failed, it is usually because the input
+   // document is malformed. Instruct Fuzzbot to use Tidy to clean up
+   // the incoming HTML/XHTML and retry.
+   if(rval != RDFA_PARSE_SUCCESS)
+   {
+      clearUiTriples();
+      gAvailableTriples = false;
+      gPlugin.tidyAndProcessRdfaTriples(url, xml, tripleHandler);
+   }
+   
    updateFuzzbotStatusDisplay(gAvailableTriples);
 }
