@@ -48,6 +48,16 @@ AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_
 # Set the OS so that we can do certain build modifications if needed
 OS="$build_os"
 
+if test "$build_os" = "linux-gnu"; then
+   FIREFOX_PLATFORM="Linux_x86-gcc3"
+fi
+if test "$build_os" = "mingw32"; then
+   FIREFOX_PLATFORM="WINNT_x86-msvc"
+fi
+if test "$build_os" = "darwin"; then
+   FIREFOX_PLATFORM="Darwin_ppc-gcc3"
+fi
+
 # Make all the proper substitutions
 AC_SUBST(FUZZBOTDIR)
 
@@ -62,6 +72,7 @@ AC_SUBST(AS)
 AC_SUBST(DLLWRAP)
 
 AC_SUBST(OS)
+AC_SUBST(FIREFOX_PLATFORM)
 
 # Export the proper include/library build paths
 AC_SUBST(RDFA_LIB_DIRECTORY)
@@ -74,6 +85,7 @@ AC_OUTPUT(Makefile \
           setup/Makefile.base \
           docs/Makefile \
           firefox/Makefile \
+          firefox/extension/install.rdf \
 	  firefox/components/Makefile)
 
 # Dump the build configuration for the developer

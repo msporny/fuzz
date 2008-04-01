@@ -3,14 +3,14 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>fuzzbot@digitalbazaar.com</em:id>
         <em:name>Fuzzbot</em:name>
-        <em:version>0.6.1</em:version>
+        <em:version>@VERSION@</em:version>
         <em:description>Fuzzbot - Semantic Web Processor.</em:description>
         <em:creator>Manu Sporny (Digital Bazaar, Inc.)</em:creator>
         <em:homepageURL>http://rdfa.digitalbazaar.com/fuzzbot</em:homepageURL>
         <em:optionsURL>chrome://fuzzbot/content/fuzzbot_options.xul</em:optionsURL>
         <em:iconURL>chrome://fuzzbot/content/fuzzbot32.png</em:iconURL>
         <em:aboutURL>chrome://fuzzbot/content/about.xul</em:aboutURL>
-        <em:targetPlatform>WINNT_x86-msvc</em:targetPlatform>
+        <em:targetPlatform>@FIREFOX_PLATFORM@</em:targetPlatform>
 
         <!-- Firefox -->
         <em:targetApplication>
