@@ -125,9 +125,9 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char
    nsresult rval = NS_OK;
    
    //printf("URI: %s\n", uri);
-   FILE* hfile = fopen("/tmp/fuzzbot.html", "w");
-   fprintf(hfile, "%s", html);
-   fclose(hfile);
+   //FILE* hfile = fopen("/tmp/fuzzbot.html", "w");
+   //fprintf(hfile, "%s", html);
+   //fclose(hfile);
    
    rdfacontext* context = rdfa_create_context(uri);
    buffer_status* status = (buffer_status*)malloc(sizeof(buffer_status));
@@ -159,9 +159,9 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    int rc = -1;
    Bool ok;
 
-   FILE* hfile = fopen("/tmp/fuzzbot-untidied.html", "w");
-   fprintf(hfile, "%s", html);
-   fclose(hfile);
+   //FILE* hfile = fopen("/tmp/fuzzbot-untidied.html", "w");
+   //fprintf(hfile, "%s", html);
+   //fclose(hfile);
    
    TidyDoc tdoc = tidyCreate();                    // Initialize "document"
    tidyBufInit(&output);
@@ -193,9 +193,9 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    else
       printf("A severe error (%d) occurred.\n", rc);
 
-   FILE* tfile = fopen("/tmp/fuzzbot-tidied.html", "w");
-   fprintf(tfile, "%s", (const char*)output.bp);
-   fclose(tfile);
+   //FILE* tfile = fopen("/tmp/fuzzbot-tidied.html", "w");
+   //fprintf(tfile, "%s", (const char*)output.bp);
+   //fclose(tfile);
    
    (*_retval) = this->ProcessRdfaTriples(
       uri, (const char*)output.bp, callback, _retval);

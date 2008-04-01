@@ -17,7 +17,8 @@ endif
 CFLAGS += -Wall -g -DMOZILLA_STRICT_API
 
 ifeq (@OS@,mingw32)
-CC = cl
+XPIDL=/usr/lib/gecko-sdk/bin/xpidl
+XULIDL=/usr/lib/gecko-sdk/idl
 CFLAGS += -I/usr/lib/gecko-sdk/include
 LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lexpat -ltidy @RDFA_LIB_DIRECTORY@/rdfa.lib 
 CFLAGS += -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
@@ -35,7 +36,7 @@ all_objects = $(fuzzbot_plugin_objects)
 
 .PHONY: make_dirs
 
-all: make_dirs $(LIBS) $(DIST)/IFuzzbotExtension.xpt
+all: make_dirs  $(DIST)/IFuzzbotExtension.xpt $(LIBS) 
 
 make_dirs:
 	mkdir -p ../build

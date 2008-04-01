@@ -33,6 +33,7 @@ xpi-windows: xpi-common
 	mkdir -p extension/components
 	cp -a dist/fuzzbot-components.dll \
 		extension/platform/WINNT_x86-msvc/components
+	cd extension && \
 	zip ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \

@@ -74,8 +74,6 @@ function updateFuzzbotStatus()
 function modifyDOM(triples)
 {
    html = gBrowser.contentDocument;
-
-   html.write("FOO!");
 }
 
 /**
