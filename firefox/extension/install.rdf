@@ -10,7 +10,7 @@
         <em:optionsURL>chrome://fuzzbot/content/fuzzbot_options.xul</em:optionsURL>
         <em:iconURL>chrome://fuzzbot/content/fuzzbot32.png</em:iconURL>
         <em:aboutURL>chrome://fuzzbot/content/about.xul</em:aboutURL>
-        <em:targetPlatform>Linux_x86-gcc3</em:targetPlatform>
+        <em:targetPlatform>WINNT_x86-msvc</em:targetPlatform>
 
         <!-- Firefox -->
         <em:targetApplication>
