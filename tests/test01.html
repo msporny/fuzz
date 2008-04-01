@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:cal="http://www.w3.org/2002/12/cal/icaltzd#" 
+  xmlns:foaf="http://xmlns.com/foaf/0.1/" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <head>
+		<title>Simple Fuzzbot UI test</title>
+    <script type="text/javascript">
+/**
+ * Gets the absolute X and Y position of an element on the page.
+ *
+ * @return an array containing an [X, Y] position of the given element
+ */
+function getElementPosition(element)
+{
+	var curleft = 0;
+   var curtop = 0;
+
+   if(element.offsetParent)
+   {
+      do 
+      {
+         curleft += element.offsetLeft;
+         curtop += element.offsetTop;
+		} 
+      while(element = element.offsetParent);
+   }
+
+	return [curleft, curtop];
+}
+
+/**
+ * Gets all of the subject elements in the current document.
+ */
+function getAllSubjectElements()
+{
+   var subjectElements = new Array();
+   var element;
+   var i = 0;
+
+   while(element = document.getElementsByTagName ('*')[i++])
+   {
+      if(element.hasAttributes())
+      {
+         if(element.attributes['about'])
+         {
+            subjectElements.push(element);
+         }
+      }
+   }
+
+   return subjectElements;
+}
+
+/**
+ * Adds Fuzzbot Actions to all of the current elements on the page.
+ */
+function addFuzzbotMarkup()
+{
+   winWidth = document.all ? document.body.clientWidth : window.innerWidth;
+   winHeight = document.all ? document.body.clientHeight : window.innerHeight;
+   subjectElements = getAllSubjectElements();
+ 
+   text = ""
+  
+   for(var i = 0; i < subjectElements.length; i++)
+   {
+      element = subjectElements[i];
+      position = getElementPosition(element);
+
+      fuzzbotUiButton = document.createElement('img');
+      fuzzbotUiButton.setAttribute("src", "larrow.png");
+      fuzzbotUiButton.setAttribute("alt", element.attributes['about'].value);
+      fuzzbotUiButton.setAttribute("title", element.attributes['about'].value);
+      fuzzbotUiButton.style.position = "absolute";
+      fuzzbotUiButton.style.left = (winWidth - 48) + "px";
+      fuzzbotUiButton.style.top = (position[1] - 8) + "px";
+      document.body.appendChild(fuzzbotUiButton);
+
+      text += element.attributes['about'].value + "<br />";
+      text += "xpos:" + position[0] + "<br />";
+      text += "ypos:" + position[1] + "<br />";
+   }
+
+   //document.write(text);
+}
+    </script>
+  </head>
+  <body>
+  <p><a href="javascript:addFuzzbotMarkup()">OUTLINE</a></p>
+
+  <p about="#iona" instanceof="cal:Vevent">
+      <b property="cal:summary">Weekend off in Iona</b>: 
+      <span property="cal:dtstart" content="2006-10-21" datatype="xsd:date">Oct 21st</span>
+      to <span property="cal:dtend" content="2006-10-23"  datatype="xsd:date">Oct 23rd</span>.
+      See <a rel="cal:url" href="http://freetime.example.org/">freetime.example.org</a> for
+      info on <span property="cal:location">Iona, UK</span>.
+  </p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p about="#manu" instanceof="foaf:Person">
+     Manu knows <a rel="foaf:knows" href="http://www.adida.net/">Ben</a>
+  </p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p>Then we have some text, some text, some text, some text.</p>
+  <p about="#manu">
+     Manu knows <a rel="foaf:knows" href="http://michael.hausenblaus.com/">Michael</a>
+  </p>
+  </body>
+</html>
