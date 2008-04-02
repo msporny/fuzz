@@ -73,7 +73,11 @@ function updateFuzzbotStatus()
  */
 function modifyDOM(triples)
 {
-   html = gBrowser.contentDocument;
+   _fuzzbotLog("modifyDOM()");
+   
+   addFuzzbotMarkup();
+
+   _fuzzbotLog("postModifyDOM()");
 }
 
 /**
@@ -105,11 +109,11 @@ function updateFuzzbotStatusDisplay(triplesFound)
 function tripleHandler(subject, predicate, object)
 {
    gAvailableTriples = true;
-   _fuzzbotLog(subject + " " + predicate + " " + object + " .");
+   _fuzzbotLog("Fuzzbot: " + subject + " " + predicate + " " + object + " .");
    
    tchildren = document.getElementById("fuzzbot-triple-tree-children");
 
-   _fuzzbotLog(tchildren);
+   //_fuzzbotLog(tchildren);
 
    // create Treerow with id (rowid is a global variable so that
    // we do not use the same id twice)
@@ -154,7 +158,7 @@ function detectSemanticData(obj)
    var url = gBrowser.contentDocument.URL;
    var xml = serializer.serializeToString(gBrowser.contentDocument);
 
-   _fuzzbotLog(xml);
+   //_fuzzbotLog(xml);
    
    var gPlugin = Components
       .classes["@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"]

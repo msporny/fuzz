@@ -11,6 +11,9 @@
           src="chrome://fuzzbot/content/webservices.js"/>
 
   <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/fuzzbot_subject_ui.js"/>
+
+  <script type="application/x-javascript"
           src="chrome://fuzzbot/content/fuzzbot.js"/>
 
   <!-- Fuzzbot panel -->
@@ -41,7 +44,7 @@
     </statusbarpanel>
     <menupopup id="fuzzbot-status-context-menu">
       <menuitem id="fuzzbot-control-label" 
-                label="View Triples" oncommand="displayTripleDialog();"/>
+                label="View Triples" oncommand="detectSemanticData();"/>
       <menuseparator/>
       <menuitem label="Detect Triples" oncommand="detectSemanticData();"/>
     </menupopup>
