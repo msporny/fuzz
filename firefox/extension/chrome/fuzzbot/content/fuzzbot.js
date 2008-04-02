@@ -7,6 +7,7 @@
 /* Global variables that track the state of this plugin */
 var gFuzzbotVisible = true;
 var gAvailableTriples = false;
+var gTripleStore = {};
 
 /* Constants */
 var RDFA_PARSE_WARNING = -2;
@@ -106,9 +107,22 @@ function tripleHandler(subject, predicate, object)
 {
    gAvailableTriples = true;
    _fuzzbotLog("Fuzzbot: " + subject + " " + predicate + " " + object + " .");
+
+   triple = new Object();
+   triple.subject = subject;
+   triple.predicate = predicate;
+   triple.object = object;
+
+   if(!gTripleStore[subject])
+   {
+      gTripleStore[subject] = new Array();
+   }
+   
+   gTripleStore[subject].push(triple);
+   _fuzzbotLog("Stored: " + subject + " " + predicate + " " + object + " .");
    
    tchildren = document.getElementById("fuzzbot-triple-tree-children");
-
+   
    //_fuzzbotLog(tchildren);
 
    // create Treerow with id (rowid is a global variable so that
@@ -143,6 +157,8 @@ function clearUiTriples()
    {
       tchildren.removeChild(tchildren.firstChild);
    }
+   
+   gTripleStore = {};
 }
 
 /**

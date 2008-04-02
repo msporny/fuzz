@@ -90,6 +90,27 @@ function generateSubjectDisplay(element, subject)
    //rval.style.height = 200 + "px";
 
    _fuzzbotLog("GSD 3");
+
+   _fuzzbotLog("TripleStore: " + gTripleStore);
+
+   var name = 0;
+   var depiction = 0;
+   for(var i in gTripleStore[subject])
+   {
+      var triple = gTripleStore[subject][i];
+      
+      _fuzzbotLog("triple: " + triple);
+      _fuzzbotLog(subject + ": " + triple.predicate + " " + triple.object);
+      
+      if(triple.predicate == "http://xmlns.com/foaf/0.1/name")
+      {
+         name = triple.object;
+      }
+      if(triple.predicate == "http://xmlns.com/foaf/0.1/depiction")
+      {
+         depiction = triple.object;
+      }
+   }
    
    // Title
    var tr = cdoc.createElement('tr');
@@ -97,9 +118,16 @@ function generateSubjectDisplay(element, subject)
    var p = cdoc.createElement('p');
    var br1 = cdoc.createElement('br');
    var center1 = cdoc.createElement('center');
-   var text1 = cdoc.createTextNode("Ben Adida");
+   var text1 = cdoc.createTextNode("Unknown");
+   if(name)
+   {
+      text1 = cdoc.createTextNode(name);
+   }
    var img = cdoc.createElement('img');
-   img.setAttribute("src", "http://ben.adida.net/ben.jpg");
+   if(depiction)
+   {
+      img.setAttribute("src", depiction);
+   }
    img.width = "200";
 
    _fuzzbotLog("GSD 4");
