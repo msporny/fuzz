@@ -6,124 +6,98 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
   <head>
 		<title>Simple Fuzzbot UI test</title>
-    <script type="text/javascript">
-/**
- * Gets the absolute X and Y position of an element on the page.
- *
- * @return an array containing an [X, Y] position of the given element
- */
-function getElementPosition(element)
-{
-	var curleft = 0;
-   var curtop = 0;
-
-   if(element.offsetParent)
-   {
-      do 
-      {
-         curleft += element.offsetLeft;
-         curtop += element.offsetTop;
-		} 
-      while(element = element.offsetParent);
-   }
-
-	return [curleft, curtop];
-}
-
-/**
- * Gets all of the subject elements in the current document.
- */
-function getAllSubjectElements()
-{
-   var subjectElements = new Array();
-   var element;
-   var i = 0;
-
-   while(element = document.getElementsByTagName ('*')[i++])
-   {
-      if(element.hasAttributes())
-      {
-         if(element.attributes['about'])
-         {
-            subjectElements.push(element);
-         }
-      }
-   }
-
-   return subjectElements;
-}
-
-/**
- * Adds Fuzzbot Actions to all of the current elements on the page.
- */
-function addFuzzbotMarkup()
-{
-   winWidth = document.all ? document.body.clientWidth : window.innerWidth;
-   winHeight = document.all ? document.body.clientHeight : window.innerHeight;
-   subjectElements = getAllSubjectElements();
- 
-   text = ""
-  
-   for(var i = 0; i < subjectElements.length; i++)
-   {
-      element = subjectElements[i];
-      position = getElementPosition(element);
-
-      fuzzbotUiButton = document.createElement('img');
-      fuzzbotUiButton.setAttribute("src", "larrow.png");
-      fuzzbotUiButton.setAttribute("alt", element.attributes['about'].value);
-      fuzzbotUiButton.setAttribute("title", element.attributes['about'].value);
-      fuzzbotUiButton.style.position = "absolute";
-      fuzzbotUiButton.style.left = (winWidth - 48) + "px";
-      fuzzbotUiButton.style.top = (position[1] - 8) + "px";
-      document.body.appendChild(fuzzbotUiButton);
-
-      text += element.attributes['about'].value + "<br />";
-      text += "xpos:" + position[0] + "<br />";
-      text += "ypos:" + position[1] + "<br />";
-   }
-
-   //document.write(text);
-}
-    </script>
+    <script type="text/javascript" src="test01.js"></script>
   </head>
   <body>
   <p><a href="javascript:addFuzzbotMarkup()">OUTLINE</a></p>
 
-  <p about="#iona" instanceof="cal:Vevent">
-      <b property="cal:summary">Weekend off in Iona</b>: 
-      <span property="cal:dtstart" content="2006-10-21" datatype="xsd:date">Oct 21st</span>
-      to <span property="cal:dtend" content="2006-10-23"  datatype="xsd:date">Oct 23rd</span>.
-      See <a rel="cal:url" href="http://freetime.example.org/">freetime.example.org</a> for
-      info on <span property="cal:location">Iona, UK</span>.
-  </p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p about="#manu" instanceof="foaf:Person">
-     Manu knows <a rel="foaf:knows" href="http://www.adida.net/">Ben</a>
-  </p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p>Then we have some text, some text, some text, some text.</p>
-  <p about="#manu">
-     Manu knows <a rel="foaf:knows" href="http://michael.hausenblaus.com/">Michael</a>
-  </p>
+  <h1>Ben Adida</h1>
+  <div about="#ben" instanceof="foaf:Person">
+<p>
+<span property="foaf:name">Ben Adida</span> is a member of the Faculty at Harvard Medical School and at
+the Children's Hospital Informatics Program, as well as a research
+fellow with the Center for Research on Computation and Society with
+the Harvard School of Engineering and Applied Sciences. <a rel="foaf:depiction" href="http://ben.adida.net/ben.jpg">His</a> work
+focuses on security and privacy of health data, in particular in the
+context of personally-controlled health records delivered over the
+web.
+</p>
+
+<p>
+Dr. Adida completed his PhD at MIT in the Cryptography and Information
+Security group, where he explored the security and privacy of
+elections, web applications, email, and health records. He is the
+Creative Commons representative to the W3C, working on interoperable
+web data as chair of the RDF-in-HTML task force. Previously, Ben
+co-founded two software startups that developed database-backed web
+application platforms based on free/open-source software.
+</p>
+  </div>
+
+  <h1>Mark Birbeck</h1>
+  <div about="#mark" instanceof="foaf:Person">
+<p><span property="foaf:name">Mark Birbeck</span> has spent the last 7 years designing, building and thinking about a framework that enables dynamic user interfaces, driven by data content. Such a framework can dramatically increase programming productivity, and open up the world of application-building to many more people. Since he believes that the framework should be built on open standards, <a rel="foaf:depiction" href="http://xhtml.com/8D79838D-7654-4400-AE85-FF810E1ABDD7/birbeck.jpg">Mark</a> is heavily involved in the W3C, as an invited expert with the XForms and XHTML 2 Working Groups, and also as the designer of RDFa.</p>
+
+<p>His companies created the formsPlayer XForms processor, and Sidewinder, an open source, next-generation semantic web browser.</p>
+
+<p>His blog focuses on building a new generation of internet applications, and a number of entries relate to Ajax, XForms, the semantic web, and the use of declarative mark-up.</p>
+  </div>
+
+  <h1>Manu Sporny</h1>
+  <div about="#manu" instanceof="foaf:Person">
+<span property="foaf:name">Manu Sporny</span> founded and was appointed CEO of Digital Bazaar in 2004. The company is based in Blacksburg, Virginia, USA. <a rel="foaf:depiction" href="http://www.zenmachine.org/pix/manu_tophat.jpg">He</a> started his career as a serial entrepreneur performing research at Virginia Tech in the late 90s in information visualization, virtual reality and high-performance graphics technologies. After graduating from Virginia Tech with a degree in Computer Science, he founded xRhino, a company specializing in software tools and middleware for the Sony PlayStation 2 video game platform. xRhino was successfully sold in late 2003 to Advanced Simulation Technology, a Department of Defense contractor.
+</p>
+<p>
+Sporny then focused his attention on solving the problem of legalizing peer-to-peer digital content distribution online, allowing distributed groups of people to legally buy and sell digital music, film, and print content via the Internet.
+</p>
+
+<p>
+In addition to his duties at Digital Bazaar, Sporny is an Invited Expert to the World Wide Web Consortium, chartered to work on creating semantic web technologies that will enable computers to utilize rich information on websites and eventually learn about their environment. He is the primary designer of Internet Microformat standards to embed meta-information about audio and video into web pages. He has authored several patents and sits on various technology company advisory boards.
+</p>
+<p>
+Sporny's favorite past-time is watching talented people realize their full potential. He believes in the goodness of people and the hope that humanity will continue to improve the quality of life around the globe. He believes <a href="http://www.ted.com/talks/view/id/92">things are getting better</a>.
+</p>
+  </div>
+
+  <h1>Michael Hausenblas</h1>
+  <div about="#michael" instanceof="foaf:Person">
+         <p><span property="foaf:name">Michael Hausenblas</span> is a Semantic Web engineer at JOANNEUM RESEARCH, an applied research company in Austria, Europe. Since 2001 <a rel="foaf:depiction" href="http://sw-app.org/img/mic_2007_01.jpg">he<a> and his team are into researching and building Semantic Web applications, often with a focus on multimedia assets. Michael has been involved in W3C activities since 2006; currently he mainly cares about <a href="http://rdfa.info/wiki/">RDFa</a> and <a href="http://linkeddata.org/">linked data</a>.</p>
+ 
+<p>Whenever possible, he is hanging out with his three children Iannis, Ranya and Saphira - fortunately, still mainly off-line ;)</p>
+  </div>
+
+  <h1>Shane McCarron</h1>
+
+  <div about="#shane" instanceof="foaf:Person">
+  <p><span property="foaf:name">Shane McCarron</span> lurks in the shadows doing what must be done, <a rel="foaf:depiction" href="http://i2.bebo.com/031b/10/medium/2007/03/03/11/1079182688a3755633155b893085973m.jpg">he</a> doesn't even have a public bio or picture on the Internet... which is probably exactly how he likes it.
+  </div>
+
+  <h1>Steven Pemberton</h1>
+
+  <div about="#steven" instanceof="foaf:Person">
+<p>At the end of the 80's, <span property="foaf:name">Steven Pemberton</span> with a group of colleagues <a href="http://www.cwi.nl/~steven/views/">built a browser</a> with extensible markup, a DOM, stylesheets, client-side scripting, etc. Following from this work, he organised two workshops at the first WWW conference in 1994 on <a href="http://www.cwi.nl/~steven/non-server.html">client-side computation</a> and <a href="http://cui.unige.ch/WWW94/Workshops/workshop.list.html#presentation">electronic publishing</a>.
+</p>
+
+<p><a rel="foaf:depiction" href="http://computersweden.idg.se/polopoly_fs/1.106367!imageUploader/f306ecb0.jpg">He</a> chaired the first-ever W3C event, <a href="http://www.w3.org/Style/951106_Workshop/Overview.html">the workshop on style sheets</a>, the first W3C <a href="http://www.w3.org/International/workshop9605.html">internationalisation</a> workshop, and was a long-time member of the CSS and HTML working groups. He now chairs the HTML and Forms working groups.</p>
+
+<p>He is editor-in-chief of <a href="http://www.acm.org/interactions">ACM/interactions</a>.</p>
+  </div>
+
+  <h1>Ivan Herman</h1>
+  <div about="#ivan" instanceof="foaf:Person">
+<p>Originally, <span lang="hu" property="foaf:name">Ivan Herman</span> is a <a rel="foaf:depiction" href="http://www.ivan-herman.net/me2003-small.png">mathematician</a> (graduated in Budapest, Hungary, in 1979), but turned into a computer
+        scientist after his graduation. He joined the Computing and Automation Institute (<a
+        href="http://www.sztaki.hu">SZTAKI</a>) of Budapest in 1979. He then left Hungary in 1986; after having spent 
+	3 years in a private software house called \u201cInsotech Consult GmbH\u201d (which, unfortunately, went down the drain since...) 
+	in Munich, Germany, he joined the Centre for Mathematics and Computer Sciences (<a href="http://www.cwi.nl/">CWI</a>) 
+	in Amsterdam in 1988, as a senior researcher. Iván also received a PhD in Leiden, the Netherlands, in 1989. He then spent 
+	12 years as a \u201ctraditional\u201d computer science researcher, working mainly on Computer Graphics. He then joined the 
+	staff of the <a href="http://www.w3.org">World Wide Web Consortium</a> (while maintaining his
+        position at CWI), in January 2001, where he served as <a href="http://www.w3.org/Consortium/Offices/">Head of Offices</a>
+	until June 2006. Since June 2006 he has been the <a href="http://www.w3.org/2001/sw">Semantic Web</a> Activity Lead. If you want more
+	details on his professional life, you can look at <a href="http://www.w3.org/People/Ivan/">my home page at W3C</a> 
+	or <a href="http://www.ivan-herman.net/professional/">\u201cprofessional\u201d CV</a>.</p>
+  </div>
+
   </body>
 </html>
