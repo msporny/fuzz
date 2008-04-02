@@ -87,6 +87,7 @@ size_t fill_buffer(char* buffer, size_t buffer_length, void* callback_data)
    {
       rval = buffer_length;
       memcpy(buffer, &bstatus->buffer[bstatus->current_offset], buffer_length);
+      bstatus->current_offset += buffer_length;
    }
    else
    {
@@ -166,7 +167,7 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    TidyDoc tdoc = tidyCreate();                    // Initialize "document"
    tidyBufInit(&output);
    tidyBufInit(&errbuf);
-   printf("Tidying:\n%s\n", html);
+   //printf("Tidying:\n%s\n", html);
    
    ok = tidyOptSetBool(tdoc, TidyXhtmlOut, yes);   // Convert to XHTML
    if(ok)
@@ -184,11 +185,11 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    
    if(rc >= 0)
    {
-      if(rc > 0)
-      {
-         printf("\nDiagnostics:\n\n%s", errbuf.bp);
-      }
-      printf("\nAnd here is the result:\n\n%s", output.bp);
+      //if(rc > 0)
+      //{
+      //   printf("\nDiagnostics:\n\n%s", errbuf.bp);
+      //}
+      //printf("\nAnd here is the result:\n\n%s", output.bp);
    }
    else
       printf("A severe error (%d) occurred.\n", rc);

@@ -70,14 +70,6 @@ function updateFuzzbotStatus()
 }
 
 /**
- * Modifies the DOM based on a set of triples that are found.
- */
-function modifyDOM(triples)
-{
-   addFuzzbotMarkup();
-}
-
-/**
  * Updates the Firefox display window with the updated status.
  */
 function updateFuzzbotStatusDisplay(triplesFound)
@@ -91,7 +83,15 @@ function updateFuzzbotStatusDisplay(triplesFound)
       statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
       gFuzzbotVisible = !gFuzzbotVisible;
       ui.hidden = gFuzzbotVisible;
-      modifyDOM(triplesFound);
+      
+      if(ui.hidden)
+      {
+         removeFuzzbotMarkup();
+      }
+      else
+      {
+         addFuzzbotMarkup();
+      }
    }
    else
    {

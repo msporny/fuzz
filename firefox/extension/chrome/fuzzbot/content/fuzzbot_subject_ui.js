@@ -271,3 +271,33 @@ function addFuzzbotMarkup()
       _fuzzbotLog("9");
    }
 }
+
+/**
+ * Removes all Fuzzbot UI elements from the page.
+ */
+function removeFuzzbotMarkup()
+{
+   var cdoc = gBrowser.contentDocument;
+   var elementFound = false;
+   var i = 0;
+
+   do
+   {
+      var idString = "fuzzbot-button-" + i;
+      var fuzzbotUiButton = cdoc.getElementById(idString);
+
+      _fuzzbotLog("FB: " + fuzzbotUiButton);
+
+      if(fuzzbotUiButton)
+      {
+         elementFound = true;
+         cdoc.body.removeChild(fuzzbotUiButton);
+      }
+      else
+      {
+         elementFound = false;
+      }
+      i++;
+   }
+   while(elementFound);
+}

@@ -25,7 +25,7 @@ CFLAGS += -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN=1 -DXP_WIN32=1 -
 LIBS = $(DIST)/fuzzbot-components.dll
 else
 CFLAGS += -I/usr/include/nspr
-LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -ltidy -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a
+LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @EXPAT_LIB_DIRECTORY@/libtidy.a
 LIBS = $(DIST)/fuzzbot-components.so
 CFLAGS += -DXP_UNIX
 endif
