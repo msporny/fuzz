@@ -73,11 +73,7 @@ function updateFuzzbotStatus()
  */
 function modifyDOM(triples)
 {
-   _fuzzbotLog("modifyDOM()");
-   
    addFuzzbotMarkup();
-
-   _fuzzbotLog("postModifyDOM()");
 }
 
 /**
