@@ -71,13 +71,12 @@ function generateSubjectDisplay(element, subject)
    _fuzzbotLog("GSD TIS: " + tableIdString);
    
    // Create the display table
-   var rval = cdoc.createElement('table');
+   var rval = cdoc.createElement('div');
    _fuzzbotLog("GSD 11");
    rval.setAttribute("id", tableIdString);
    _fuzzbotLog("GSD 12");
-   rval.setAttribute("bgcolor", "#c1c1c1");
+   rval.style.background = "#c1c1c1";
    _fuzzbotLog("GSD 13");
-   rval.style.align = "top";
    rval.style.position = "absolute";
    rval.style.top = position[1] + "px";
    _fuzzbotLog("GSD 14");
@@ -111,35 +110,50 @@ function generateSubjectDisplay(element, subject)
          depiction = triple.object;
       }
    }
-   
-   // Title
-   var tr = cdoc.createElement('tr');
-   var td = cdoc.createElement('td');
-   var p = cdoc.createElement('p');
-   var br1 = cdoc.createElement('br');
-   var center1 = cdoc.createElement('center');
-   var text1 = cdoc.createTextNode("Unknown");
+
+   // Display the title
+   var h1 = cdoc.createElement('h1');
+   h1.style.fontWeight = "bold";
+   h1.style.margin = 0;
+   h1.style.textAlign = "center";
+   h1.style.padding = "5px";
+   h1.style.fontSize = "16px";
+
+   var h1text = cdoc.createTextNode("Unknown");   
    if(name)
    {
-      text1 = cdoc.createTextNode(name);
+      h1text = cdoc.createTextNode(name);
    }
-   var img = cdoc.createElement('img');
+   h1.appendChild(h1text);
+   rval.appendChild(h1);
+
+   // Display the image if it exists
    if(depiction)
    {
+      var imgdiv = cdoc.createElement('div');
+      imgdiv.style.textAlign = "center";
+      
+      var img = cdoc.createElement('img');
+      img.width = "200";
       img.setAttribute("src", depiction);
+      img.style.marginLeft = "auto";
+      img.style.marginRight = "auto";
+      
+      imgdiv.appendChild(img);
+      rval.appendChild(imgdiv);
    }
-   img.width = "200";
+   
+   // Display the main body of the tab
+   var divbody = cdoc.createElement('div');
+   divbody.style.padding = "0 10px";
+   rval.appendChild(divbody);
+
+   // Display the bottom of the tab
+   var divbottom = cdoc.createElement('div');
+   divbottom.style.height = "10px";
+   rval.appendChild(divbottom);
 
    _fuzzbotLog("GSD 4");
-   
-   center1.appendChild(text1);
-   p.appendChild(center1);
-   p.appendChild(br1);
-   p.appendChild(img);
-
-   td.appendChild(p);
-   tr.appendChild(td);
-   rval.appendChild(tr);
 
    return rval;
 }
