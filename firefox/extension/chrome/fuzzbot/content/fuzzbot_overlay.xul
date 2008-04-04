@@ -20,17 +20,8 @@
 
   <vbox id="appcontent">
      <vbox id="fuzzbot-ui" hidden="true" minheight="200">
-     <tree id="fuzzbot-triple-tree" flex="1">
-
-     <treecols>
-       <treecol id="subject" label="Subject" flex="2"/>
-       <treecol id="predicate" label="Predicate" flex="1"/>
-       <treecol id="object" label="Object" flex="2"/>
-     </treecols>
-
-     <treechildren id="fuzzbot-triple-tree-children"/>
-
-     </tree>
+        <listbox id="fuzzbot-triples-listbox" flex="1">
+        </listbox>
      </vbox>
   </vbox>
 

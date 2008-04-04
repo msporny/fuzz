@@ -129,27 +129,57 @@ function tripleHandler(subject, predicate, object)
    _fuzzbotLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
    
-   tchildren = document.getElementById("fuzzbot-triple-tree-children");
-   
-   //_fuzzbotLog(tchildren);
+   var lchildren = document.getElementById("fuzzbot-triples-listbox");
 
+   _fuzzbotLog("L1");
+   
    // create Treerow with id (rowid is a global variable so that
    // we do not use the same id twice)
-   var ti = document.createElement("treeitem");
-   var tr = document.createElement("treerow");
-   var tcs = document.createElement("treecell");
-   var tcp = document.createElement("treecell");
-   var tco = document.createElement("treecell");
-   tcs.setAttribute("label", triple.subject);
-   tcp.setAttribute("label", triple.predicate);
-   tco.setAttribute("label", triple.object);
+   var url = gBrowser.contentDocument.URL;
+   var li = document.createElement("listitem");
+   var lcs = document.createElement("listcell");
+   var lcp = document.createElement("listcell");
+   var lco = document.createElement("listcell");
+
+   _fuzzbotLog("L2");
+
+   // correct the subject for display
+   var relativeSubject = triple.subject;
+   if(triple.subject != url)
+   {
+      relativeSubject = relativeSubject.replace(url, "");
+   }
+   lcs.setAttribute("label", relativeSubject);
+   lcs.value = triple.subject;
+
+   _fuzzbotLog("L3");
+
+   // correct the predicate for display
+   var predicateCurie = triple.predicate;
+   for(var i in gTripleStore["@prefix"])
+   {
+      var prefixTriple = gTripleStore["@prefix"][i];
+      var prefix = prefixTriple.predicate;
+      var uri = prefixTriple.object;
+      var replacement = prefix + ":";
+
+      predicateCurie = predicateCurie.replace(uri, replacement);
+   }
+   lcp.setAttribute("label", predicateCurie);
+   lcp.value = triple.predicate;
    
-   tr.appendChild(tcs);
-   tr.appendChild(tcp);
-   tr.appendChild(tco);
-   ti.appendChild(tr);
+   _fuzzbotLog("L4");
    
-   tchildren.appendChild(ti);
+   lco.setAttribute("label", triple.object);
+   lco.value = triple.object;
+   
+   li.appendChild(lcs);
+   li.appendChild(lcp);
+   li.appendChild(lco);
+
+   _fuzzbotLog("L5");
+   
+   lchildren.appendChild(li);
    
    return true;
 };
@@ -159,14 +189,50 @@ function tripleHandler(subject, predicate, object)
  */
 function clearUiTriples()
 {
-   // clear the current list of children
-   tchildren = document.getElementById("fuzzbot-triple-tree-children");
-   while(tchildren.firstChild)
-   {
-      tchildren.removeChild(tchildren.firstChild);
-   }
+   _fuzzbotLog("clearUiTriples()");
    
+   // clear the current list of children
+   var lb = document.getElementById("fuzzbot-triples-listbox");
+   while(lb.firstChild)
+   {
+      lb.removeChild(lb.firstChild);
+   }
+
+   // Create the list header and columns layout information
+   var lbhead = document.createElement("listhead");
+   var lhs = document.createElement("listheader");
+   var lhp = document.createElement("listheader");
+   var lho = document.createElement("listheader");
+   var lbcols = document.createElement("listcols");
+   var lcs = document.createElement("listcol");
+   var lcp = document.createElement("listcol");
+   var lco = document.createElement("listcol");
+
+   // setup each listbox item
+   lhs.setAttribute("label", "Subject");
+   lhp.setAttribute("label", "Predicate");
+   lho.setAttribute("label", "Object");
+
+   lco.setAttribute("flex", "1");
+
+   // put the entire UI together
+   lbhead.appendChild(lhs);
+   lbhead.appendChild(lhp);
+   lbhead.appendChild(lho);
+
+   lbcols.appendChild(lcs);
+   lbcols.appendChild(lcp);
+   lbcols.appendChild(lco);
+
+   lb.appendChild(lbhead);
+   lb.appendChild(lbcols);
+
+   // re-initialize the triple-store
    gTripleStore = {};
+   tripleHandler(
+      "@prefix", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+   tripleHandler(
+      "@prefix", "xhv", "http://www.w3.org/1999/xhtml/vocab#");
 }
 
 /**

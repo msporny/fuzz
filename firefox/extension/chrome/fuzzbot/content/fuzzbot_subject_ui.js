@@ -60,39 +60,25 @@ function getAllSubjectElements()
  */
 function generateSubjectDisplay(element, subject)
 {
-   _fuzzbotLog("GSD!");
-   
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
    var fuzzbotSubjectButton = element;
    var position = getElementPosition(fuzzbotSubjectButton);
    var tableIdString = element.getAttribute('id') + "-table";
 
-   _fuzzbotLog("GSD TIS: " + tableIdString);
-   
    // Create the display table
    var rval = cdoc.createElement('div');
-   _fuzzbotLog("GSD 11");
    rval.setAttribute("id", tableIdString);
-   _fuzzbotLog("GSD 12");
    rval.style.background = "#dcdad5";
-   _fuzzbotLog("GSD 13");
    rval.style.position = "absolute";
    rval.style.top = position[1] + "px";
-   _fuzzbotLog("GSD 14");
    rval.style.left = 
       (position[0] + gFuzzbotButtonWidth + 16) + "px";
-   _fuzzbotLog("GSD 15");
    rval.style.width = 
       (winWidth - (position[0] + gFuzzbotButtonWidth)) + "px";
-   _fuzzbotLog("GSD 16");
    
-   //rval.style.height = 200 + "px";
-
-   _fuzzbotLog("GSD 3");
-
-   _fuzzbotLog("TripleStore: " + gTripleStore);
-
+   // Retrieve all of the display-able values
+   // TODO: This needs to be broken out into a more modular architecture
    var name = 0;
    var depiction = 0;
    var type = 0;
@@ -102,7 +88,6 @@ function generateSubjectDisplay(element, subject)
    {
       var triple = gTripleStore[subject][i];
       
-      _fuzzbotLog("triple: " + triple);
       _fuzzbotLog(subject + ": " + triple.predicate + " " + triple.object);
       
       if(triple.predicate == "http://xmlns.com/foaf/0.1/name")
@@ -182,8 +167,6 @@ function generateSubjectDisplay(element, subject)
 
    if(type == "http://xmlns.com/foaf/0.1/Person")
    {
-      _fuzzbotLog("DDC 1");
-      
       // Display the actions available via this tab
       var form = cdoc.createElement('form');
       var select = cdoc.createElement('select');
@@ -192,15 +175,11 @@ function generateSubjectDisplay(element, subject)
       var skype_option = cdoc.createElement('option');
       var vcard_export_option = cdoc.createElement('option');
 
-      _fuzzbotLog("DDC 2");
-      
       form.style.textAlign = "center";
       form.style.padding = "5px 0";
       homepage_option.setAttribute("disabled", true);
       homepage_option.setAttribute("selected", true);
-      _fuzzbotLog("DDC 21");
       homepage_option.appendChild(cdoc.createTextNode("Go to Homepage"));
-      _fuzzbotLog("DDC 22");
       email_option.setAttribute("disabled", true);
       email_option.appendChild(cdoc.createTextNode("E-mail"));
       skype_option.setAttribute("disabled", true);
@@ -209,22 +188,19 @@ function generateSubjectDisplay(element, subject)
       vcard_export_option.appendChild(
          cdoc.createTextNode("Add to Addressbook"));
 
-      _fuzzbotLog("DDC 3");
-      
       select.appendChild(homepage_option);
       select.appendChild(email_option);
       select.appendChild(skype_option);
       select.appendChild(vcard_export_option);
       form.appendChild(select);
       divbody.appendChild(form);
-
-      _fuzzbotLog("DDC 4");
    }
 
    // display an abstract if needed
    if(dcabstract)
    {
       var p = cdoc.createElement('p');
+      p.style.clear = "left";
       p.innerHTML = dcabstract;
       divbody.appendChild(p);
    }
@@ -237,8 +213,6 @@ function generateSubjectDisplay(element, subject)
    divbottom.style.backgroundPosition = "bottom";
    divbottom.style.backgroundRepeat = "repeat-x";
    rval.appendChild(divbottom);
-
-   _fuzzbotLog("GSD 4");
 
    return rval;
 }
@@ -255,8 +229,6 @@ function fuzzbotHandleClickEvent(event)
    var element = event.target;
    var subject = element.getAttribute('title');
    var position = getElementPosition(element);
-
-   _fuzzbotLog("X,Y: "+ position[0] + ", " + position[1]);
 
    if((winWidth - position[0]) < 100)
    {
@@ -276,23 +248,14 @@ function fuzzbotHandleClickEvent(event)
  */
 function fuzzbotHideSubject(element, subject)
 {
-   _fuzzbotLog("FHS 1");
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
    var fuzzbotSubjectButton = element;
-   _fuzzbotLog("FHS 2");
    var tableId = element.getAttribute('id') + "-table";
    var fuzzbotSubjectDisplay = cdoc.getElementById(tableId);
-   _fuzzbotLog("FHS 3");
-
-   //fuzzbotSubjectDisplay.style.display = "none";
-   _fuzzbotLog("FHS 4");
 
    cdoc.body.removeChild(fuzzbotSubjectDisplay);
-   
-   _fuzzbotLog("FHS 4.5");
    fuzzbotSubjectButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
-   _fuzzbotLog("FHS 5");
 }
 
 /**
@@ -328,46 +291,32 @@ function fuzzbotDisplaySubject(element, subject)
  */
 function addFuzzbotMarkup()
 {
-   _fuzzbotLog("AFM!");
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
    var winHeight = cdoc.body.clientHeight;
    var subjectElements = getAllSubjectElements();
-   _fuzzbotLog("WW: " + winWidth);
 
    for(var i = 0; i < subjectElements.length; i++)
    {
-      _fuzzbotLog("AFM: " + i);
-  
       var element = subjectElements[i];
-      _fuzzbotLog("AFM: " + i);
       var idString = "fuzzbot-button-" + i;
       var subject = cdoc.URL + element.getAttribute('about');
-      _fuzzbotLog("1");
       var position = getElementPosition(element);
-      _fuzzbotLog("2");
       
       var fuzzbotUiButton = cdoc.createElement('img');
-      _fuzzbotLog("3");
       fuzzbotUiButton.setAttribute("id", idString);
       fuzzbotUiButton.setAttribute("src",
          "chrome://fuzzbot/content/ltab_open.png");
       fuzzbotUiButton.setAttribute("alt", subject);
       fuzzbotUiButton.setAttribute("title", subject);
 
-      _fuzzbotLog("4");
       fuzzbotUiButton.addEventListener(
          "click", fuzzbotHandleClickEvent, false);
-      _fuzzbotLog("5");
       
       fuzzbotUiButton.style.position = "absolute";
-      _fuzzbotLog("6");
       fuzzbotUiButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
-      _fuzzbotLog("7");
       fuzzbotUiButton.style.top = (position[1] - 8) + "px";
-      _fuzzbotLog("8");
       cdoc.body.appendChild(fuzzbotUiButton);
-      _fuzzbotLog("9");
    }
 }
 
@@ -384,8 +333,6 @@ function removeFuzzbotMarkup()
    {
       var idString = "fuzzbot-button-" + i;
       var fuzzbotUiButton = cdoc.getElementById(idString);
-
-      _fuzzbotLog("FB: " + fuzzbotUiButton);
 
       if(fuzzbotUiButton)
       {
