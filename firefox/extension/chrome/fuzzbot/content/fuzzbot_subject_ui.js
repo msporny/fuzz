@@ -75,7 +75,7 @@ function generateSubjectDisplay(element, subject)
    _fuzzbotLog("GSD 11");
    rval.setAttribute("id", tableIdString);
    _fuzzbotLog("GSD 12");
-   rval.style.background = "#c1c1c1";
+   rval.style.background = "#dcdad5";
    _fuzzbotLog("GSD 13");
    rval.style.position = "absolute";
    rval.style.top = position[1] + "px";
@@ -86,6 +86,7 @@ function generateSubjectDisplay(element, subject)
    rval.style.width = 
       (winWidth - (position[0] + gFuzzbotButtonWidth)) + "px";
    _fuzzbotLog("GSD 16");
+   
    //rval.style.height = 200 + "px";
 
    _fuzzbotLog("GSD 3");
@@ -94,6 +95,9 @@ function generateSubjectDisplay(element, subject)
 
    var name = 0;
    var depiction = 0;
+   var type = 0;
+   var dctitle = 0;
+   var dcabstract = 0;
    for(var i in gTripleStore[subject])
    {
       var triple = gTripleStore[subject][i];
@@ -109,6 +113,19 @@ function generateSubjectDisplay(element, subject)
       {
          depiction = triple.object;
       }
+      if((triple.predicate ==
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
+      {
+         type = triple.object;
+      }
+      if(triple.predicate == "http://purl.org/dc/elements/1.1/title")
+      {
+         dctitle = triple.object;
+      }
+      if(triple.predicate == "http://purl.org/dc/terms/abstract")
+      {
+         dcabstract = triple.object;
+      }
    }
 
    // Display the title
@@ -118,11 +135,18 @@ function generateSubjectDisplay(element, subject)
    h1.style.textAlign = "center";
    h1.style.padding = "5px";
    h1.style.fontSize = "16px";
+   h1.style.backgroundImage = "url(chrome://fuzzbot/content/tabpanel-top.png)";
+   h1.style.backgroundPosition = "top";
+   h1.style.backgroundRepeat = "repeat-x";
 
-   var h1text = cdoc.createTextNode("Unknown");   
+   var h1text = cdoc.createTextNode("Unknown");
    if(name)
    {
       h1text = cdoc.createTextNode(name);
+   }
+   else if(dctitle)
+   {
+      h1text = cdoc.createTextNode(dctitle);
    }
    h1.appendChild(h1text);
    rval.appendChild(h1);
@@ -132,7 +156,11 @@ function generateSubjectDisplay(element, subject)
    {
       var imgdiv = cdoc.createElement('div');
       imgdiv.style.textAlign = "center";
-      
+      imgdiv.style.backgroundImage =
+         "url(chrome://fuzzbot/content/tabpanel-middle.png)";
+      imgdiv.style.backgroundPosition = "left";
+      imgdiv.style.backgroundRepeat = "repeat-y";
+   
       var img = cdoc.createElement('img');
       img.width = "200";
       img.setAttribute("src", depiction);
@@ -146,11 +174,68 @@ function generateSubjectDisplay(element, subject)
    // Display the main body of the tab
    var divbody = cdoc.createElement('div');
    divbody.style.padding = "0 10px";
+   divbody.style.backgroundImage =
+      "url(chrome://fuzzbot/content/tabpanel-middle.png)";
+   divbody.style.backgroundPosition = "left";
+   divbody.style.backgroundRepeat = "repeat-y";
    rval.appendChild(divbody);
 
+   if(type == "http://xmlns.com/foaf/0.1/Person")
+   {
+      _fuzzbotLog("DDC 1");
+      
+      // Display the actions available via this tab
+      var form = cdoc.createElement('form');
+      var select = cdoc.createElement('select');
+      var homepage_option = cdoc.createElement('option');
+      var email_option = cdoc.createElement('option');
+      var skype_option = cdoc.createElement('option');
+      var vcard_export_option = cdoc.createElement('option');
+
+      _fuzzbotLog("DDC 2");
+      
+      form.style.textAlign = "center";
+      form.style.padding = "5px 0";
+      homepage_option.setAttribute("disabled", true);
+      homepage_option.setAttribute("selected", true);
+      _fuzzbotLog("DDC 21");
+      homepage_option.appendChild(cdoc.createTextNode("Go to Homepage"));
+      _fuzzbotLog("DDC 22");
+      email_option.setAttribute("disabled", true);
+      email_option.appendChild(cdoc.createTextNode("E-mail"));
+      skype_option.setAttribute("disabled", true);
+      skype_option.appendChild(cdoc.createTextNode("Call via Skype"));
+      vcard_export_option.setAttribute("disabled", true);
+      vcard_export_option.appendChild(
+         cdoc.createTextNode("Add to Addressbook"));
+
+      _fuzzbotLog("DDC 3");
+      
+      select.appendChild(homepage_option);
+      select.appendChild(email_option);
+      select.appendChild(skype_option);
+      select.appendChild(vcard_export_option);
+      form.appendChild(select);
+      divbody.appendChild(form);
+
+      _fuzzbotLog("DDC 4");
+   }
+
+   // display an abstract if needed
+   if(dcabstract)
+   {
+      var p = cdoc.createElement('p');
+      p.innerHTML = dcabstract;
+      divbody.appendChild(p);
+   }
+   
    // Display the bottom of the tab
    var divbottom = cdoc.createElement('div');
-   divbottom.style.height = "10px";
+   divbottom.style.height = "2px";
+   divbottom.style.backgroundImage =
+      "url(chrome://fuzzbot/content/tabpanel-bottom.png)";
+   divbottom.style.backgroundPosition = "bottom";
+   divbottom.style.backgroundRepeat = "repeat-x";
    rval.appendChild(divbottom);
 
    _fuzzbotLog("GSD 4");
@@ -266,7 +351,7 @@ function addFuzzbotMarkup()
       _fuzzbotLog("3");
       fuzzbotUiButton.setAttribute("id", idString);
       fuzzbotUiButton.setAttribute("src",
-         "chrome://fuzzbot/content/larrow.png");
+         "chrome://fuzzbot/content/ltab_open.png");
       fuzzbotUiButton.setAttribute("alt", subject);
       fuzzbotUiButton.setAttribute("title", subject);
 

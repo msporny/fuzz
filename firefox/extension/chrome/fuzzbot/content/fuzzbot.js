@@ -108,10 +108,17 @@ function tripleHandler(subject, predicate, object)
    gAvailableTriples = true;
    _fuzzbotLog("Fuzzbot: " + subject + " " + predicate + " " + object + " .");
 
+   // strip any whitespace;
+   var strippedObject = object.replace(/\r/g, " ");
+   strippedObject = strippedObject.replace(/\n/g, " ");
+   strippedObject = strippedObject.replace(/\t/g, " ");
+   strippedObject = strippedObject.replace(/ +/g, " ");
+   strippedObject = strippedObject.replace(/^ +/g, "");
+   
    triple = new Object();
    triple.subject = subject;
    triple.predicate = predicate;
-   triple.object = object;
+   triple.object = strippedObject;
 
    if(!gTripleStore[subject])
    {
@@ -119,7 +126,8 @@ function tripleHandler(subject, predicate, object)
    }
    
    gTripleStore[subject].push(triple);
-   _fuzzbotLog("Stored: " + subject + " " + predicate + " " + object + " .");
+   _fuzzbotLog("Stored: " + triple.subject + " " + triple.predicate + " " +
+               triple.object + " .");
    
    tchildren = document.getElementById("fuzzbot-triple-tree-children");
    
@@ -132,9 +140,9 @@ function tripleHandler(subject, predicate, object)
    var tcs = document.createElement("treecell");
    var tcp = document.createElement("treecell");
    var tco = document.createElement("treecell");
-   tcs.setAttribute("label", subject);
-   tcp.setAttribute("label", predicate);
-   tco.setAttribute("label", object);
+   tcs.setAttribute("label", triple.subject);
+   tcp.setAttribute("label", triple.predicate);
+   tco.setAttribute("label", triple.object);
    
    tr.appendChild(tcs);
    tr.appendChild(tcp);
