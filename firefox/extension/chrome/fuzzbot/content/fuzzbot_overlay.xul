@@ -19,9 +19,15 @@
   <!-- Fuzzbot panel -->
 
   <vbox id="appcontent">
-     <vbox id="fuzzbot-ui" hidden="true" minheight="200">
-        <listbox id="fuzzbot-triples-listbox" flex="1">
-        </listbox>
+     <vbox id="fuzzbot-ui" hidden="true" minheight="200" maxheight="200">
+        <listhead>
+           <listheader minwidth="100" label="Subject"/>
+           <listheader minwidth="100" label="Predicate"/>
+           <listheader minwidth="100" label="Object"/>
+           <listheader style="text-align: right" minwidth="300" flex="1" label="Fuzzbot"/>
+        </listhead>
+        <richlistbox id="fuzzbot-triples-listbox" flex="1" rows="10">
+        </richlistbox>
      </vbox>
   </vbox>
 

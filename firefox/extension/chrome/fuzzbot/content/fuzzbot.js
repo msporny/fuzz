@@ -82,9 +82,9 @@ function updateFuzzbotStatusDisplay(triplesFound)
    {
       statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
       gFuzzbotVisible = !gFuzzbotVisible;
-      ui.hidden = gFuzzbotVisible;
+      //ui.hidden = gFuzzbotVisible;
       
-      if(ui.hidden)
+      if(!gFuzzbotVisible)
       {
          removeFuzzbotMarkup();
       }
@@ -96,7 +96,7 @@ function updateFuzzbotStatusDisplay(triplesFound)
    else
    {
       statusImage.src = "chrome://fuzzbot/content/fuzzbot16-offline.png";
-      ui.hidden = true;
+      //ui.hidden = true;
       gFuzzbotVisible = false;
    }
 }
@@ -128,7 +128,19 @@ function tripleHandler(subject, predicate, object)
    gTripleStore[subject].push(triple);
    _fuzzbotLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
+
+   //addTripleToUi(triple);
    
+   return true;
+};
+
+/**
+ * Adds a triple to the UI given a triple object.
+ *
+ * @param triple the triple to add to the UI.
+ */
+function addTripleToUi(triple)
+{
    var lchildren = document.getElementById("fuzzbot-triples-listbox");
 
    _fuzzbotLog("L1");
@@ -136,22 +148,47 @@ function tripleHandler(subject, predicate, object)
    // create Treerow with id (rowid is a global variable so that
    // we do not use the same id twice)
    var url = gBrowser.contentDocument.URL;
-   var li = document.createElement("listitem");
-   var lcs = document.createElement("listcell");
-   var lcp = document.createElement("listcell");
-   var lco = document.createElement("listcell");
+   var rli = document.createElement("richlistitem");
+   var lhs = document.createElement("hbox");
+   var ls = document.createElement("label");
+   var lhp = document.createElement("hbox");
+   var lp = document.createElement("label");
+   var lho = document.createElement("hbox");
+   var lo = document.createElement("label");
 
    _fuzzbotLog("L2");
 
+   // setup the hbox dimensions
+   lhs.setAttribute("minwidth", "100");
+   lhs.setAttribute("maxwidth", "250");
+   lhp.setAttribute("minwidth", "100");
+   lhp.setAttribute("maxwidth", "250");
+   lho.setAttribute("minwidth", "100");
+   lho.setAttribute("flex", "1");
+   
+   // setup the correct styles for the elements
+   if(triple.subject.indexOf("http://") == 0)
+   {
+      ls.setAttribute("class", "text-link");
+      ls.setAttribute("href", triple.subject);
+   }
+   lp.setAttribute("class", "text-link");
+   lp.setAttribute("href", triple.predicate);
+   
+   if(triple.object.indexOf("http://") == 0)
+   {
+      lo.setAttribute("class", "text-link");
+      lo.setAttribute("href", triple.object);
+   }
+   
    // correct the subject for display
    var relativeSubject = triple.subject;
    if(triple.subject != url)
    {
       relativeSubject = relativeSubject.replace(url, "");
    }
-   lcs.setAttribute("label", relativeSubject);
-   lcs.value = triple.subject;
-
+   ls.setAttribute("value", relativeSubject);
+   
    _fuzzbotLog("L3");
 
    // correct the predicate for display
@@ -165,24 +202,24 @@ function tripleHandler(subject, predicate, object)
 
       predicateCurie = predicateCurie.replace(uri, replacement);
    }
-   lcp.setAttribute("label", predicateCurie);
-   lcp.value = triple.predicate;
+   lp.setAttribute("value", predicateCurie);
    
    _fuzzbotLog("L4");
    
-   lco.setAttribute("label", triple.object);
-   lco.value = triple.object;
+   lo.setAttribute("value", triple.object);
    
-   li.appendChild(lcs);
-   li.appendChild(lcp);
-   li.appendChild(lco);
+   lhs.appendChild(ls);
+   lhp.appendChild(lp);
+   lho.appendChild(lo);
+
+   rli.appendChild(lhs);
+   rli.appendChild(lhp);
+   rli.appendChild(lho);
 
    _fuzzbotLog("L5");
    
-   lchildren.appendChild(li);
-   
-   return true;
-};
+   lchildren.appendChild(rli);   
+}
 
 /**
  * Clears the triples that are being shown on the screen.
@@ -197,35 +234,6 @@ function clearUiTriples()
    {
       lb.removeChild(lb.firstChild);
    }
-
-   // Create the list header and columns layout information
-   var lbhead = document.createElement("listhead");
-   var lhs = document.createElement("listheader");
-   var lhp = document.createElement("listheader");
-   var lho = document.createElement("listheader");
-   var lbcols = document.createElement("listcols");
-   var lcs = document.createElement("listcol");
-   var lcp = document.createElement("listcol");
-   var lco = document.createElement("listcol");
-
-   // setup each listbox item
-   lhs.setAttribute("label", "Subject");
-   lhp.setAttribute("label", "Predicate");
-   lho.setAttribute("label", "Object");
-
-   lco.setAttribute("flex", "1");
-
-   // put the entire UI together
-   lbhead.appendChild(lhs);
-   lbhead.appendChild(lhp);
-   lbhead.appendChild(lho);
-
-   lbcols.appendChild(lcs);
-   lbcols.appendChild(lcp);
-   lbcols.appendChild(lco);
-
-   lb.appendChild(lbhead);
-   lb.appendChild(lbcols);
 
    // re-initialize the triple-store
    gTripleStore = {};
