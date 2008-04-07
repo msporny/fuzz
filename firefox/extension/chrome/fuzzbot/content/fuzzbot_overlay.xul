@@ -21,10 +21,12 @@
   <vbox id="appcontent">
      <vbox id="fuzzbot-ui" hidden="true" minheight="200" maxheight="200">
         <listhead>
-           <listheader minwidth="100" label="Subject"/>
-           <listheader minwidth="100" label="Predicate"/>
-           <listheader minwidth="100" label="Object"/>
-           <listheader style="text-align: right" minwidth="300" flex="1" label="Fuzzbot"/>
+           <hbox>
+           <label minwidth="200" value="Subject"/>
+           <label minwidth="200" value="Predicate"/>
+           <label minwidth="200" value="Object"/>
+           <label style="text-align: right" minwidth="300" flex="1" value="Fuzzbot"/>
+           </hbox>
         </listhead>
         <richlistbox id="fuzzbot-triples-listbox" flex="1" rows="10">
         </richlistbox>
@@ -37,13 +39,16 @@
                     context="fuzzbot-status-context-menu"
                     oncommand="detectSemanticData();">
       <image id="fuzzbot-status-image" width="16" height="16"
-             src="chrome://fuzzbot/content/fuzzbot16-offline.png"/>
+             src="chrome://fuzzbot/content/fuzzbot16-offline.png"
+             onload="attachDocumentListeners();"/>
     </statusbarpanel>
     <menupopup id="fuzzbot-status-context-menu">
-      <menuitem id="fuzzbot-control-label" 
-                label="View Triples" oncommand="detectSemanticData();"/>
-      <menuseparator/>
-      <menuitem label="Detect Triples" oncommand="detectSemanticData();"/>
+      <menuitem id="fuzzbot-ui-find-triples" 
+                label="Display Triples" oncommand="detectSemanticData();"/>
+      <menuitem id="fuzzbot-ui-control" 
+                label="Examine Raw Triples" oncommand="toggleFuzzbotTripleUi();"/>
+      <menuitem id="fuzzbot-ui-disable" 
+                label="Fuzzbot Disabled" type="checkbox"/>
     </menupopup>
   </statusbar>
 
