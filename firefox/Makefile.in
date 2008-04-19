@@ -11,17 +11,20 @@ build-libraries:
 	cd components && $(MAKE) all
 
 ifeq (@OS@,mingw32)
+CP_FLAGS = -a
 xpi: build-libraries xpi-windows
 endif
-ifeq (@OS@,darwin)
+ifeq (@OS@,darwin8.9.1)
+CP_FLAGS = -p
 xpi: build-libraries xpi-darwin
 endif
 ifeq (@OS@,linux-gnu)
+CP_FLAGS = -a
 xpi: build-libraries xpi-linux
 endif
 
 xpi-common:
-	cp -a dist/*.xpt extension/components/
+	cp $(CP_FLAGS) dist/*.xpt extension/components/
 	-$(RM) extension/chrome/$(NAME).jar
 	cd extension/chrome/$(NAME) && \
 		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
@@ -42,11 +45,12 @@ xpi-windows: xpi-common
 
 xpi-darwin: xpi-common
 	$(RM) dist/fuzzbot-darwin.xpi
-	mkdir -p extension/platform/Darwin_ppc-gcc3/content
-	mkdir -p extension/platform/Darwin_ppc-gcc3/components
+	mkdir -p extension/platform/Darwin_x86-gcc3/content
+	mkdir -p extension/platform/Darwin_x86-gcc3/components
 	mkdir -p extension/components
-	cp -a dist/fuzzbot-components.dylib \
-		extension/platform/Darwin_ppc-gcc3/components
+	cp -p dist/fuzzbot-components.dylib \
+		extension/platform/Darwin_x86-gcc3/components
+	cd extension && \
 	zip ../dist/fuzzbot-darwin.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \

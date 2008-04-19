@@ -6,14 +6,8 @@ DIST=../dist
 
 CC = g++
 
-CFLAGS = -I/usr/include -I/usr/include/xulrunner/java -I/usr/include/xulrunner/plugin -I/usr/include/xulrunner -I/usr/include/xulrunner/xpcom -I/usr/include/xulrunner/string -I$(BUILD) 
+CFLAGS = -I/usr/include -I/usr/include/xulrunner/java -I/usr/include/xulrunner/plugin -I/usr/include/xulrunner -I/usr/include/xulrunner/xpcom -I/usr/include/xulrunner/string -I$(BUILD) -I@EXPAT_INCLUDE_DIRECTORY@ -I@TIDY_INCLUDE_DIRECTORY@ -I@RDFA_INCLUDE_DIRECTORY@
 LDFLAGS += -L/usr/lib -L/usr/lib/xulrunner 
-
-ifneq (@RDFA_INCLUDE_DIRECTORY@,/usr/include)
-CFLAGS += -I@RDFA_INCLUDE_DIRECTORY@
-LDFLAGS += -L@RDFA_LIB_DIRECTORY@
-endif
-
 CFLAGS += -Wall -g -DMOZILLA_STRICT_API
 
 ifeq (@OS@,mingw32)
@@ -23,7 +17,18 @@ CFLAGS += -I/usr/lib/gecko-sdk/include
 LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lexpat -ltidy @RDFA_LIB_DIRECTORY@/rdfa.lib 
 CFLAGS += -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
 LIBS = $(DIST)/fuzzbot-components.dll
-else
+endif
+
+ifeq (@OS@,darwin8.9.1)
+XPIDL=/usr/local/gecko-sdk-mac-intel-1.8.1.3/bin/xpidl
+XULIDL=/usr/local/gecko-sdk-mac-intel-1.8.1.3/idl
+CFLAGS += -I/usr/local/gecko-sdk-mac-intel-1.8.1.3/include
+LDFLAGS += -L/usr/local/gecko-sdk-mac-intel-1.8.1.3/lib -L/Library/Frameworks/XUL.framework/Versions/Current/ -Wl,-executable_path,/Library/Frameworks/XUL.framework/Versions/Current/ -lxpcomglue_s -lxpcom -lnspr4  @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
+CFLAGS += -DXP_UNIX
+LIBS = $(DIST)/fuzzbot-components.dylib
+endif
+
+ifeq (@OS@,linux-gnu)
 CFLAGS += -I/usr/include/nspr
 LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @EXPAT_LIB_DIRECTORY@/libtidy.a
 LIBS = $(DIST)/fuzzbot-components.so
@@ -49,6 +54,9 @@ $(BUILD)/FuzzbotExtension.o : $(BUILD)/IFuzzbotExtension.h
 
 $(DIST)/fuzzbot-components.so $(DIST)/fuzzbot-components.dll: $(fuzzbot_plugin_objects)
 	$(CC) -shared -o $(DIST)/$@ $^ $(LDFLAGS)
+
+$(DIST)/fuzzbot-components.dylib: $(fuzzbot_plugin_objects)
+	$(CC) -dynamiclib -o $(DIST)/$@ $^ $(LDFLAGS)
 
 $(BUILD)/%.o: %.cpp
 	$(CC) -c $(CFLAGS) $< -o $@

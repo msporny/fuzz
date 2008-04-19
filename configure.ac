@@ -31,19 +31,37 @@ CC="$CXX"
 #AC_CHECK_HEADERS(iostream)
 RDFA_LIB_DIRECTORY="/usr/lib"
 RDFA_INCLUDE_DIRECTORY="/usr/include"
+TIDY_LIB_DIRECTORY="/usr/lib"
+TIDY_INCLUDE_DIRECTORY="/usr/include"
 EXPAT_LIB_DIRECTORY="/usr/lib"
 EXPAT_INCLUDE_DIRECTORY="/usr/include"
+
+# Check to see where the expat library resides
+if test -e "/opt/local/lib/libexpat.dylib"; then
+   EXPAT_INCLUDE_DIRECTORY="/opt/local/include"
+   EXPAT_LIB_DIRECTORY="/opt/local/lib"
+fi
+
+# Check to see where the tidy library resides
+if test -e "/opt/local/lib/libtidy.a"; then
+   TIDY_INCLUDE_DIRECTORY="/opt/local/include"
+   TIDY_LIB_DIRECTORY="/opt/local/lib"
+fi
 
 # Check to see where the rdfa parser resides
 if test -e "../librdfa/libs/librdfa.so"; then
    RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
    RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
 fi
+if test -e "../librdfa/libs/librdfa.dylib"; then
+   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+fi
 
 # Make sure the proper libraries exist
 AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L$EXPAT_LIB_DIRECTORY)
-AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$EXPAT_LIB_DIRECTORY)
-AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY)
+AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
+AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
 
 # Set the OS so that we can do certain build modifications if needed
 OS="$build_os"
@@ -77,6 +95,8 @@ AC_SUBST(FIREFOX_PLATFORM)
 # Export the proper include/library build paths
 AC_SUBST(RDFA_LIB_DIRECTORY)
 AC_SUBST(RDFA_INCLUDE_DIRECTORY)
+AC_SUBST(TIDY_LIB_DIRECTORY)
+AC_SUBST(TIDY_INCLUDE_DIRECTORY)
 AC_SUBST(EXPAT_LIB_DIRECTORY)
 AC_SUBST(EXPAT_INCLUDE_DIRECTORY)
 
