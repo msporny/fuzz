@@ -77,18 +77,24 @@ function updateFuzzbotStatusDisplay(triplesFound)
    var statusImage = document.getElementById("fuzzbot-status-image");
    var ui = document.getElementById("fuzzbot-ui");
    var disabled = document.getElementById("fuzzbot-ui-disable");
+   var urlBarIcon = document.getElementById("fuzzbot-urlbar-icon");
 
    // update the image and the label
    if((gNumTriples > 2) && !disabled.hasAttribute("checked"))
    {
       statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
-      removeFuzzbotMarkup();
-      addFuzzbotMarkup();
+      // FIXME: Temporarily removed, don't know if this is the proper approach
+      //removeFuzzbotMarkup();
+      //addFuzzbotMarkup();
+      urlBarIcon.setAttribute("rdfa", "true");
    }
    else
    {
       statusImage.src = "chrome://fuzzbot/content/fuzzbot16-offline.png";
-      removeFuzzbotMarkup();
+      // FIXME: Temporarily removed, don't know if this is the proper 
+      //        approach.
+      //removeFuzzbotMarkup();
+      urlBarIcon.removeAttribute("rdfa");
    }
 }
 

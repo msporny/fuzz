@@ -1,0 +1,33 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#fuzzbot-urlbar-icon, #fuzzbot-urlbar-icon > .button-box,
+#fuzzbot-urlbar-icon:hover:active > .button-box {
+  padding: 0px;
+  margin: 0px;
+  border: 0px; 
+  background-color: transparent;
+}
+
+#fuzzbot-urlbar-icon > hbox > .button-menu-dropmarker,
+#fuzzbot-urlbar-icon > hbox > .button-text {
+  display: none;
+}
+
+#fuzzbot-urlbar-icon {
+  -moz-binding: url("chrome://global/content/bindings/button.xml#menu");
+  -moz-appearance: none; 
+  min-width: 0px; 
+  margin-right: 1px !important;
+}
+
+#fuzzbot-urlbar-icon[rdfa] {
+  list-style-image: url("chrome://fuzzbot/content/fuzzbot16-online.png");
+}
+
+#fuzzbot-status-image {
+   list-style-image: url("chrome://fuzzbot/content/fuzzbot16-online.png");
+}
+
+#fuzzbot-status-image[disabled="true"] {
+   list-style-image: url("chrome://fuzzbot/content/fuzzbot16-offline.png");
+}

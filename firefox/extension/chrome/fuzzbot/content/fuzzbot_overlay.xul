@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://navigator/content/fuzzbot.css" type="text/css"?>
+<?xml-stylesheet href="chrome://fuzzbot/content/fuzzbot.css" type="text/css"?>
 
 <overlay id="fuzzbot-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -15,6 +15,14 @@
 
   <script type="application/x-javascript"
           src="chrome://fuzzbot/content/fuzzbot.js"/>
+
+  <!-- Fuzzbot URLbar Icons -->
+  <hbox id="urlbar-icons">
+    <button insertbefore="feed-button" 
+     style="-moz-user-focus: none" class="plain"
+     id="fuzzbot-urlbar-icon" onclick="toggleFuzzbotTripleUi();">
+    </button>
+  </hbox>
 
   <!-- Fuzzbot panel -->
 
@@ -33,18 +41,18 @@
      </vbox>
   </vbox>
 
-  <statusbar id="status-bar">
+  <statusbar id="status-bar" >
     <statusbarpanel class="statusbarpanel-iconic"
                     id="fuzzbot-status"
                     context="fuzzbot-status-context-menu"
-                    oncommand="detectSemanticData();">
+                    oncommand="detectSemanticData(); toggleFuzzbotTripleUi();">
       <image id="fuzzbot-status-image" width="16" height="16"
              src="chrome://fuzzbot/content/fuzzbot16-offline.png"
              onload="attachDocumentListeners();"/>
     </statusbarpanel>
     <menupopup id="fuzzbot-status-context-menu">
-      <menuitem id="fuzzbot-ui-find-triples" 
-                label="Display Triples" oncommand="detectSemanticData();"/>
+      <!-- menuitem id="fuzzbot-ui-find-triples" 
+                label="Display Triples" oncommand="detectSemanticData();"/ -->
       <menuitem id="fuzzbot-ui-control" 
                 label="Examine Raw Triples" oncommand="toggleFuzzbotTripleUi();"/>
       <menuitem id="fuzzbot-ui-disable" 
