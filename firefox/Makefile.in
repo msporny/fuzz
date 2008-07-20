@@ -14,7 +14,7 @@ ifeq (@OS@,mingw32)
 CP_FLAGS = -a
 xpi: build-libraries xpi-windows
 endif
-ifeq (@OS@,darwin8.9.1)
+ifeq (@OS@,darwin8.11.1)
 CP_FLAGS = -p
 xpi: build-libraries xpi-darwin
 endif
