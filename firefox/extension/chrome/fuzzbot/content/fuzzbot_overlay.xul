@@ -22,6 +22,18 @@
      style="-moz-user-focus: none" class="plain"
      id="fuzzbot-urlbar-icon" onclick="toggleFuzzbotTripleUi();">
     </button>
+    <button insertbefore="feed-button" 
+     style="-moz-user-focus: none" class="plain"
+     id="fuzzbot-urlbar-audio-icon" onclick="toggleFuzzbotTripleUi();">
+    </button>
+    <button insertbefore="feed-button" 
+     style="-moz-user-focus: none" class="plain"
+     id="fuzzbot-urlbar-video-icon" onclick="toggleFuzzbotTripleUi();">
+    </button>
+    <button insertbefore="feed-button" 
+     style="-moz-user-focus: none" class="plain"
+     id="fuzzbot-urlbar-foaf-person-icon" onclick="toggleFuzzbotTripleUi();">
+    </button>
   </hbox>
 
   <!-- Fuzzbot panel -->

@@ -6,7 +6,15 @@
 
 /* Global variables that track the state of this plugin */
 var gFuzzbotVisible = true;
+
+/* The triple store contains all of the triples on the current page. */
 var gTripleStore = {};
+
+/* The triple RDF types contains all of the types of triples found in
+   the current document. */
+var gTripleRdfTypes = {};
+
+/* The number of triples in the current document. */
 var gNumTriples = 0;
 
 /* Constants */
@@ -70,14 +78,71 @@ function updateFuzzbotStatus()
 }
 
 /**
+ * Adds icons to the URL bar depending on what types of triples, if any, were
+ * detected on the page.
+ */
+function addUrlBarIcons()
+{
+   var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
+   var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
+   var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
+   var fuzzbotFoafPersonIcon = 
+      document.getElementById("fuzzbot-urlbar-foaf-person-icon");
+
+   /* Display audio icon */
+   if(gTripleRdfTypes["http://purl.org/media/audio#Recording"] ||
+      gTripleRdfTypes["http://purl.org/media/audio#Album"])
+   {
+       fuzzbotAudioIcon.setAttribute("objectsDetected", "true");
+   }
+
+   /* Display video icon */
+   if(gTripleRdfTypes["http://purl.org/media/video#Recording"] ||
+      gTripleRdfTypes["http://purl.org/media/video#Episode"] ||
+      gTripleRdfTypes["http://purl.org/media/video#Movie"] ||
+      gTripleRdfTypes["http://purl.org/media/video#Series"])
+   {
+       fuzzbotVideoIcon.setAttribute("objectsDetected", "true");
+   }
+
+   /* Display FOAF Person icon */
+   if(gTripleRdfTypes["http://xmlns.com/foaf/0.1/Person"])
+   {
+       fuzzbotFoafPersonIcon.setAttribute("objectsDetected", "true");
+   }
+
+   /* Display general Fuzzbot UI */
+   if(gNumTriples > 2)
+   {
+       fuzzbotIcon.setAttribute("objectsDetected", "true");
+   }
+}
+
+/**
+ * Removes all Fuzzbot icons from the URL bar.
+ */
+function removeUrlBarIcons()
+{
+   var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
+   var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
+   var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
+   var fuzzbotFoafPersonIcon = 
+      document.getElementById("fuzzbot-urlbar-foaf-person-icon");
+
+   fuzzbotIcon.removeAttribute("objectsDetected");
+   fuzzbotAudioIcon.removeAttribute("objectsDetected");
+   fuzzbotVideoIcon.removeAttribute("objectsDetected");
+   fuzzbotFoafPersonIcon.removeAttribute("objectsDetected");
+}
+
+/**
  * Updates the Firefox display window with the updated status.
  */
-function updateFuzzbotStatusDisplay(triplesFound)
+function updateFuzzbotStatusDisplay()
 {
    var statusImage = document.getElementById("fuzzbot-status-image");
    var ui = document.getElementById("fuzzbot-ui");
    var disabled = document.getElementById("fuzzbot-ui-disable");
-   var urlBarIcon = document.getElementById("fuzzbot-urlbar-icon");
 
    // update the image and the label
    if((gNumTriples > 2) && !disabled.hasAttribute("checked"))
@@ -86,7 +151,7 @@ function updateFuzzbotStatusDisplay(triplesFound)
       // FIXME: Temporarily removed, don't know if this is the proper approach
       //removeFuzzbotMarkup();
       //addFuzzbotMarkup();
-      urlBarIcon.setAttribute("rdfa", "true");
+      addUrlBarIcons();
    }
    else
    {
@@ -94,7 +159,7 @@ function updateFuzzbotStatusDisplay(triplesFound)
       // FIXME: Temporarily removed, don't know if this is the proper 
       //        approach.
       //removeFuzzbotMarkup();
-      urlBarIcon.removeAttribute("rdfa");
+      removeUrlBarIcons();
    }
 }
 
@@ -120,9 +185,17 @@ function tripleHandler(subject, predicate, object)
    triple.predicate = predicate;
    triple.object = strippedObject;
 
+   // If the subject doesn't exist in the triple store, create it.
    if(!gTripleStore[subject])
    {
       gTripleStore[subject] = new Array();
+   }
+
+   // If the type hasn't been saved in the rdf types hastable, save it.
+   if(predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && 
+      !gTripleRdfTypes[object])
+   {
+       gTripleRdfTypes[object] = true;
    }
    
    gTripleStore[subject].push(triple);
@@ -266,6 +339,7 @@ function clearTriples()
 {
    // re-initialize the triple-store
    gTripleStore = {};
+   gTripleRdfTypes = {};
    gNumTriples = 0;
    tripleHandler(
       "@prefix", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
