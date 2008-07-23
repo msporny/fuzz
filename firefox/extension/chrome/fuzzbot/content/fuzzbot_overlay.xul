@@ -16,22 +16,32 @@
   <script type="application/x-javascript"
           src="chrome://fuzzbot/content/fuzzbot.js"/>
 
+  <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/displays/audio.js"/>
+
   <!-- Fuzzbot URLbar Icons -->
   <hbox id="urlbar-icons">
     <button insertbefore="feed-button" 
      style="-moz-user-focus: none" class="plain"
      id="fuzzbot-urlbar-icon" onclick="toggleFuzzbotTripleUi();">
     </button>
-    <button insertbefore="feed-button" 
+    <button insertbefore="feed-button" type="menu"
      style="-moz-user-focus: none" class="plain"
-     id="fuzzbot-urlbar-audio-icon" onclick="toggleFuzzbotTripleUi();">
+     id="fuzzbot-urlbar-audio-icon" 
+     tooltiptext="Click to see Audio info..."
+     onclick="buildAudioMenuPopup();">  
+       <menupopup id="fuzzbot-audio-menu-popup">
+       </menupopup>
     </button>
-    <button insertbefore="feed-button" 
+    <button insertbefore="feed-button"  type="menu"
      style="-moz-user-focus: none" class="plain"
-     id="fuzzbot-urlbar-video-icon" onclick="toggleFuzzbotTripleUi();">
+     id="fuzzbot-urlbar-video-icon" 
+     tooltiptext="Click to see Video info..."
+     onclick="toggleFuzzbotTripleUi();">
     </button>
-    <button insertbefore="feed-button" 
+    <button insertbefore="feed-button"  type="menu"
      style="-moz-user-focus: none" class="plain"
+     tooltiptext="Click to see Contact info..."
      id="fuzzbot-urlbar-foaf-person-icon" onclick="toggleFuzzbotTripleUi();">
     </button>
   </hbox>

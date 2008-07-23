@@ -78,12 +78,30 @@ function updateFuzzbotStatus()
 }
 
 /**
+ * Create a menu item given a label and an action to execute when the menu
+ * item is selected.
+ *
+ * @param label the label to use to identify the menu item.
+ * @param action the Javascript action to execute when the menu item is clicked.
+ */
+function createMenuItem(label, action) 
+{
+   const XUL_NS = 
+      "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+   var menuitem = document.createElementNS(XUL_NS, "menuitem");
+   menuitem.setAttribute("label", label);
+   menuitem.addEventListener("click", action, false);
+
+   return menuitem;
+}
+
+/**
  * Adds icons to the URL bar depending on what types of triples, if any, were
  * detected on the page.
  */
 function addUrlBarIcons()
 {
-   var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
+   //var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
    var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
    var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
    var fuzzbotFoafPersonIcon = 
@@ -95,6 +113,10 @@ function addUrlBarIcons()
    {
        fuzzbotAudioIcon.setAttribute("objectsDetected", "true");
    }
+   else
+   {
+       fuzzbotAudioIcon.removeAttribute("objectsDetected");
+   }
 
    /* Display video icon */
    if(gTripleRdfTypes["http://purl.org/media/video#Recording"] ||
@@ -104,18 +126,26 @@ function addUrlBarIcons()
    {
        fuzzbotVideoIcon.setAttribute("objectsDetected", "true");
    }
+   else
+   {
+       fuzzbotVideoIcon.removeAttribute("objectsDetected");
+   }
 
    /* Display FOAF Person icon */
    if(gTripleRdfTypes["http://xmlns.com/foaf/0.1/Person"])
    {
        fuzzbotFoafPersonIcon.setAttribute("objectsDetected", "true");
    }
+   else
+   {
+       fuzzbotFoafPersonIcon.removeAttribute("objectsDetected");
+   }
 
    /* Display general Fuzzbot UI */
-   if(gNumTriples > 2)
-   {
-       fuzzbotIcon.setAttribute("objectsDetected", "true");
-   }
+   //if(gNumTriples > 2)
+   //{
+   //    fuzzbotIcon.setAttribute("objectsDetected", "true");
+   //}
 }
 
 /**
@@ -123,13 +153,13 @@ function addUrlBarIcons()
  */
 function removeUrlBarIcons()
 {
-   var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
+   //var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
    var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
    var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
    var fuzzbotFoafPersonIcon = 
       document.getElementById("fuzzbot-urlbar-foaf-person-icon");
 
-   fuzzbotIcon.removeAttribute("objectsDetected");
+   //fuzzbotIcon.removeAttribute("objectsDetected");
    fuzzbotAudioIcon.removeAttribute("objectsDetected");
    fuzzbotVideoIcon.removeAttribute("objectsDetected");
    fuzzbotFoafPersonIcon.removeAttribute("objectsDetected");

@@ -12,7 +12,7 @@ var gFuzzbotButtonWidth = 12;
  */
 function getElementPosition(element)
 {
-	var curleft = 0;
+   var curleft = 0;
    var curtop = 0;
 
    if(element.offsetParent)
