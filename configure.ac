@@ -3,7 +3,7 @@
 # 
 # Author: Manu Sporny
 
-AC_INIT(fuzzbot, 0.8.1, support@digitalbazaar.com)
+AC_INIT(fuzzbot, 0.8.3, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables

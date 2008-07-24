@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" onload="initDialog();">
+
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/displays/audio.js"/>
+
+  <groupbox>
+    <caption label="Audio Details"/>
+    <grid>
+      <columns>
+        <column flex="1"/>
+        <column flex="2"/>
+        <column flex="1"/>
+      </columns>
+      <rows>
+        <row>
+          <hbox>
+            <image id="fuzzbot-audio-details-image" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png"/>
+          </hbox>
+        </row>
+        <row id="fuzzbot-audio-details-row-title">
+          <label value="Title"/>
+          <label id="fuzzbot-audio-details-title" value="TITLE_VALUE"/>
+          <button type="menu" label="Use Title to...">
+            <menupopup id="fuzzbot-audio-details-title-menupopup">
+            </menupopup>
+          </button>
+        </row>
+        <row id="fuzzbot-audio-details-row-creator">
+          <label value="Creator"/>
+          <label id="fuzzbot-audio-details-creator" value="CREATOR_VALUE"/>
+          <button type="menu" label="Use Creator to...">
+            <menupopup id="fuzzbot-audio-details-creator-menupopup">
+            </menupopup>
+          </button>
+        </row>
+       </rows>
+    </grid>
+  </groupbox>
+  <spacer flex="1"/>
+</dialog>
