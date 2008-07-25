@@ -5,6 +5,94 @@
  */
 
 /**
+ * The processing data used for the audio details panel.
+ */
+gFuzzbotAudioProcessingData = {
+   title : 
+   { 
+      properties : ["http://purl.org/dc/terms/title",
+                    "http://purl.org/dc/elements/1.1/title"],
+      value : null
+   },
+   creator :
+   {
+      properties : ["http://purl.org/dc/terms/creator",
+                    "http://purl.org/dc/elements/1.1/creator"],
+      value : null
+   },
+   contributor :
+   {
+      properties : ["http://purl.org/dc/terms/contributor",
+                    "http://purl.org/dc/elements/1.1/contributor"],
+      value : null
+   },
+   published :
+   {
+      properties : ["http://purl.org/dc/terms/published",
+                    "http://purl.org/dc/elements/1.1/published"],
+      value : null
+   },
+   description :
+   {
+      properties : ["http://purl.org/dc/terms/description",
+                    "http://purl.org/dc/elements/1.1/description"],
+      value : null
+   },
+   position :
+   {
+      properties : ["http://purl.org/media#position",],
+      value : null
+   },
+   duration :
+   {
+      properties : ["http://purl.org/dc/terms/duration",
+                    "http://purl.org/dc/elements/1.1/duration"],
+      value : null
+   },
+   sample :
+   {
+      properties : ["http://purl.org/media#sample",],
+      value : null
+   },
+   download :
+   {
+      properties : ["http://purl.org/media#download",],
+      value : null
+   },
+   depiction :
+   {
+      properties : ["http://purl.org/media#depiction",],
+      value : null
+   },
+   type :
+   {
+      properties : ["http://purl.org/dc/terms/type",
+                    "http://purl.org/dc/elements/1.1/type"],
+      value : null
+   },
+   license :
+   {
+      properties : ["http://www.w3.org/1999/xhtml/vocab#license",],
+      value : null
+   },
+   costs :
+   {
+      properties : ["http://purl.org/commerce#costs",],
+      value : null
+   },
+   payment :
+   {
+      properties : ["http://purl.org/commerce#payment",],
+      value : null
+   },
+   contains :
+   {
+      properties : ["http://purl.org/media#contains",],
+      value : null
+   },
+};
+
+/**
  * Creates all of the menu items for the Audio AwesomeBar icon menu.
  */
 function buildAudioMenuPopup()
@@ -51,6 +139,7 @@ function buildAudioMenuPopup()
       for(var i in gTripleStore[subject])
       {
          var triple = gTripleStore[subject][i];
+
 	 if(triple.predicate == "http://purl.org/dc/terms/title" ||
             triple.predicate == "http://purl.org/dc/elements/1.1/title")
 	 {
@@ -69,10 +158,10 @@ function buildAudioMenuPopup()
  */
 function audioSelected(event)
 {
-   var subject = event.currentTarget.getAttribute("subject");
+   var subj = event.currentTarget.getAttribute("subject");
    //alert("Display UI for Audio Subject\n: " + subject);
 
-   var params = {inn:{triples:gTripleStore[subject]}, out:null};
+   var params = {inn:{subject:subj, triples:gTripleStore}, out:null};
 
    window.openDialog("chrome://fuzzbot/content/displays/audio.xul", "",
     "chrome, dialog, modal, resizable=yes", params).focus();
@@ -85,33 +174,70 @@ function audioSelected(event)
  */
 function initDialog()
 {
-   var triples = window.arguments[0].inn.triples;
+   var args = window.arguments[0].inn;
+   var triples = args.triples;
+   var subjectTriples = triples[args.subject];
 
-   for(i in triples)
+   // process all of the triples for the given subject and set the appropriate
+   // data items in the audio processing model
+   for(i in subjectTriples)
    {
-      var triple = triples[i];
+      var triple = subjectTriples[i];
 
-      // update the UI based on the title of the audio recording.
-      if(triple.predicate == "http://purl.org/dc/elements/1.1/title" ||
-         triple.predicate == "http://purl.org/dc/terms/title")
+      // process every term in the processing model
+      for(var term in gFuzzbotAudioProcessingData)
       {
-	 var title = document.getElementById("fuzzbot-audio-details-title");
-         title.value = triple.object;
-
-         buildActionMenu("fuzzbot-audio-details-title-menupopup",
-            "musicbrainz", "track", triple.object);
-      }
-      // update the UI based on the creator of the audio recording.
-      else if(triple.predicate == "http://purl.org/dc/elements/1.1/creator" ||
-	      triple.predicate == "http://purl.org/dc/terms/creator")
-      {
-         var creator = document.getElementById("fuzzbot-audio-details-creator");
-         creator.value = triple.object;
-
-         buildActionMenu("fuzzbot-audio-details-creator-menupopup",
-            "musicbrainz", "artist", triple.object);
+	  _fuzzbotLog("Processing term: " + term);
+	 // process every property for every term in the processing model
+         for(var p in gFuzzbotAudioProcessingData[term]["properties"])
+	 {
+	    var property = gFuzzbotAudioProcessingData[term]["properties"][p];
+            _fuzzbotLog("Processing property: " + property);
+	    if(triple.predicate == property)
+	    {
+		_fuzzbotLog("SET VALUE: " + triple.object);
+   	       gFuzzbotAudioProcessingData[term]["value"] = triple.object;
+	    }
+	 }
       }
    }
+
+   // set all of the UI elements given the processing model
+   for(var term in gFuzzbotAudioProcessingData)
+   {
+       _fuzzbotLog("Searching for " + term);
+      var widget = document.getElementById("fuzzbot-audio-details-" + term);
+
+      if(gFuzzbotAudioProcessingData[term]["value"] != null)
+      {
+         _fuzzbotLog("widget " + widget + " value " + gFuzzbotAudioProcessingData[term]["value"]);
+         if(term != "depiction")
+	 {
+	    widget.value = gFuzzbotAudioProcessingData[term]["value"];
+	 }
+	 else
+	 {
+	    widget.src = gFuzzbotAudioProcessingData[term]["value"];
+	 }
+      }
+      else
+      {
+          var row = 
+             document.getElementById("fuzzbot-audio-details-row-" + term);
+	  row.hidden = true;
+      }
+   }
+
+   // build the action menus
+   buildActionMenu("fuzzbot-audio-details-title-menupopup",
+      "musicbrainz", "track", 
+      gFuzzbotAudioProcessingData["title"]["value"]);
+   buildActionMenu("fuzzbot-audio-details-creator-menupopup",
+      "musicbrainz", "artist", 
+      gFuzzbotAudioProcessingData["creator"]["value"]);
+   buildActionMenu("fuzzbot-audio-details-contributor-menupopup",
+      "musicbrainz", "label", 
+      gFuzzbotAudioProcessingData["contributor"]["value"]);
 }
 
 /**

@@ -197,7 +197,6 @@ function updateFuzzbotStatusDisplay()
 // generated via the C++ XPCOM librdfa parser.
 function tripleHandler(subject, predicate, object)
 {
-   _fuzzbotLog("Fuzzbot: " + subject + " " + predicate + " " + object + " .");
    if(subject != "@prefix")
    {
       gNumTriples += 1;
@@ -284,8 +283,6 @@ function addTripleToUi(triple)
 {
    var lchildren = document.getElementById("fuzzbot-triples-listbox");
 
-   _fuzzbotLog("L1");
-   
    // create Treerow with id (rowid is a global variable so that
    // we do not use the same id twice)
    var url = gBrowser.contentDocument.URL;
@@ -296,8 +293,6 @@ function addTripleToUi(triple)
    var lp = document.createElement("label");
    var lho = document.createElement("hbox");
    var lo = document.createElement("label");
-
-   _fuzzbotLog("L2");
 
    // setup the hbox dimensions
    lhs.setAttribute("minwidth", "200");
@@ -330,8 +325,6 @@ function addTripleToUi(triple)
    }
    ls.setAttribute("value", relativeSubject);
    
-   _fuzzbotLog("L3");
-
    // correct the predicate for display
    var predicateCurie = triple.predicate;
    for(var i in gTripleStore["@prefix"])
@@ -345,8 +338,6 @@ function addTripleToUi(triple)
    }
    lp.setAttribute("value", predicateCurie);
    
-   _fuzzbotLog("L4");
-   
    lo.setAttribute("value", triple.object);
    
    lhs.appendChild(ls);
@@ -357,8 +348,6 @@ function addTripleToUi(triple)
    rli.appendChild(lhp);
    rli.appendChild(lho);
 
-   _fuzzbotLog("L5");
-   
    lchildren.appendChild(rli);   
 }
 
@@ -382,8 +371,6 @@ function clearTriples()
  */
 function clearUiTriples()
 {
-   _fuzzbotLog("clearUiTriples()");
-   
    // clear the current list of children
    var lb = document.getElementById("fuzzbot-triples-listbox");
    while(lb.firstChild)
