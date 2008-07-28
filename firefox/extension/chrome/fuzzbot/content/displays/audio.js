@@ -177,6 +177,10 @@ function initDialog()
    var args = window.arguments[0].inn;
    var triples = args.triples;
    var subjectTriples = triples[args.subject];
+   var images = ["depiction",];
+   var labels = ["title", "creator", "contributor", "published",
+      "description", "position", "duration", "type"];
+   var buttons = ["sample", "download", "license", "payment"];
 
    // process all of the triples for the given subject and set the appropriate
    // data items in the audio processing model
@@ -206,19 +210,31 @@ function initDialog()
    for(var term in gFuzzbotAudioProcessingData)
    {
        _fuzzbotLog("Searching for " + term);
+      var tval = gFuzzbotAudioProcessingData[term]["value"];
       var widget = document.getElementById("fuzzbot-audio-details-" + term);
 
-      if(gFuzzbotAudioProcessingData[term]["value"] != null)
+      // select which UI elements to modify based on the name of the attribute
+      if(tval != null)
       {
-         _fuzzbotLog("widget " + widget + " value " + gFuzzbotAudioProcessingData[term]["value"]);
-         if(term != "depiction")
-	 {
-	    widget.value = gFuzzbotAudioProcessingData[term]["value"];
-	 }
-	 else
-	 {
-	    widget.src = gFuzzbotAudioProcessingData[term]["value"];
-	 }
+	  if(labels.indexOf(term) >= 0)
+	  {
+	     _fuzzbotLog("widget " + widget + " value " + 
+	        gFuzzbotAudioProcessingData[term]["value"]);
+	     widget.value = tval;
+	  }
+	  else if(buttons.indexOf(term) >= 0)
+	  {
+	     var button = 
+		 document.getElementById("fuzzbot-audio-details-" + term + 
+		    "-button");
+             button.setAttribute("href", tval);
+	     button.addEventListener("click", openUrlInNewTab, false);
+	     widget.value = tval;
+	  }
+	  else if(images.indexOf(term) >= 0)
+	  {
+	     widget.src = tval;
+	  }
       }
       else
       {
@@ -285,6 +301,22 @@ function performSearch(event)
       url = "http://musicbrainz.org/search/textsearch.html?query=" + 
          query  + "&type=" + serviceType;
    }
+
+   // create a new tab for the search
+   newTab = window.opener.getBrowser().addTab(url);
+   windows.opener.getBrowser().selectedTab = newTab;
+
+   event.stopPropagation();
+}
+
+/**
+ * Callback to open a URL in a tab.
+ *
+ * @param event the event object to process.
+ */
+function openUrlInNewTab(event)
+{
+   var url = event.currentTarget.getAttribute("href");
 
    // create a new tab for the search
    newTab = window.opener.getBrowser().addTab(url);

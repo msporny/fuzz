@@ -71,11 +71,15 @@
         <row id="fuzzbot-audio-details-row-sample">
           <label value="Sample"/>
           <label id="fuzzbot-audio-details-sample" value="SAMPLE_VALUE"/>
+          <button id="fuzzbot-audio-details-sample-button" 
+                  label="Get Sample"/>
         </row>
 
         <row id="fuzzbot-audio-details-row-download">
           <label value="Download"/>
           <label id="fuzzbot-audio-details-download" value="DOWNLOAD_VALUE"/>
+          <button id="fuzzbot-audio-details-download-button" 
+                  label="Download"/>
         </row>
 
         <row id="fuzzbot-audio-details-row-type">
@@ -109,6 +113,8 @@
         <row id="fuzzbot-audio-details-row-payment">
           <label value="Payment"/>
           <label id="fuzzbot-audio-details-payment" value="PAYMENT_VALUE"/>
+          <button id="fuzzbot-audio-details-payment-button" 
+                  label="Purchase"/>
         </row>
 
         <row id="fuzzbot-audio-details-row-contains">
