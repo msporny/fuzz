@@ -101,6 +101,7 @@ function buildAudioMenuPopup()
    var audioSubjects = [];
 
    // Clear the current contents of the audio menu popup
+   fuzzbotAudioMenu.hidden = true;
    while(fuzzbotAudioMenu.firstChild) 
    {
        fuzzbotAudioMenu.removeChild(fuzzbotAudioMenu.firstChild);
@@ -136,6 +137,10 @@ function buildAudioMenuPopup()
    for(var index in audioSubjects)
    {
       var subject = audioSubjects[index];
+      var menuItem = createMenuItem("Unknown", audioSelected);
+      menuItem.setAttribute("subject", subject);
+
+      // Set certain menu attributes based on the triple information.
       for(var i in gTripleStore[subject])
       {
          var triple = gTripleStore[subject][i];
@@ -143,12 +148,30 @@ function buildAudioMenuPopup()
 	 if(triple.predicate == "http://purl.org/dc/terms/title" ||
             triple.predicate == "http://purl.org/dc/elements/1.1/title")
 	 {
-	     var menuItem = createMenuItem(triple.object, audioSelected);
-             menuItem.setAttribute("subject", subject);
-             fuzzbotAudioMenu.appendChild(menuItem);
-         }
+	    // Set the name of the menu based on the title information.
+	    menuItem.setAttribute("label", triple.object);
+	 }
+	 else if(triple.predicate == 
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+	 {
+	     // Set the menu image based on the RDF type information.
+	    if(triple.object == "http://purl.org/media/audio#Recording")
+	    {
+		menuItem.setAttribute("image", 
+		   "chrome://fuzzbot/content/rdfTypeAudioRecording.png");
+	    }
+	    else if(triple.object == "http://purl.org/media/audio#Album")
+	    {
+		menuItem.setAttribute("image", 
+		   "chrome://fuzzbot/content/rdfTypeAudioCollection.png");
+            }
+	 }
       }
+      
+      fuzzbotAudioMenu.appendChild(menuItem);
    }
+
+   fuzzbotAudioMenu.hidden = false;
 }
 
 /**
@@ -160,11 +183,27 @@ function audioSelected(event)
 {
    var subj = event.currentTarget.getAttribute("subject");
    //alert("Display UI for Audio Subject\n: " + subject);
-
+   var title = "Audio Information";
    var params = {inn:{subject:subj, triples:gTripleStore}, out:null};
 
-   window.openDialog("chrome://fuzzbot/content/displays/audio.xul", "",
-    "chrome, dialog, modal, resizable=yes", params).focus();
+   // Set certain menu attributes based on the triple information.
+   for(var i in gTripleStore[subj])
+   {
+      var triple = gTripleStore[subj][i];
+
+      if(triple.predicate == "http://purl.org/dc/terms/title" ||
+         triple.predicate == "http://purl.org/dc/elements/1.1/title")
+      {
+	  // Set the name of the menu based on the title information.
+	  title = triple.object;
+      }
+   }
+
+   // create and display the new window.
+   var newWindow = 
+      window.openDialog("chrome://fuzzbot/content/displays/audio.xul", "",
+         "chrome, dialog, resizable=yes", params).focus();
+   newWindow.title = title;
 
    event.stopPropagation();
 }
@@ -179,8 +218,9 @@ function initDialog()
    var subjectTriples = triples[args.subject];
    var images = ["depiction",];
    var labels = ["title", "creator", "contributor", "published",
-      "description", "position", "duration", "type"];
+      "description", "position", "type"];
    var buttons = ["sample", "download", "license", "payment"];
+   var conversions = ["costs", "duration"];
 
    // process all of the triples for the given subject and set the appropriate
    // data items in the audio processing model
@@ -191,15 +231,12 @@ function initDialog()
       // process every term in the processing model
       for(var term in gFuzzbotAudioProcessingData)
       {
-	  _fuzzbotLog("Processing term: " + term);
 	 // process every property for every term in the processing model
          for(var p in gFuzzbotAudioProcessingData[term]["properties"])
 	 {
 	    var property = gFuzzbotAudioProcessingData[term]["properties"][p];
-            _fuzzbotLog("Processing property: " + property);
 	    if(triple.predicate == property)
 	    {
-		_fuzzbotLog("SET VALUE: " + triple.object);
    	       gFuzzbotAudioProcessingData[term]["value"] = triple.object;
 	    }
 	 }
@@ -218,22 +255,37 @@ function initDialog()
       {
 	  if(labels.indexOf(term) >= 0)
 	  {
-	     _fuzzbotLog("widget " + widget + " value " + 
-	        gFuzzbotAudioProcessingData[term]["value"]);
+	     // Set the label values
 	     widget.value = tval;
 	  }
 	  else if(buttons.indexOf(term) >= 0)
 	  {
+	      // Set the button/label actions for URL data
 	     var button = 
 		 document.getElementById("fuzzbot-audio-details-" + term + 
 		    "-button");
+             widget.setAttribute("href", tval);
              button.setAttribute("href", tval);
 	     button.addEventListener("click", openUrlInNewTab, false);
 	     widget.value = tval;
 	  }
 	  else if(images.indexOf(term) >= 0)
 	  {
+	     // Set the image data
 	     widget.src = tval;
+	  }
+	  else if(conversions.indexOf(term) >= 0)
+	  {
+	     // For all data that needs to be converted, convert to a 
+	     // displayable string value
+	     if(term == "costs")
+	     {
+		widget.value = convertPriceToString(triples[tval]);
+	     }
+	     else if(term == "duration")
+	     {
+		widget.value = convertIso8601DurationToString(tval);
+	     }
 	  }
       }
       else
@@ -254,6 +306,8 @@ function initDialog()
    buildActionMenu("fuzzbot-audio-details-contributor-menupopup",
       "musicbrainz", "label", 
       gFuzzbotAudioProcessingData["contributor"]["value"]);
+
+   window.sizeToContent();
 }
 
 /**
@@ -281,46 +335,4 @@ function buildActionMenu(id, service, serviceType, query)
    menuItem.setAttribute("serviceType", serviceType);
    menuItem.setAttribute("query", query);
    actionMenu.appendChild(menuItem);
-}
-
-/**
- * Callback to perform a search action, called by the audio details dialog.
- *
- * @param event the event object to process.
- */
-function performSearch(event)
-{
-   var service = event.currentTarget.getAttribute("service");
-   var serviceType = event.currentTarget.getAttribute("serviceType");
-   var query = event.currentTarget.getAttribute("query");
-   var url = "about:";
-
-   // construct the URL for MusicBrainz if that is the destined service
-   if(service == "musicbrainz")
-   {
-      url = "http://musicbrainz.org/search/textsearch.html?query=" + 
-         query  + "&type=" + serviceType;
-   }
-
-   // create a new tab for the search
-   newTab = window.opener.getBrowser().addTab(url);
-   windows.opener.getBrowser().selectedTab = newTab;
-
-   event.stopPropagation();
-}
-
-/**
- * Callback to open a URL in a tab.
- *
- * @param event the event object to process.
- */
-function openUrlInNewTab(event)
-{
-   var url = event.currentTarget.getAttribute("href");
-
-   // create a new tab for the search
-   newTab = window.opener.getBrowser().addTab(url);
-   windows.opener.getBrowser().selectedTab = newTab;
-
-   event.stopPropagation();
 }

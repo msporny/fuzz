@@ -24,38 +24,6 @@ var RDFA_PARSE_UNKNOWN = 0;
 var RDFA_PARSE_SUCCESS = 1;
 
 /**
- * Logs a message to the console.
- *
- * @param msg the message to log to the console.
- */
-function _fuzzbotLog(msg)
-{
-   debug_flag = true;
-
-   // If debug mode is active, log the message to the console
-   if(debug_flag)
-   {
-      Components
-         .classes["@mozilla.org/consoleservice;1"]
-         .getService(Components.interfaces["nsIConsoleService"])
-         .logStringMessage(msg);
-  }
-}
-
-/**
- * Gets the currently active window.
- */
-function getCurrentWindow()
-{
-   return window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-             .getInterface(Components.interfaces.nsIWebNavigation)
-             .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
-             .rootTreeItem
-             .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-             .getInterface(Components.interfaces.nsIDOMWindow);
-}
-
-/**
  * Open a new tab showing the status of the Fuzzbot software.
  */
 function showStatus()
@@ -75,24 +43,6 @@ function updateFuzzbotStatus()
    //mainWindow = getCurrentWindow();
 
    window.setTimeout(updateFuzzbotStatus, 1000);
-}
-
-/**
- * Create a menu item given a label and an action to execute when the menu
- * item is selected.
- *
- * @param label the label to use to identify the menu item.
- * @param action the Javascript action to execute when the menu item is clicked.
- */
-function createMenuItem(label, action) 
-{
-   const XUL_NS = 
-      "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
-   var menuitem = document.createElementNS(XUL_NS, "menuitem");
-   menuitem.setAttribute("label", label);
-   menuitem.addEventListener("click", action, false);
-
-   return menuitem;
 }
 
 /**

@@ -17,6 +17,9 @@
           src="chrome://fuzzbot/content/fuzzbot.js"/>
 
   <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/fuzzbot_ui_helper.js"/>
+
+  <script type="application/x-javascript"
           src="chrome://fuzzbot/content/displays/audio.js"/>
 
   <!-- Fuzzbot URLbar Icons -->

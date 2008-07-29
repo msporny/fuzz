@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
-<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" onload="initDialog();">
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" title="Audio Information" onload="initDialog();" style="overflow: auto;" >
 
-  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_ui_helper.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_conversion.js"/>
   <script type="application/x-javascript" src="chrome://fuzzbot/content/displays/audio.js"/>
 
   <groupbox>
@@ -19,7 +20,7 @@
         <row id="fuzzbot-audio-details-row-depiction">
           <spacer flex="1"/>
           <hbox>
-            <image id="fuzzbot-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png"/>
+            <image id="fuzzbot-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png" onload="window.sizeToContent();"/>
           </hbox>
           <spacer flex="1"/>
         </row>
@@ -70,14 +71,16 @@
 
         <row id="fuzzbot-audio-details-row-sample">
           <label value="Sample"/>
-          <label id="fuzzbot-audio-details-sample" value="SAMPLE_VALUE"/>
+          <label id="fuzzbot-audio-details-sample" style="text-link;" 
+                 value="SAMPLE_VALUE"/>
           <button id="fuzzbot-audio-details-sample-button" 
                   label="Get Sample"/>
         </row>
 
         <row id="fuzzbot-audio-details-row-download">
           <label value="Download"/>
-          <label id="fuzzbot-audio-details-download" value="DOWNLOAD_VALUE"/>
+          <label id="fuzzbot-audio-details-download" style="text-link;"
+                 value="DOWNLOAD_VALUE"/>
           <button id="fuzzbot-audio-details-download-button" 
                   label="Download"/>
         </row>
@@ -112,7 +115,8 @@
 
         <row id="fuzzbot-audio-details-row-payment">
           <label value="Payment"/>
-          <label id="fuzzbot-audio-details-payment" value="PAYMENT_VALUE"/>
+          <label id="fuzzbot-audio-details-payment" style="text-link;"
+                 value="PAYMENT_VALUE"/>
           <button id="fuzzbot-audio-details-payment-button" 
                   label="Purchase"/>
         </row>
