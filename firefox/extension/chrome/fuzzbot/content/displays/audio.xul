@@ -88,10 +88,10 @@
         <row id="fuzzbot-audio-details-row-type">
           <label value="Genre"/>
           <label id="fuzzbot-audio-details-type" value="TYPE_VALUE"/>
-          <button type="menu" label="Use Genre to...">
+          <!--button type="menu" label="Use Genre to...">
             <menupopup id="fuzzbot-audio-details-type-menupopup">
             </menupopup>
-          </button>
+          </button -->
         </row>
 
         <row id="fuzzbot-audio-details-row-license">
@@ -121,7 +121,7 @@
                   label="Purchase"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-contains">
+        <row hidden="true" id="fuzzbot-audio-details-row-contains">
           <label value="Contains"/>
           <label id="fuzzbot-audio-details-contains" value="CONTAINS_VALUE"/>
         </row>
