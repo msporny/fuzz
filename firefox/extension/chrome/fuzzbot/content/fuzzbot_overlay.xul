@@ -22,6 +22,9 @@
   <script type="application/x-javascript"
           src="chrome://fuzzbot/content/displays/audio.js"/>
 
+  <script type="application/x-javascript"
+          src="chrome://fuzzbot/content/displays/video.js"/>
+
   <!-- Fuzzbot URLbar Icons -->
   <hbox id="urlbar-icons">
     <button insertbefore="feed-button" 
@@ -40,7 +43,9 @@
      style="-moz-user-focus: none" class="plain"
      id="fuzzbot-urlbar-video-icon" 
      tooltiptext="Click to see Video info..."
-     onclick="toggleFuzzbotTripleUi();">
+     onclick="buildVideoMenuPopup();">
+       <menupopup id="fuzzbot-video-menu-popup">
+       </menupopup>
     </button>
     <button insertbefore="feed-button"  type="menu"
      style="-moz-user-focus: none" class="plain"

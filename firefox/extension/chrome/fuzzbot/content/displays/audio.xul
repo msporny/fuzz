@@ -3,6 +3,7 @@
 
 <dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" title="Audio Information" onload="initDialog();" style="overflow: auto;" >
 
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/json2.js"/>
   <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_ui_helper.js"/>
   <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_conversion.js"/>
   <script type="application/x-javascript" src="chrome://fuzzbot/content/displays/audio.js"/>
@@ -20,7 +21,7 @@
         <row id="fuzzbot-audio-details-row-depiction">
           <spacer flex="1"/>
           <hbox>
-            <image id="fuzzbot-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png" onload="window.sizeToContent();"/>
+            <image id="fuzzbot-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png" onclick="window.sizeToContent();"/>
           </hbox>
           <spacer flex="1"/>
         </row>
@@ -43,7 +44,7 @@
           </button>
         </row>
 
-        <row id="fuzzbot-audio-details-row-contributor">
+        <!-- row id="fuzzbot-audio-details-row-contributor">
           <label value="Contributor"/>
           <label id="fuzzbot-audio-details-contributor" 
                  value="CONTRIBUTOR_VALUE"/>
@@ -51,7 +52,7 @@
             <menupopup id="fuzzbot-audio-details-contributor-menupopup">
             </menupopup>
           </button>
-        </row>
+        </row -->
 
         <row id="fuzzbot-audio-details-row-published">
           <label value="Published"/>
@@ -71,7 +72,7 @@
 
         <row id="fuzzbot-audio-details-row-sample">
           <label value="Sample"/>
-          <label id="fuzzbot-audio-details-sample" style="text-link;" 
+          <label id="fuzzbot-audio-details-sample" style="text-link: true" 
                  value="SAMPLE_VALUE"/>
           <button id="fuzzbot-audio-details-sample-button" 
                   label="Get Sample"/>
@@ -79,7 +80,7 @@
 
         <row id="fuzzbot-audio-details-row-download">
           <label value="Download"/>
-          <label id="fuzzbot-audio-details-download" style="text-link;"
+          <label id="fuzzbot-audio-details-download" style="text-link: true"
                  value="DOWNLOAD_VALUE"/>
           <button id="fuzzbot-audio-details-download-button" 
                   label="Download"/>
@@ -115,7 +116,7 @@
 
         <row id="fuzzbot-audio-details-row-payment">
           <label value="Payment"/>
-          <label id="fuzzbot-audio-details-payment" style="text-link;"
+          <label id="fuzzbot-audio-details-payment" style="text-link: true"
                  value="PAYMENT_VALUE"/>
           <button id="fuzzbot-audio-details-payment-button" 
                   label="Purchase"/>

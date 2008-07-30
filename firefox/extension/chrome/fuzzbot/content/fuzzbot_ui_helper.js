@@ -76,15 +76,40 @@ function createMenuItem(label, action)
 function performSearch(event)
 {
    var service = event.currentTarget.getAttribute("service");
-   var serviceType = event.currentTarget.getAttribute("serviceType");
+   var serviceArgumentsJSON = 
+      event.currentTarget.getAttribute("serviceArguments");
+   var serviceArguments = JSON.parse(serviceArgumentsJSON);
    var query = event.currentTarget.getAttribute("query");
    var url = "about:";
 
    // construct the URL for MusicBrainz if that is the destined service
    if(service == "musicbrainz")
    {
-      url = "http://musicbrainz.org/search/textsearch.html?query=" + 
-         query  + "&type=" + serviceType;
+      url = "http://musicbrainz.org/search/textsearch.html?query=" + query;
+   }
+   else if(service == "imdb")
+   {
+      url = "http://www.imdb.com/find?q=" + query;
+   }
+   else if(service == "fandango")
+   {
+      url = "http://www.fandango.com/GlobalSearch.aspx?q=" + query;
+   }
+   else if(service == "wikipedia")
+   {
+      url = "http://en.wikipedia.org/wiki/Special:Search?search=" + query;
+   }
+   else if(service == "rotten-tomatoes")
+   {
+      url = "http://www.rottentomatoes.com/search/full_search.php?search=" + 
+         query;
+   }
+
+   // Add the service arguments to the end of the URL
+   for(arg in serviceArguments)
+   {
+      var val = serviceArguments[arg];
+      url = url + "&" + arg + "=" + val;
    }
 
    // create a new tab for the search
@@ -108,4 +133,43 @@ function openUrlInNewTab(event)
    windows.opener.getBrowser().selectedTab = newTab;
 
    event.stopPropagation();
+}
+
+/**
+ * Builds an action menu given the input text for the action and the ID
+ * of the menupopup.
+ *
+ * @param id The ID for the menupopup.
+ * @param label the label of the menu item.
+ * @param service the service to query.
+ * @param serviceArguments The arguments to pass to the service.
+ * @param query the query to use when checking the service.
+ */
+function buildActionMenu(id, label, service, serviceArguments, query)
+{
+   var actionMenu = document.getElementById(id);
+   var serviceArgumentsJSON = JSON.stringify(serviceArguments);
+
+   // Create the search menuitem
+   var menuItem = createMenuItem(label, performSearch);
+   menuItem.setAttribute("service", service);
+   menuItem.setAttribute("serviceArguments", serviceArgumentsJSON);
+   menuItem.setAttribute("query", query);
+   actionMenu.appendChild(menuItem);
+}
+
+/**
+ * Clears the contents of an action menu given the id for the menu.
+ *
+ * @param id The ID for the menupopup.
+ */
+function clearActionMenu(id)
+{
+   var actionMenu = document.getElementById(id);
+
+   // Clear the current contents of the action menu
+   while(actionMenu.firstChild)
+   {
+      actionMenu.removeChild(actionMenu.firstChild);
+   }   
 }

@@ -43,15 +43,15 @@
 }
 
 #fuzzbot-urlbar-foaf-person-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/rdfTypeFoafPerson.png");
+  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeFoafPerson.png");
 }
 
 #fuzzbot-urlbar-audio-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/rdfTypeAudio.png");
+  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeAudio.png");
 }
 
 #fuzzbot-urlbar-video-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/rdfTypeVideo.png");
+  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeVideo.png");
 }
 
 #fuzzbot-status-image {

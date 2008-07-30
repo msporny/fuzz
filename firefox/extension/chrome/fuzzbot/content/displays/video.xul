@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" title="Video Information" onload="initDialog();" style="overflow: auto;" >
+
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/json2.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_ui_helper.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_conversion.js"/>
+  <script type="application/x-javascript" src="chrome://fuzzbot/content/displays/video.js"/>
+
+  <groupbox>
+    <caption label="Video Details"/>
+    <grid>
+      <columns>
+        <column flex="1"/>
+        <column flex="2"/>
+        <column flex="1"/>
+      </columns>
+      <rows>
+
+        <row id="fuzzbot-video-details-row-depiction">
+          <spacer flex="1"/>
+          <hbox>
+            <image id="fuzzbot-video-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png" onclick="window.sizeToContent();"/>
+          </hbox>
+          <spacer flex="1"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-title">
+          <label value="Title"/>
+          <label id="fuzzbot-video-details-title" value="TITLE_VALUE"/>
+          <button type="menu" label="Use Title to...">
+            <menupopup id="fuzzbot-video-details-title-menupopup">
+            </menupopup>
+          </button>
+        </row>
+
+        <row id="fuzzbot-video-details-row-creator">
+          <label value="Creator"/>
+          <label id="fuzzbot-video-details-creator" value="CREATOR_VALUE"/>
+          <button type="menu" label="Use Creator to...">
+            <menupopup id="fuzzbot-video-details-creator-menupopup">
+            </menupopup>
+          </button>
+        </row>
+
+        <row id="fuzzbot-video-details-row-contributor">
+          <label value="Contributor"/>
+          <label id="fuzzbot-video-details-contributor" 
+                 value="CONTRIBUTOR_VALUE"/>
+          <button type="menu" label="Use Contributor to...">
+            <menupopup id="fuzzbot-video-details-contributor-menupopup">
+            </menupopup>
+          </button>
+        </row>
+
+        <row id="fuzzbot-video-details-row-published">
+          <label value="Published"/>
+          <label id="fuzzbot-video-details-published" value="PUBLISHED_VALUE"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-description">
+          <label value="Description"/>
+          <description id="fuzzbot-video-details-description" 
+                       value="DESCRIPTION_VALUE"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-position">
+          <label value="Position"/>
+          <label id="fuzzbot-video-details-position" value="POSITION_VALUE"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-sample">
+          <label value="Sample"/>
+          <label id="fuzzbot-video-details-sample" style="text-link" 
+                 value="SAMPLE_VALUE"/>
+          <button id="fuzzbot-video-details-sample-button" 
+                  label="Get Sample"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-download">
+          <label value="Download"/>
+          <label id="fuzzbot-video-details-download" style="text-link"
+                 value="DOWNLOAD_VALUE"/>
+          <button id="fuzzbot-video-details-download-button" 
+                  label="Download"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-type">
+          <label value="Genre"/>
+          <label id="fuzzbot-video-details-type" value="TYPE_VALUE"/>
+          <!--button type="menu" label="Use Genre to...">
+            <menupopup id="fuzzbot-video-details-type-menupopup">
+            </menupopup>
+          </button -->
+        </row>
+
+        <row id="fuzzbot-video-details-row-rating">
+          <label value="Rating"/>
+          <label id="fuzzbot-video-details-rating" value="RATING_VALUE"/>
+          <!--button type="menu" label="Use Rating to...">
+            <menupopup id="fuzzbot-video-details-rating-menupopup">
+            </menupopup>
+          </button -->
+        </row>
+
+        <row id="fuzzbot-video-details-row-license">
+          <label value="License"/>
+          <label id="fuzzbot-video-details-license" value="LICENSE_VALUE"/>
+          <button type="menu" label="Use License to...">
+            <menupopup id="fuzzbot-video-details-license-menupopup">
+            </menupopup>
+          </button>
+        </row>
+
+        <row id="fuzzbot-video-details-row-duration">
+          <label value="Duration"/>
+          <label id="fuzzbot-video-details-duration" value="DURATION_VALUE"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-costs">
+          <label value="Price"/>
+          <label id="fuzzbot-video-details-costs" value="COSTS_VALUE"/>
+        </row>
+
+        <row id="fuzzbot-video-details-row-payment">
+          <label value="Payment"/>
+          <label id="fuzzbot-video-details-payment" style="text-link"
+                 value="PAYMENT_VALUE"/>
+          <button id="fuzzbot-video-details-payment-button" 
+                  label="Purchase"/>
+        </row>
+
+        <row hidden="true" id="fuzzbot-video-details-row-contains">
+          <label value="Contains"/>
+          <label id="fuzzbot-video-details-contains" value="CONTAINS_VALUE"/>
+        </row>
+
+       </rows>
+    </grid>
+  </groupbox>
+  <spacer flex="1"/>
+</dialog>

@@ -4,19 +4,6 @@
  * @author Manu Sporny
  */
 
-/* Global variables that track the state of this plugin */
-var gFuzzbotVisible = true;
-
-/* The triple store contains all of the triples on the current page. */
-var gTripleStore = {};
-
-/* The triple RDF types contains all of the types of triples found in
-   the current document. */
-var gTripleRdfTypes = {};
-
-/* The number of triples in the current document. */
-var gNumTriples = 0;
-
 /* Constants */
 var RDFA_PARSE_WARNING = -2;
 var RDFA_PARSE_FAILED = -1;

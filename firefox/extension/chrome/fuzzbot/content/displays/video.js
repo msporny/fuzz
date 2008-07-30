@@ -1,13 +1,13 @@
 /**
- * The Fuzzbot extension Javascript functionality for the Audio vocabulary.
+ * The Fuzzbot extension Javascript functionality for the Video vocabulary.
  *
  * @author Manu Sporny
  */
 
 /**
- * The processing data used for the audio details panel.
+ * The processing data used for the video details panel.
  */
-gFuzzbotAudioProcessingData = {
+gFuzzbotVideoProcessingData = {
    title : 
    { 
       properties : ["http://purl.org/dc/terms/title",
@@ -20,12 +20,12 @@ gFuzzbotAudioProcessingData = {
                     "http://purl.org/dc/elements/1.1/creator"],
       value : null
    },
-   //contributor :
-   //{
-   //   properties : ["http://purl.org/dc/terms/contributor",
-   //                 "http://purl.org/dc/elements/1.1/contributor"],
-   //   value : null
-   //},
+   contributor :
+   {
+      properties : ["http://purl.org/dc/terms/contributor",
+                    "http://purl.org/dc/elements/1.1/contributor"],
+      value : null
+   },
    published :
    {
       properties : ["http://purl.org/dc/terms/published",
@@ -70,6 +70,11 @@ gFuzzbotAudioProcessingData = {
                     "http://purl.org/dc/elements/1.1/type"],
       value : null
    },
+   rating :
+   {
+      properties : ["http://purl.org/media#rating"],
+      value : null
+   },
    license :
    {
       properties : ["http://www.w3.org/1999/xhtml/vocab#license",],
@@ -93,21 +98,21 @@ gFuzzbotAudioProcessingData = {
 };
 
 /**
- * Creates all of the menu items for the Audio AwesomeBar icon menu.
+ * Creates all of the menu items for the Video AwesomeBar icon menu.
  */
-function buildAudioMenuPopup()
+function buildVideoMenuPopup()
 {
-   var fuzzbotAudioMenu = document.getElementById("fuzzbot-audio-menu-popup");
-   var audioSubjects = [];
+   var fuzzbotVideoMenu = document.getElementById("fuzzbot-video-menu-popup");
+   var videoSubjects = [];
 
-   // Clear the current contents of the audio menu popup
-   fuzzbotAudioMenu.hidden = true;
-   while(fuzzbotAudioMenu.firstChild) 
+   // Clear the current contents of the video menu popup
+   fuzzbotVideoMenu.hidden = true;
+   while(fuzzbotVideoMenu.firstChild) 
    {
-       fuzzbotAudioMenu.removeChild(fuzzbotAudioMenu.firstChild);
+       fuzzbotVideoMenu.removeChild(fuzzbotVideoMenu.firstChild);
    }
 
-   // Scan the triple store and collect the subjects that are audio
+   // Scan the triple store and collect the subjects that are video
    // recordings or albums.
    for(var subject in gTripleStore)
    {
@@ -118,10 +123,12 @@ function buildAudioMenuPopup()
          if(triple.predicate == 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
          {
-            if(triple.object == "http://purl.org/media/audio#Recording" ||
-               triple.object == "http://purl.org/media/audio#Album")
+            if(triple.object == "http://purl.org/media/video#Recording" ||
+	       triple.object == "http://purl.org/media/video#Episode" ||
+	       triple.object == "http://purl.org/media/video#Movie" ||
+               triple.object == "http://purl.org/media/video#Series")
             {
-               audioSubjects.push(triple.subject);
+               videoSubjects.push(triple.subject);
                continue;
             }
             else
@@ -132,12 +139,12 @@ function buildAudioMenuPopup()
       }
    }
 
-   // for each subject that is an audio recording or album, add a menu
+   // for each subject that is an video recording or album, add a menu
    // item for it.
-   for(var index in audioSubjects)
+   for(var index in videoSubjects)
    {
-      var subject = audioSubjects[index];
-      var menuItem = createMenuItem("Unknown", audioSelected);
+      var subject = videoSubjects[index];
+      var menuItem = createMenuItem("Unknown", videoSelected);
       menuItem.setAttribute("subject", subject);
 
       // Set certain menu attributes based on the triple information.
@@ -155,35 +162,45 @@ function buildAudioMenuPopup()
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
 	 {
 	     // Set the menu image based on the RDF type information.
-	    if(triple.object == "http://purl.org/media/audio#Recording")
+	    if(triple.object == "http://purl.org/media/video#Recording")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeAudioRecording.png");
+		   "chrome://fuzzbot/content/displays/rdfTypeVideoRecording.png");
 	    }
-	    else if(triple.object == "http://purl.org/media/audio#Album")
+	    else if(triple.object == "http://purl.org/media/video#Episode")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeAudioCollection.png");
+		   "chrome://fuzzbot/content/displays/rdfTypeVideoEpisode.png");
+            }
+	    else if(triple.object == "http://purl.org/media/video#Movie")
+	    {
+		menuItem.setAttribute("image", 
+		   "chrome://fuzzbot/content/displays/rdfTypeVideoMovie.png");
+            }
+	    else if(triple.object == "http://purl.org/media/video#Series")
+	    {
+		menuItem.setAttribute("image", 
+		   "chrome://fuzzbot/content/displays/rdfTypeVideoSeries.png");
             }
 	 }
       }
       
-      fuzzbotAudioMenu.appendChild(menuItem);
+      fuzzbotVideoMenu.appendChild(menuItem);
    }
 
-   fuzzbotAudioMenu.hidden = false;
+   fuzzbotVideoMenu.hidden = false;
 }
 
 /**
- * This callback is called whenever an audio item has been selected.
+ * This callback is called whenever an video item has been selected.
  *
  * @param event the Event object that should be used for processing.
  */
-function audioSelected(event)
+function videoSelected(event)
 {
    var subj = event.currentTarget.getAttribute("subject");
-   //alert("Display UI for Audio Subject\n: " + subject);
-   var title = "Audio Information";
+   //alert("Display UI for Video Subject\n: " + subject);
+   var title = "Video Information";
    var params = {inn:{subject:subj, triples:gTripleStore}, out:null};
 
    // Set certain menu attributes based on the triple information.
@@ -200,17 +217,17 @@ function audioSelected(event)
    }
 
    // create and display the new window.
-   var newWindow = window.openDialog(
-      "chrome://fuzzbot/content/displays/audio.xul", "",
-      "chrome, dialog, resizable=yes", params);
+   var newWindow = 
+      window.openDialog("chrome://fuzzbot/content/displays/video.xul", "",
+         "chrome, dialog, resizable=yes", params);
    newWindow.focus();
-   newWindow.document.title = title;
+   newWindow.title = title;
 
    event.stopPropagation();
 }
 
 /**
- * This callback is called whenever an audio details dialog is loaded.
+ * This callback is called whenever an video details dialog is loaded.
  */
 function initDialog()
 {
@@ -218,38 +235,38 @@ function initDialog()
    var triples = args.triples;
    var subjectTriples = triples[args.subject];
    var images = ["depiction",];
-   var labels = ["title", "creator", "published",
-      "description", "position", "type"];
+   var labels = ["title", "creator", "contributor", "published",
+      "description", "position", "type", "rating"];
    var buttons = ["sample", "download", "license", "payment"];
    var conversions = ["costs", "duration"];
 
    // process all of the triples for the given subject and set the appropriate
-   // data items in the audio processing model
+   // data items in the video processing model
    for(i in subjectTriples)
    {
       var triple = subjectTriples[i];
 
       // process every term in the processing model
-      for(var term in gFuzzbotAudioProcessingData)
+      for(var term in gFuzzbotVideoProcessingData)
       {
 	 // process every property for every term in the processing model
-         for(var p in gFuzzbotAudioProcessingData[term]["properties"])
+         for(var p in gFuzzbotVideoProcessingData[term]["properties"])
 	 {
-	    var property = gFuzzbotAudioProcessingData[term]["properties"][p];
+	    var property = gFuzzbotVideoProcessingData[term]["properties"][p];
 	    if(triple.predicate == property)
 	    {
-   	       gFuzzbotAudioProcessingData[term]["value"] = triple.object;
+   	       gFuzzbotVideoProcessingData[term]["value"] = triple.object;
 	    }
 	 }
       }
    }
 
    // set all of the UI elements given the processing model
-   for(var term in gFuzzbotAudioProcessingData)
+   for(var term in gFuzzbotVideoProcessingData)
    {
        _fuzzbotLog("Searching for " + term);
-      var tval = gFuzzbotAudioProcessingData[term]["value"];
-      var widget = document.getElementById("fuzzbot-audio-details-" + term);
+      var tval = gFuzzbotVideoProcessingData[term]["value"];
+      var widget = document.getElementById("fuzzbot-video-details-" + term);
 
       // select which UI elements to modify based on the name of the attribute
       if(tval != null)
@@ -263,7 +280,7 @@ function initDialog()
 	  {
 	      // Set the button/label actions for URL data
 	     var button = 
-		 document.getElementById("fuzzbot-audio-details-" + term + 
+		 document.getElementById("fuzzbot-video-details-" + term + 
 		    "-button");
              widget.setAttribute("href", tval);
              button.setAttribute("href", tval);
@@ -292,26 +309,33 @@ function initDialog()
       else
       {
           var row = 
-             document.getElementById("fuzzbot-audio-details-row-" + term);
+             document.getElementById("fuzzbot-video-details-row-" + term);
 	  row.hidden = true;
       }
    }
 
    // build the action menus
-   var serviceArguments = { type : "track" };
-   buildActionMenu("fuzzbot-audio-details-title-menupopup",
-      "Search MusicBrainz", "musicbrainz", serviceArguments, 
-      gFuzzbotAudioProcessingData["title"]["value"]);
+   clearActionMenu("fuzzbot-video-details-title-menupopup");
 
-   serviceArguments = { type : "artist" };
-   buildActionMenu("fuzzbot-audio-details-creator-menupopup",
-      "Search MusicBrainz", "musicbrainz", serviceArguments,
-      gFuzzbotAudioProcessingData["creator"]["value"]);
+   var serviceArguments = {"s":"tt"};
+   buildActionMenu("fuzzbot-video-details-title-menupopup",
+      "Search IMDB", "imdb", serviceArguments, 
+      gFuzzbotVideoProcessingData["title"]["value"]);
 
-   serviceArguments = {};
-   buildActionMenu("fuzzbot-audio-details-creator-menupopup",
-      "Search Wikipedia", "wikipedia", serviceArguments,
-      gFuzzbotAudioProcessingData["creator"]["value"]);
+   serviceArguments = {"tab":"Movies", repos:"Movies"};
+   buildActionMenu("fuzzbot-video-details-title-menupopup",
+     "Search Fandango", "fandango", serviceArguments, 
+      gFuzzbotVideoProcessingData["title"]["value"]);
+
+   serviceArguments = {"s":"nm"};
+   buildActionMenu("fuzzbot-video-details-creator-menupopup",
+      "Search IMDB", "imdb", serviceArguments, 
+      gFuzzbotVideoProcessingData["creator"]["value"]);
+
+   serviceArguments = {"searchby":"celebs"};
+   buildActionMenu("fuzzbot-video-details-creator-menupopup",
+      "Search Rotten Tomatoes", "rotten-tomatoes", serviceArguments, 
+      gFuzzbotVideoProcessingData["creator"]["value"]);
 
    window.sizeToContent();
 }
