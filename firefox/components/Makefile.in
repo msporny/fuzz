@@ -1,15 +1,3 @@
-XULRUNNER = xulrunner
-XPIDL=/usr/lib/xulrunner/xpidl
-XULIDL=/usr/share/idl/xulrunner
-BUILD=../build
-DIST=../dist
-
-CC = g++
-
-CFLAGS = -I/usr/include -I/usr/include/xulrunner/java -I/usr/include/xulrunner/plugin -I/usr/include/xulrunner -I/usr/include/xulrunner/xpcom -I/usr/include/xulrunner/string -I$(BUILD) -I@EXPAT_INCLUDE_DIRECTORY@ -I@TIDY_INCLUDE_DIRECTORY@ -I@RDFA_INCLUDE_DIRECTORY@
-LDFLAGS += -L/usr/lib -L/usr/lib/xulrunner 
-CFLAGS += -Wall -g -DMOZILLA_STRICT_API
-
 ifeq (@OS@,mingw32)
 XPIDL=/usr/lib/gecko-sdk/bin/xpidl
 XULIDL=/usr/lib/gecko-sdk/idl
@@ -28,44 +16,9 @@ CFLAGS += -DXP_UNIX -DXP_MACOSX
 LIBS = $(DIST)/fuzzbot-components.dylib
 endif
 
-ifeq (@OS@,linux-gnu)
-CFLAGS += -I/usr/include/nspr
-LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @EXPAT_LIB_DIRECTORY@/libtidy.a
-LIBS = $(DIST)/fuzzbot-components.so
-CFLAGS += -DXP_UNIX
-endif
+SOURCES = FuzzbotExtension.cpp
+IDL_SOURCES = IFuzzbotExtension.idl
+COMPONENT_LIBRARIES = fuzzbot-components
 
-fuzzbot_plugin_objects = $(BUILD)/FuzzbotExtension.o
-
-all_objects = $(fuzzbot_plugin_objects)
-
-.PHONY: make_dirs
-
-all: make_dirs  $(DIST)/IFuzzbotExtension.xpt $(LIBS) 
-
-make_dirs:
-	mkdir -p ../build
-	mkdir -p ../dist
-
-clean:
-	$(RM) -rf $(BUILD) $(DIST)
-
-$(BUILD)/FuzzbotExtension.o : $(BUILD)/IFuzzbotExtension.h 
-
-$(DIST)/fuzzbot-components.so $(DIST)/fuzzbot-components.dll: $(fuzzbot_plugin_objects)
-	$(CC) -shared -o $(DIST)/$@ $^ $(LDFLAGS)
-
-$(DIST)/fuzzbot-components.dylib: $(fuzzbot_plugin_objects)
-	$(CC) -dynamiclib -o $(DIST)/$@ $^ $(LDFLAGS)
-
-$(BUILD)/%.o: %.cpp
-	$(CC) -c $(CFLAGS) $< -o $@
-
-$(BUILD)/%.h: %.idl
-	$(XPIDL) -m header -I $(XULIDL)  -o $(basename $@) $<
-
-$(DIST)/%.xpt: %.idl
-	$(XPIDL) -m typelib -I $(XULIDL) -o $(basename $@) $<
-
-%.html: %.idl
-	$(XPIDL) -m doc -I $(XULIDL) -o $(BUILD) $<
+# ----------- Standard Makefile
+include @FUZZBOTDIR@/setup/Makefile.base

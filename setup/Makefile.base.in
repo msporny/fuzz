@@ -1,47 +1,60 @@
 # This file contains basic Makefile includes that contain all building
 # instructions for all binaries and packages.
 FUZZBOT = @FUZZBOTDIR@
-INCLUDE_DIRECTORIES = \
-	@RDFA_INCLUDE_DIRECTORY@ @EXPAT_INCLUDE_DIRECTORY@ \
-	@FUZZBOTDIR@/firefox/components
-LIBRARY_DIRECTORIES = \
-	@RDFA_LIB_DIRECTORY@ @EXPAT_LIB_DIRECTORY@ \
-	@FUZZBOTDIR@/libs
-
-
 CURRENT_DIR = $(shell pwd)
 
-.PHONY: all build-directories build-objects build-libraries build-executables clean clean-objects clean-libraries $(ALL_EXECUTABLES)
+.PHONY: all build-directories build-objects build-xpts build-libraries build-executables clean clean-objects clean-libraries $(ALL_EXECUTABLES)
 
-all: build-directories build-objects build-libraries build-executables
+all: build-directories build-xpts build-objects build-libraries build-executables
 
 # Variables
-CC = @CXX@
+CXX = @CXX@
+XPIDL = @XPIDL@
+CXX_FLAGS = -Wall -fPIC -g
 AR_FLAGS = cr
 
-ifeq (@OS@,mingw32)
-CC_FLAGS = -Wall -g -D_WIN32_WINNT=0x0501
-else
-CC_FLAGS = -Wall -fPIC -g
-endif
-
 LIB_DIR = $(FUZZBOT)/libs
-INCLUDES = $(foreach $dir,$INCLUDE_DIRECTORIES,-I$dir)
-LD_FLAGS = $(foreach $dir,$LIBRARY_DIRECTORIES,-L$dir)
+INCLUDES = -I build \
+           -I /usr/include \
+           -I /usr/include/xulrunner \
+           -I /usr/include/xulrunner/java \
+           -I /usr/include/xulrunner/java \
+           -I /usr/include/xulrunner/plugin \
+           -I /usr/include/xulrunner/xpcom \
+           -I /usr/include/xulrunner/string \
+           -I @TIDY_INCLUDE_DIRECTORY@ \
+           -I @RDFA_INCLUDE_DIRECTORY@ \
+           -I @EXPAT_INCLUDE_DIRECTORY@ 
+LDFLAGS =
 AR = @AR@
 OS = @OS@
-DLLWRAP = @DLLWRAP@
-DLLWRAP_FLAGS = --as=$(AS) --export-all --driver-name $(CC) -s
+
+ifeq (@OS@,mingw32)
+CXX_FLAGS = -Wall -g -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
+INCLUDES += -I /usr/include/nspr
+XULIDL_INCLUDES= -I /usr/lib/xulrunner/sdk/idl
+endif
+
+ifeq (@OS@,linux-gnu)
+CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX
+LDFLAGS = -L /usr/lib/xulrunner -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
+INCLUDES += -I /usr/include/nspr
+XULIDL_INCLUDES= -I /usr/share/idl/xulrunner
+endif
+
 BUILD_DIR = build
 DIST_DIR = dist
-DEPENDENCIES := $(patsubst %.c,$(BUILD_DIR)/%.P, $(SOURCES))
+DEPENDENCIES := $(patsubst %.cpp,$(BUILD_DIR)/%.P, $(SOURCES))
 OBJECTS := $(patsubst %.cpp,$(BUILD_DIR)/%.o, $(SOURCES))
 OBJECTS += $(patsubst %,$(BUILD_DIR)/%.o, $(EXECUTABLES))
 LIBDEPS := $(DYNAMIC_LINK_LIBRARIES)
 
 # All variables
 ALL_SOURCES := $(patsubst %.cpp,$(BUILD_DIR)/%.cpp, $(SOURCES))
+ALL_SOURCES += $(patsubst %.idl,$(BUILD_DIR)/%.idl, $(IDL_SOURCES))
 ALL_SOURCES += $(patsubst %,$(BUILD_DIR)/%.cpp, $(EXECUTABLES))
+ALL_GENERATED_HEADERS := $(patsubst %.idl,$(BUILD_DIR)/%.h, $(IDL_SOURCES))
+ALL_XPTS := $(patsubst %.idl,$(DIST_DIR)/%.xpt, $(IDL_SOURCES))
 ALL_DEPENDENCIES += $(DEPENDENCIES)
 ALL_OBJECTS += $(OBJECTS)
 
@@ -50,6 +63,7 @@ ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/%.lib, $(LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dll, $(LIBRARIES))
 else 
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/lib%.so, $(LIBRARIES))
+ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.so, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/lib%.a, $(LIBRARIES))
 endif
 
@@ -73,24 +87,32 @@ $(ALL_SOURCES):
 	@mkdir -p $(dir $@)
 	@ln -sf $(subst $(BUILD_DIR)/,$(CURRENT_DIR)/,$@) $@
 
-%.o %.P: %.cpp
+%.o %.P: %.cpp $(ALL_GENERATED_HEADERS)
 	@echo "Building $(basename $@).o..."
-	@$(CC) $(CC_FLAGS) -c -MD -o $(basename $@).o $(INCLUDES) -I. $<
+	$(CXX) $(CXX_FLAGS) -c -MD -o $(basename $@).o $(INCLUDES) -I. $<
 	@cp $(basename $@).d $(basename $@).P; \
 		sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' -e '/^$$/ d' -e 's/$$/ :/' < $(basename $@).d >> $(basename $@).P; \
 		rm -f $(basename $@).d
 
-%.so: $(OBJECTS)
+dist/%.so: $(OBJECTS)
 	@echo "Building $@..."
-	@$(CC) $(LD_FLAGS) -shared -o $@ $(OBJECTS) $(DYNAMIC_LINK_LIBRARIES:%=-l%)
+	$(CXX) -shared -o $@ $(OBJECTS) $(LDFLAGS) $(DYNAMIC_LINK_LIBRARIES:%=-l%)
 	@mkdir -p $(LIB_DIR)
 	@ln -sf $(CURRENT_DIR)/$@ $(LIB_DIR)/$(@F)
 
 %.dll: $(OBJECTS)
 	@echo "Building $@..."
-	@$(DLLWRAP) $(DLLWRAP_FLAGS) $(LD_FLAGS) --output-def $(@:.dll=.def) --implib $(@:.dll=.lib) -o $@ $^ $(DYNAMIC_LINK_LIBRARIES:%=-l%) --exclude-symbols $(EXCLUDE_DLL_SYMBOLS)
+	@$(CXX) --shared $(LDFLAGS) --export-all --output-def,$(@:.dll=.def),--out-implib,$(@:.dll=.lib) -o $@ $^ $(DYNAMIC_LINK_LIBRARIES:%=-l%) --exclude-symbols,$(EXCLUDE_DLL_SYMBOLS)
 	@mkdir -p $(LIB_DIR)
 	@ln -sf $(CURRENT_DIR)/$@ $(LIB_DIR)/$(@F)
+
+%.h: %.idl
+	@echo "Building $@..."
+	$(XPIDL) -m header $(XULIDL_INCLUDES)  -o $(basename $@) $<
+
+dist/%.xpt: %.idl
+	@echo "Building $@..."
+	$(XPIDL) -m typelib $(XULIDL_INCLUDES) -o $(basename $@) $<
 
 %.lib: $(OBJECTS)
 	@echo "Building $@..."
@@ -110,15 +132,17 @@ $(STATIC_WINDOWS_LIBRARIES):
 	# This is a fake target to override the default .lib build
 $(ALL_EXECUTABLES): $(ALL_SOURCES) $(ALL_OBJECTS)
 	@echo "Building $(@F)..."
-	@$(CC) $(CC_FLAGS) $(LD_FLAGS) -o $@ $(BUILD_DIR)/$(basename $(@F)).o $(DYNAMIC_LINK_LIBRARIES:%=-l%) $(DYNAMIC_WINDOWS_LIBRARIES:%=-l%)
+	@$(CXX) $(CXX_FLAGS) $(LDFLAGS) -o $@ $(BUILD_DIR)/$(basename $(@F)).o $(DYNAMIC_LINK_LIBRARIES:%=-l%) $(DYNAMIC_WINDOWS_LIBRARIES:%=-l%)
 else
 #$(STATIC_LINUX_LIBRARIES):
 #	# This is a fake target to override the default .a build
 $(ALL_EXECUTABLES): $(ALL_SOURCES) $(ALL_OBJECTS) 
 	@echo "Building $(@F)..."
-	@$(CC) $(CC_FLAGS) $(LD_FLAGS) -o $@ $(BUILD_DIR)/$(@F).o $(DYNAMIC_LINK_LIBRARIES:%=-l%) $(DYNAMIC_UNIX_LIBRARIES:%=-l%)
+	@$(CXX) $(CXX_FLAGS) $(LDFLAGS) -o $@ $(BUILD_DIR)/$(@F).o $(DYNAMIC_LINK_LIBRARIES:%=-l%) $(DYNAMIC_UNIX_LIBRARIES:%=-l%)
 endif
 endif
+
+build-xpts: $(ALL_DIRECTORIES) $(ALL_GENERATED_HEADERS) $(ALL_XPTS)
 
 build-objects: $(ALL_DIRECTORIES) $(ALL_SOURCES) $(ALL_DEPENDENCIES) $(ALL_OBJECTS)
 

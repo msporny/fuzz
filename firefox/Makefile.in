@@ -24,7 +24,7 @@ xpi: build-libraries xpi-linux
 endif
 
 xpi-common:
-	cp $(CP_FLAGS) dist/*.xpt extension/components/
+	cp $(CP_FLAGS) components/dist/*.xpt extension/components/
 	-$(RM) extension/chrome/$(NAME).jar
 	cd extension/chrome/$(NAME) && \
 		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
@@ -58,11 +58,12 @@ xpi-darwin: xpi-common
 		$(ZIPEXCLUDE)
 
 xpi-linux: xpi-common
+	mkdir -p dist
 	$(RM) dist/fuzzbot-linux.xpi
 	mkdir -p extension/platform/Linux_x86-gcc3/content
 	mkdir -p extension/platform/Linux_x86-gcc3/components
 	mkdir -p extension/components
-	cp -a dist/fuzzbot-components.so \
+	cp -a components/dist/fuzzbot-components.so \
 		extension/platform/Linux_x86-gcc3/components
 	cd extension && \
 	zip ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
@@ -72,6 +73,7 @@ xpi-linux: xpi-common
 		$(ZIPEXCLUDE)
 
 clean: clean-xpi
+	cd components && make clean
 	rm -rf build
 	rm -rf dist
 

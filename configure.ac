@@ -3,29 +3,88 @@
 # 
 # Author: Manu Sporny
 
-AC_INIT(fuzzbot, 0.8.3, support@digitalbazaar.com)
+AC_INIT(fuzzbot, 0.8.4, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables
 FUZZBOTDIR=`pwd`
 RELEASE=`date +%Y%m%d`
 
+# Check for particular build options
+AC_ARG_ENABLE([linux],
+   AS_HELP_STRING([--enable-linux], [compile for linux [[yes]]]),
+   [
+      case "${enableval}" in
+         yes) BUILD_FOR_LINUX=yes ;;
+         no) BUILD_FOR_LINUX=no ;;
+         *) AC_MSG_ERROR(bad value ${enableval} for --enable-linux) ;;
+      esac
+   ], [BUILD_FOR_LINUX=yes])  dnl Default value
+
+AC_ARG_ENABLE([windows],
+   AS_HELP_STRING([--enable-windows], [compile for windows [[no]]]),
+   [
+      case "${enableval}" in
+         yes) BUILD_FOR_WINDOWS=yes ;;
+         no) BUILD_FOR_WINDOWS=no ;;
+         *) AC_MSG_ERROR(bad value ${enableval} for --enable-windows) ;;
+      esac
+   ], [BUILD_FOR_WINDOWS=no])  dnl Default value
+
+AC_ARG_ENABLE([macos],
+   AS_HELP_STRING([--enable-macos], [compile for MacOS [[no]]]),
+   [
+      case "${enableval}" in
+         yes) BUILD_FOR_MACOS=yes ;;
+         no) BUILD_FOR_MACOS=no ;;
+         *) AC_MSG_ERROR(bad value ${enableval} for --enable-macos) ;;
+      esac
+   ], [BUILD_FOR_MACOS=no])  dnl Default value
+
 echo -e "\n--------- Configuring Fuzzbot build environment -----------"
 
 # Check the system type
 AC_CANONICAL_BUILD()
+AC_CANONICAL_HOST()
+AC_CANONICAL_SYSTEM()
 
 # Checking for standard build tools
-#AC_LANG(C++)
 AC_PROG_INSTALL()
 
-# Get the C compiler for this system
-AC_PROG_CXX()
-AC_CHECK_PROG(AR, ar, ar, not found)
-AC_CHECK_PROG(AS, as, as, not found)
-AC_CHECK_PROG(DLLWRAP, dllwrap, dllwrap, not found)
+# Conditional setup for Windows build
+if test "$BUILD_FOR_WINDOWS" = "yes" ; then
+   BUILD_FOR_LINUX="no"
+   BUILD_FOR_MACOS="no"
+   AC_CHECK_PROGS(CXX, i586-mingw32msvc-g++ g++, not found)
+   AC_CHECK_PROGS(AR, i586-mingw32msvc-ar ar, not found)
+   AC_CHECK_PROGS(AS, i586-mingw32msvc-as as, not found)
+   AC_CHECK_PROGS(XPIDL, /usr/lib/xulrunner/sdk/bin/xpidl xpidl, not found)
+   FIREFOX_PLATFORM="WINNT_x86-msvc"
+   OS="mingw32"
+fi
 
-CC="$CXX"
+# Conditional setup for MacOS build
+if test "$BUILD_FOR_MACOS" = "yes" ; then
+   BUILD_FOR_LINUX="no"
+   BUILD_FOR_WINDOWS="no"
+   AC_PROG_CXX()
+   AC_CHECK_PROG(AR, ar, ar, not found)
+   AC_CHECK_PROG(AS, as, as, not found)
+   AC_CHECK_PROGS(XPIDL, /usr/local/gecko-sdk/bin/xpidl xpidl, not found)
+   FIREFOX_PLATFORM="Darwin_ppc-gcc3"
+   OS="macos"
+fi
+
+# Conditional setup for Linux build
+if test "$BUILD_FOR_LINUX" = "yes" ; then
+   AC_LANG(C++)
+   AC_PROG_CXX()
+   AC_CHECK_PROG(AR, ar, ar, not found)
+   AC_CHECK_PROG(AS, as, as, not found)
+   AC_CHECK_PROGS(XPIDL, xpidl, not found)
+   FIREFOX_PLATFORM="Linux_x86-gcc3"
+   OS="$build_os"
+fi
 
 # Perform compilation environment tests
 #AC_CHECK_HEADERS(iostream)
@@ -63,19 +122,6 @@ AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L$EXP
 AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
 AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
 
-# Set the OS so that we can do certain build modifications if needed
-OS="$build_os"
-
-if test "$build_os" = "linux-gnu"; then
-   FIREFOX_PLATFORM="Linux_x86-gcc3"
-fi
-if test "$build_os" = "mingw32"; then
-   FIREFOX_PLATFORM="WINNT_x86-msvc"
-fi
-if test "$build_os" = "darwin"; then
-   FIREFOX_PLATFORM="Darwin_ppc-gcc3"
-fi
-
 # Make all the proper substitutions
 AC_SUBST(FUZZBOTDIR)
 
@@ -84,10 +130,9 @@ VERSION="$PACKAGE_VERSION"
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_SUBST(CC)
+AC_SUBST(CXX)
 AC_SUBST(AR)
 AC_SUBST(AS)
-AC_SUBST(DLLWRAP)
 
 AC_SUBST(OS)
 AC_SUBST(FIREFOX_PLATFORM)
@@ -112,9 +157,7 @@ AC_OUTPUT(Makefile \
 echo -e "\n--------- Fuzzbot build environment -----------"
 echo "Product        : $PACKAGE_STRING-$RELEASE"
 echo "Build system   : $build_cpu-$build_vendor-$build_os"
-echo "C++ compiler   : $CC"
+echo "C++ compiler   : $CXX"
 echo "Archiver       : $AR"
-if test "$DLLWRAP" != "not found"; then
-   echo "DLL wrapper    : $DLLWRAP"
-fi
+echo "xpidl          : $XPIDL"
 
