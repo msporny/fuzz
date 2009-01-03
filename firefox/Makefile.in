@@ -1,7 +1,7 @@
 NAME=fuzzbot
 ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ \*.svg
 
-.PHONY: all help
+.PHONY: all xpi xpi-common xpi-windows xpi-darwin xpi-linux clean clean-xpi
 
 build-executables: build-libraries xpi
 build-directories:
@@ -24,61 +24,65 @@ xpi: build-libraries xpi-linux
 endif
 
 xpi-common:
-	cp $(CP_FLAGS) components/dist/*.xpt extension/components/
-	-$(RM) extension/chrome/$(NAME).jar
-	cd extension/chrome/$(NAME) && \
-		zip -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
+	@echo "Building common XPI files..."
+	@cp $(CP_FLAGS) components/dist/*.xpt extension/components/
+	@-$(RM) extension/chrome/$(NAME).jar
+	@cd extension/chrome/$(NAME) && \
+		zip -q -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
 
 xpi-windows: xpi-common
-	$(RM) dist/fuzzbot-windows.xpi
-	mkdir -p extension/platform/WINNT_x86-msvc/content
-	mkdir -p extension/platform/WINNT_x86-msvc/components
-	mkdir -p extension/components
-	cp -a dist/fuzzbot-components.dll \
+	@echo "Building Windows Fuzzbot XPI..."
+	@$(RM) dist/fuzzbot-windows.xpi
+	@mkdir -p extension/platform/WINNT_x86-msvc/content
+	@mkdir -p extension/platform/WINNT_x86-msvc/components
+	@mkdir -p extension/components
+	@cp -a dist/fuzzbot-components.dll \
 		extension/platform/WINNT_x86-msvc/components
-	cd extension && \
-	zip ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
+	@cd extension && \
+	zip -q ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 xpi-darwin: xpi-common
-	$(RM) dist/fuzzbot-darwin.xpi
-	mkdir -p extension/platform/Darwin_x86-gcc3/content
-	mkdir -p extension/platform/Darwin_x86-gcc3/components
-	mkdir -p extension/components
-	cp -p dist/fuzzbot-components.dylib \
+	@echo "Building MacOS XPI..."
+	@$(RM) dist/fuzzbot-darwin.xpi
+	@mkdir -p extension/platform/Darwin_x86-gcc3/content
+	@mkdir -p extension/platform/Darwin_x86-gcc3/components
+	@mkdir -p extension/components
+	@cp -p dist/fuzzbot-components.dylib \
 		extension/platform/Darwin_x86-gcc3/components
-	cd extension && \
-	zip ../dist/fuzzbot-darwin.xpi chrome.manifest chrome/$(NAME).jar \
+	@cd extension && \
+	zip -q ../dist/fuzzbot-darwin.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 xpi-linux: xpi-common
-	mkdir -p dist
-	$(RM) dist/fuzzbot-linux.xpi
-	mkdir -p extension/platform/Linux_x86-gcc3/content
-	mkdir -p extension/platform/Linux_x86-gcc3/components
-	mkdir -p extension/components
-	cp -a components/dist/fuzzbot-components.so \
+	@echo "Building Linux Fuzzbot XPI..."
+	@mkdir -p dist
+	@$(RM) dist/fuzzbot-linux.xpi
+	@mkdir -p extension/platform/Linux_x86-gcc3/content
+	@mkdir -p extension/platform/Linux_x86-gcc3/components
+	@mkdir -p extension/components
+	@cp -a components/dist/fuzzbot-components.so \
 		extension/platform/Linux_x86-gcc3/components
-	cd extension && \
-	zip ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
+	@cd extension && \
+	zip -q ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 clean: clean-xpi
-	cd components && make clean
-	rm -rf build
-	rm -rf dist
+	@cd components && make clean
+	@rm -rf build
+	@rm -rf dist
 
 clean-xpi:
-	$(RM) dist/fuzzbot-*.xpi
-	$(RM) extension/chrome/$(NAME).jar
-	$(RM) extension/components/*.xpt
-	$(RM) -rf extension/platform/*
+	@$(RM) dist/fuzzbot-*.xpi
+	@$(RM) extension/chrome/$(NAME).jar
+	@$(RM) extension/components/*.xpt
+	@$(RM) -rf extension/platform/*
