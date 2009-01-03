@@ -58,7 +58,7 @@ if test "$BUILD_FOR_WINDOWS" = "yes" ; then
    AC_CHECK_PROGS(CXX, i586-mingw32msvc-g++ g++, not found)
    AC_CHECK_PROGS(AR, i586-mingw32msvc-ar ar, not found)
    AC_CHECK_PROGS(AS, i586-mingw32msvc-as as, not found)
-   AC_CHECK_PROGS(XPIDL, /usr/lib/xulrunner/sdk/bin/xpidl xpidl, not found)
+   AC_CHECK_PROGS(XPIDL, xpidl, not found)
    FIREFOX_PLATFORM="WINNT_x86-msvc"
    OS="mingw32"
 fi
