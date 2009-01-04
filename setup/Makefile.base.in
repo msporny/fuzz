@@ -15,13 +15,11 @@ AR_FLAGS = cr
 
 LIB_DIR = $(FUZZBOT)/libs
 INCLUDES = -I build \
-           -I /usr/include \
-           -I /usr/include/xulrunner \
-           -I /usr/include/xulrunner/java \
-           -I /usr/include/xulrunner/java \
-           -I /usr/include/xulrunner/plugin \
-           -I /usr/include/xulrunner/xpcom \
-           -I /usr/include/xulrunner/string \
+           -I @XULRUNNER_INCLUDE_DIRECTORY@ \
+           -I @XULRUNNER_INCLUDE_DIRECTORY@/java \
+           -I @XULRUNNER_INCLUDE_DIRECTORY@/plugin \
+           -I @XULRUNNER_INCLUDE_DIRECTORY@/xpcom \
+           -I @XULRUNNER_INCLUDE_DIRECTORY@/string \
            -I @TIDY_INCLUDE_DIRECTORY@ \
            -I @RDFA_INCLUDE_DIRECTORY@ \
            -I @EXPAT_INCLUDE_DIRECTORY@ 
@@ -30,15 +28,18 @@ AR = @AR@
 OS = @OS@
 
 ifeq (@OS@,mingw32)
-CXX_FLAGS = -Wall -g -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
-INCLUDES += -I /usr/include/nspr
-XULIDL_INCLUDES= -I /usr/lib/xulrunner/sdk/idl
+#CXX_FLAGS = -Wall -g -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
+CXX_FLAGS = -Wall -g -DHAVE_CPP_MODERN_SPECIALIZE_TEMPLATE_SYNTAX -include "mozilla-config.h"
+LDFLAGS = @RDFA_LIB_DIRECTORY@/rdfa.lib @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/tidy.lib @XULRUNNER_LIB_DIRECTORY@/xpcomglue_s.lib @XULRUNNER_LIB_DIRECTORY@/xpcom.lib @XULRUNNER_LIB_DIRECTORY@/nspr4.lib
+
+INCLUDES += -I @XULRUNNER_INCLUDE_DIRECTORY@
+XULIDL_INCLUDES= -I @XULRUNNER_IDL_DIRECTORY@
 endif
 
 ifeq (@OS@,linux-gnu)
-CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX
-LDFLAGS = -L /usr/lib/xulrunner -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
-INCLUDES += -I /usr/include/nspr
+CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX -include "mozilla-config.h"
+LDFLAGS = -L @XULRUNNER_LIB_DIRECTORY@ -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
+INCLUDES += -I /usr/include/nspr -I /usr/include
 XULIDL_INCLUDES= -I /usr/share/idl/xulrunner
 endif
 
@@ -60,6 +61,7 @@ ALL_OBJECTS += $(OBJECTS)
 
 ifeq ($(OS),mingw32)
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/%.lib, $(LIBRARIES))
+ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dll, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dll, $(LIBRARIES))
 else 
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/lib%.so, $(LIBRARIES))
@@ -102,7 +104,7 @@ dist/%.so: $(OBJECTS)
 
 %.dll: $(OBJECTS)
 	@echo "Building $@..."
-	@$(CXX) --shared $(LDFLAGS) --export-all --output-def,$(@:.dll=.def),--out-implib,$(@:.dll=.lib) -o $@ $^ $(DYNAMIC_LINK_LIBRARIES:%=-l%) --exclude-symbols,$(EXCLUDE_DLL_SYMBOLS)
+	$(CXX) --shared --export-all --output-def,$(@:.dll=.def),--out-implib,$(@:.dll=.lib) -o $@ $^ $(DYNAMIC_LINK_LIBRARIES:%=-l%) $(LDFLAGS)
 	@mkdir -p $(LIB_DIR)
 	@ln -sf $(CURRENT_DIR)/$@ $(LIB_DIR)/$(@F)
 

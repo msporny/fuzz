@@ -47,9 +47,49 @@ echo -e "\n--------- Configuring Fuzzbot build environment -----------"
 AC_CANONICAL_BUILD()
 AC_CANONICAL_HOST()
 AC_CANONICAL_SYSTEM()
+AC_LANG(C++)
 
 # Checking for standard build tools
 AC_PROG_INSTALL()
+
+# Assume the xulrunner library is in the standard location
+XULRUNNER_LIB_DIRECTORY=/usr/lib/xulrunner
+XULRUNNER_INCLUDE_DIRECTORY=/usr/include/xulrunner
+XULRUNNER_IDL_DIRECTORY=/usr/share/idl/xulrunner
+
+# Check to see where the expat library resides
+if test -e "/opt/local/lib/libexpat.dylib"; then
+   EXPAT_INCLUDE_DIRECTORY="/opt/local/include"
+   EXPAT_LIB_DIRECTORY="/opt/local/lib"
+fi
+if test -e "/usr/lib/libexpat.a"; then
+   EXPAT_INCLUDE_DIRECTORY="/usr/include"
+   EXPAT_LIB_DIRECTORY="/usr/lib"
+fi
+
+# Check to see where the tidy library resides
+if test -e "/opt/local/lib/libtidy.a"; then
+   TIDY_INCLUDE_DIRECTORY="/opt/local/include"
+   TIDY_LIB_DIRECTORY="/opt/local/lib"
+fi
+if test -e "/usr/lib/libtidy.a"; then
+   TIDY_INCLUDE_DIRECTORY="/usr/include"
+   TIDY_LIB_DIRECTORY="/usr/lib"
+fi
+
+# Check to see where the rdfa parser resides
+if test -e "../librdfa/libs/librdfa.so"; then
+   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+fi
+if test -e "../librdfa/libs/librdfa.dylib"; then
+   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+fi
+if test -e "../librdfa/libs/rdfa.dll"; then
+   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+fi
 
 # Conditional setup for Windows build
 if test "$BUILD_FOR_WINDOWS" = "yes" ; then
@@ -60,6 +100,13 @@ if test "$BUILD_FOR_WINDOWS" = "yes" ; then
    AC_CHECK_PROGS(AS, i586-mingw32msvc-as as, not found)
    AC_CHECK_PROGS(XPIDL, xpidl, not found)
    FIREFOX_PLATFORM="WINNT_x86-msvc"
+   TIDY_LIB_DIRECTORY="$FUZZBOTDIR/3rdparty/tidy"
+   TIDY_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/tidy/include"
+   EXPAT_LIB_DIRECTORY="$FUZZBOTDIR/3rdparty/expat"
+   EXPAT_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/expat/include"
+   XULRUNNER_LIB_DIRECTORY="/tmp/gecko-sdk/lib"
+   XULRUNNER_INCLUDE_DIRECTORY="/tmp/gecko-sdk/include"
+   XULRUNNER_IDL_DIRECTORY="/tmp/gecko-sdk/idl"
    OS="mingw32"
 fi
 
@@ -77,7 +124,6 @@ fi
 
 # Conditional setup for Linux build
 if test "$BUILD_FOR_LINUX" = "yes" ; then
-   AC_LANG(C++)
    AC_PROG_CXX()
    AC_CHECK_PROG(AR, ar, ar, not found)
    AC_CHECK_PROG(AS, as, as, not found)
@@ -88,34 +134,6 @@ fi
 
 # Perform compilation environment tests
 #AC_CHECK_HEADERS(iostream)
-RDFA_LIB_DIRECTORY="/usr/lib"
-RDFA_INCLUDE_DIRECTORY="/usr/include"
-TIDY_LIB_DIRECTORY="/usr/lib"
-TIDY_INCLUDE_DIRECTORY="/usr/include"
-EXPAT_LIB_DIRECTORY="/usr/lib"
-EXPAT_INCLUDE_DIRECTORY="/usr/include"
-
-# Check to see where the expat library resides
-if test -e "/opt/local/lib/libexpat.dylib"; then
-   EXPAT_INCLUDE_DIRECTORY="/opt/local/include"
-   EXPAT_LIB_DIRECTORY="/opt/local/lib"
-fi
-
-# Check to see where the tidy library resides
-if test -e "/opt/local/lib/libtidy.a"; then
-   TIDY_INCLUDE_DIRECTORY="/opt/local/include"
-   TIDY_LIB_DIRECTORY="/opt/local/lib"
-fi
-
-# Check to see where the rdfa parser resides
-if test -e "../librdfa/libs/librdfa.so"; then
-   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
-   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
-fi
-if test -e "../librdfa/libs/librdfa.dylib"; then
-   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
-   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
-fi
 
 # Make sure the proper libraries exist
 AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L$EXPAT_LIB_DIRECTORY)
@@ -123,10 +141,8 @@ AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$TIDY_
 AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
 
 # Make all the proper substitutions
-AC_SUBST(FUZZBOTDIR)
-
-# Make all the proper substitutions
 VERSION="$PACKAGE_VERSION"
+AC_SUBST(FUZZBOTDIR)
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
@@ -144,6 +160,9 @@ AC_SUBST(TIDY_LIB_DIRECTORY)
 AC_SUBST(TIDY_INCLUDE_DIRECTORY)
 AC_SUBST(EXPAT_LIB_DIRECTORY)
 AC_SUBST(EXPAT_INCLUDE_DIRECTORY)
+AC_SUBST(XULRUNNER_LIB_DIRECTORY)
+AC_SUBST(XULRUNNER_INCLUDE_DIRECTORY)
+AC_SUBST(XULRUNNER_IDL_DIRECTORY)
 
 # Generating files
 AC_OUTPUT(Makefile \

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include "xpcom-config.h"
 #include "nsXPCOM.h"
 #include "nsCOMPtr.h"
 #include "nsIProperties.h"

@@ -3,6 +3,7 @@
  */
 #ifndef _NS_FUZZBOT_EXTENSION_H
 #define _NS_FUZZBOT_EXTENSION_H
+#include "xpcom-config.h"
 #include "nsStringAPI.h"
 #include "nsEmbedString.h"
 #include "IFuzzbotExtension.h"
