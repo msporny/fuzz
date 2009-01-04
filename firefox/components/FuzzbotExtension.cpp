@@ -226,3 +226,15 @@ static const nsModuleComponentInfo gFuzzbotComponents[] =
 
 // Create the method that will be called to register the extension.
 NS_IMPL_NSGETMODULE(nsFuzzbotExtension, gFuzzbotComponents)
+
+// This code is needed by Windows to specify an entry-point for the
+// DLL
+#ifdef WIN32
+#include "windows.h"
+
+BOOL APIENTRY DllMain(
+   HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+{
+    return TRUE;
+}
+#endif
