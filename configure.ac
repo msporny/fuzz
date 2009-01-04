@@ -104,9 +104,9 @@ if test "$BUILD_FOR_WINDOWS" = "yes" ; then
    TIDY_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/tidy/include"
    EXPAT_LIB_DIRECTORY="$FUZZBOTDIR/3rdparty/expat"
    EXPAT_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/expat/include"
-   XULRUNNER_LIB_DIRECTORY="/tmp/gecko-sdk/lib"
-   XULRUNNER_INCLUDE_DIRECTORY="/tmp/gecko-sdk/include"
-   XULRUNNER_IDL_DIRECTORY="/tmp/gecko-sdk/idl"
+   XULRUNNER_LIB_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/lib"
+   XULRUNNER_INCLUDE_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/include"
+   XULRUNNER_IDL_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/idl"
    OS="mingw32"
 fi
 
@@ -136,9 +136,11 @@ fi
 #AC_CHECK_HEADERS(iostream)
 
 # Make sure the proper libraries exist
+if test "$BUILD_FOR_WINDOWS" = "no" ; then
 AC_CHECK_LIB(expat, main, [], AC_MSG_ERROR(could not find expat library), -L$EXPAT_LIB_DIRECTORY)
 AC_CHECK_LIB(tidy, main, [], AC_MSG_ERROR(could not find tidy library), -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
 AC_CHECK_LIB(rdfa, main, [], AC_MSG_ERROR(could not find rdfa library), -L$RDFA_LIB_DIRECTORY -L$TIDY_LIB_DIRECTORY -L$EXPAT_LIB_DIRECTORY)
+fi
 
 # Make all the proper substitutions
 VERSION="$PACKAGE_VERSION"

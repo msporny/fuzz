@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\msys\1.0\include;C:\msys\1.0\home\msporny\source\fuzzbot\firefox\build;&quot;C:\msys\1.0\lib\gecko-sdk\include&quot;;C:\msys\1.0\home\msporny\source\librdfa\c"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\firefox\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;XP_WIN;XP_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,15 +63,17 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				LinkLibraryDependencies="false"
+				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="false"
-				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfa.lib tidy.lib libexpatMT.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\msys\1.0\lib\gecko-sdk\lib&quot;;C:\msys\1.0\lib"
+				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfa.lib tidy.lib libexpat.a"
+				OutputFile="$(OutDir)\..\..\..\firefox\components\dist\fuzzbot-components.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\3rdparty\expat;..\..\..\librdfa\libs;..\..\3rdparty\tidy;..\..\..\gecko-sdk\lib"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="msvcrt"
+				IgnoreDefaultLibraryNames="msvcrt;libcmtd"
+				AddModuleNamesToAssembly=""
 				DelayLoadDLLs=""
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -124,13 +126,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\gecko-sdk\include"
+				Optimization="2"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\firefox\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;XP_WIN;XP_WIN32"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -143,9 +146,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib"
+				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfa.lib tidy.lib libexpat.a"
+				OutputFile="$(OutDir)\..\..\..\firefox\components\dist\fuzzbot-components.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\gecko-sdk\lib"
+				AdditionalLibraryDirectories="..\..\3rdparty\expat;..\..\..\librdfa\libs;..\..\3rdparty\tidy;..\..\..\gecko-sdk\lib"
+				IgnoreDefaultLibraryNames="msvcrt;libcmtd"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -185,10 +190,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\fuzzbot-components.cpp"
-				>
-			</File>
 			<File
 				RelativePath="..\..\firefox\components\FuzzbotExtension.cpp"
 				>
