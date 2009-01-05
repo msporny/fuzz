@@ -127,7 +127,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\firefox\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;&quot;..\..\..\gecko-sdk\include&quot;;..\..\firefox\components\build;&quot;C:\Program Files\Expat 2.0.1\Source\lib&quot;;..\..\3rdparty\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;XP_WIN32;MOZILLA_STRICT_API;XPCOM_GLUE;XP_WIN;_X86_;NPSIMPLE_EXPORTS;XML_STATIC;TIDY_WIN32_MLANG_SUPPORT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
