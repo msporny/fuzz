@@ -24,21 +24,21 @@ xpi: build-libraries xpi-linux
 endif
 
 xpi-common:
-	@echo "Building common XPI files..."
-	@cp $(CP_FLAGS) components/dist/*.xpt extension/components/
-	@-$(RM) extension/chrome/$(NAME).jar
-	@cd extension/chrome/$(NAME) && \
+	echo "Building common XPI files..."
+	cp $(CP_FLAGS) components/dist/*.xpt extension/components/
+	-$(RM) extension/chrome/$(NAME).jar
+	cd extension/chrome/$(NAME) && \
 		zip -q -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
 
 xpi-windows: xpi-common
-	@echo "Building Windows Fuzzbot XPI..."
-	@$(RM) dist/fuzzbot-windows.xpi
-	@mkdir -p extension/platform/WINNT_x86-msvc/content
-	@mkdir -p extension/platform/WINNT_x86-msvc/components
-	@mkdir -p extension/components
-	@cp -a dist/fuzzbot-components.dll \
+	echo "Building Windows Fuzzbot XPI..."
+	$(RM) dist/fuzzbot-windows.xpi
+	mkdir -p extension/platform/WINNT_x86-msvc/content
+	mkdir -p extension/platform/WINNT_x86-msvc/components
+	mkdir -p extension/components
+	cp -a components/dist/fuzzbot-components.dll \
 		extension/platform/WINNT_x86-msvc/components
-	@cd extension && \
+	cd extension && \
 	zip -q ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \
