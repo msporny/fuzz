@@ -52,11 +52,6 @@ AC_LANG(C++)
 # Checking for standard build tools
 AC_PROG_INSTALL()
 
-# Assume the xulrunner library is in the standard location
-XULRUNNER_LIB_DIRECTORY=/usr/lib/xulrunner
-XULRUNNER_INCLUDE_DIRECTORY=/usr/include/xulrunner
-XULRUNNER_IDL_DIRECTORY=/usr/share/idl/xulrunner
-
 # Check to see where the expat library resides
 if test -e "/opt/local/lib/libexpat.dylib"; then
    EXPAT_INCLUDE_DIRECTORY="/opt/local/include"
@@ -132,7 +127,10 @@ if test "$BUILD_FOR_LINUX" = "yes" ; then
    AC_CHECK_PROG(AS, as, as, not found)
    AC_CHECK_PROGS(XPIDL, xpidl, not found)
    FIREFOX_PLATFORM="Linux_x86-gcc3"
-   OS="$build_os"
+   XULRUNNER_LIB_DIRECTORY=/usr/lib/xulrunner-devel-1.9/sdk/lib
+   XULRUNNER_INCLUDE_DIRECTORY=/usr/include/xulrunner-1.9/stable
+   XULRUNNER_IDL_DIRECTORY=/usr/share/idl/xulrunner-1.9/stable
+   OS="linux"
 fi
 
 # Perform compilation environment tests

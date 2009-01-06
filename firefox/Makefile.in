@@ -18,7 +18,7 @@ ifeq (@OS@,macos)
 CP_FLAGS = -p
 xpi: build-libraries xpi-macos
 endif
-ifeq (@OS@,linux-gnu)
+ifeq (@OS@,linux)
 CP_FLAGS = -a
 xpi: build-libraries xpi-linux
 endif

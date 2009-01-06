@@ -36,9 +36,9 @@ INCLUDES += -I @XULRUNNER_INCLUDE_DIRECTORY@
 XULIDL_INCLUDES= -I @XULRUNNER_IDL_DIRECTORY@
 endif
 
-ifeq (@OS@,linux-gnu)
-CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX -include "mozilla-config.h"
-LDFLAGS = -L @XULRUNNER_LIB_DIRECTORY@ -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
+ifeq (@OS@,linux)
+CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX
+LDFLAGS = -L @XULRUNNER_LIB_DIRECTORY@ -lxpcomglue_s -lxpcom @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
 INCLUDES += -I @XULRUNNER_INCLUDE_DIRECTORY@
 XULIDL_INCLUDES= -I @XULRUNNER_IDL_DIRECTORY@
 endif
@@ -79,7 +79,7 @@ ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dylib, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dylib, $(LIBRARIES))
 endif
 
-ifeq ($(OS),linux-gnu)
+ifeq ($(OS),linux)
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/lib%.so, $(LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.so, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/lib%.a, $(LIBRARIES))

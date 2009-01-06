@@ -1,21 +1,3 @@
-ifeq (@OS@,mingw32)
-XPIDL=/usr/lib/gecko-sdk/bin/xpidl
-XULIDL=/usr/lib/gecko-sdk/idl
-CFLAGS += -I/usr/lib/gecko-sdk/include
-LDFLAGS += -lxpcom -lplds4 -lplc4 -lnspr4 -lexpat -ltidy @RDFA_LIB_DIRECTORY@/rdfa.lib 
-CFLAGS += -DXP_WIN=1 -D_WINDOWS=1 -D_WIN32=1 -DWIN32=1 -DXP_WIN=1 -DXP_WIN32=1 -DHW_THREADS=1 -DWINVER=0x400 -D_WIN32_WINNT=0x400 -DSTDC_HEADERS=1 -DWIN32_LEAN_AND_MEAN=1
-LIBS = $(DIST)/fuzzbot-components.dll
-endif
-
-ifeq (@OS@,darwin8.11.1)
-XPIDL=/usr/local/gecko-sdk/bin/xpidl
-XULIDL=/usr/local/gecko-sdk/idl
-CFLAGS += -I/usr/local/gecko-sdk/include
-LDFLAGS += -L/usr/local/gecko-sdk/lib -L/Library/Frameworks/XUL.framework/Versions/Current/ -Wl,-executable_path,/Library/Frameworks/XUL.framework/Versions/Current/ -lxpcomglue_s -lxpcom -lnspr4  @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
-CFLAGS += -DXP_UNIX -DXP_MACOSX
-LIBS = $(DIST)/fuzzbot-components.dylib
-endif
-
 SOURCES = FuzzbotExtension.cpp
 IDL_SOURCES = IFuzzbotExtension.idl
 COMPONENT_LIBRARIES = fuzzbot-components
