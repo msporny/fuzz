@@ -14,9 +14,9 @@ ifeq (@OS@,mingw32)
 CP_FLAGS = -a
 xpi: build-libraries xpi-windows
 endif
-ifeq (@OS@,darwin8.11.1)
+ifeq (@OS@,macos)
 CP_FLAGS = -p
-xpi: build-libraries xpi-darwin
+xpi: build-libraries xpi-macos
 endif
 ifeq (@OS@,linux-gnu)
 CP_FLAGS = -a
@@ -32,6 +32,7 @@ xpi-common:
 
 xpi-windows: xpi-common
 	echo "Building Windows Fuzzbot XPI..."
+	mkdir -p dist
 	$(RM) dist/fuzzbot-windows.xpi
 	mkdir -p extension/platform/WINNT_x86-msvc/content
 	mkdir -p extension/platform/WINNT_x86-msvc/components
@@ -45,16 +46,17 @@ xpi-windows: xpi-common
 		`find platform` \
 		$(ZIPEXCLUDE)
 
-xpi-darwin: xpi-common
+xpi-macos: xpi-common
 	@echo "Building MacOS XPI..."
-	@$(RM) dist/fuzzbot-darwin.xpi
+	mkdir -p dist
+	@$(RM) dist/fuzzbot-macosx-i386.xpi
 	@mkdir -p extension/platform/Darwin_x86-gcc3/content
 	@mkdir -p extension/platform/Darwin_x86-gcc3/components
 	@mkdir -p extension/components
-	@cp -p dist/fuzzbot-components.dylib \
+	@cp -p components/dist/fuzzbot-components.dylib \
 		extension/platform/Darwin_x86-gcc3/components
 	@cd extension && \
-	zip -q ../dist/fuzzbot-darwin.xpi chrome.manifest chrome/$(NAME).jar \
+	zip -q ../dist/fuzzbot-macosx-i386.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzzbot.js \
 		install.rdf components/*.xpt \
 		`find platform` \

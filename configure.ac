@@ -118,7 +118,10 @@ if test "$BUILD_FOR_MACOS" = "yes" ; then
    AC_CHECK_PROG(AR, ar, ar, not found)
    AC_CHECK_PROG(AS, as, as, not found)
    AC_CHECK_PROGS(XPIDL, /usr/local/gecko-sdk/bin/xpidl xpidl, not found)
-   FIREFOX_PLATFORM="Darwin_ppc-gcc3"
+   FIREFOX_PLATFORM="Darwin_x86-gcc3"
+   XULRUNNER_LIB_DIRECTORY=/usr/local/gecko-sdk/lib
+   XULRUNNER_INCLUDE_DIRECTORY=/usr/local/gecko-sdk/include
+   XULRUNNER_IDL_DIRECTORY=/usr/local/gecko-sdk/idl
    OS="macos"
 fi
 

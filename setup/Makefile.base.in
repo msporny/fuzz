@@ -39,8 +39,16 @@ endif
 ifeq (@OS@,linux-gnu)
 CXX_FLAGS = -Wall -g -DMOZILLA_STRICT_API -DXP_UNIX -include "mozilla-config.h"
 LDFLAGS = -L @XULRUNNER_LIB_DIRECTORY@ -lxpcom -lplds4 -lplc4 -lnspr4 -lpthread -ldl @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a
-INCLUDES += -I /usr/include/nspr -I /usr/include
-XULIDL_INCLUDES= -I /usr/share/idl/xulrunner
+INCLUDES += -I @XULRUNNER_INCLUDE_DIRECTORY@
+XULIDL_INCLUDES= -I @XULRUNNER_IDL_DIRECTORY@
+endif
+
+ifeq (@OS@,macos)
+CXX += -isysroot /Developer/SDKs/MacOSX10.4u.sdk
+CXX_FLAGS = -g -DMOZILLA_STRICT_API -DXP_UNIX -DXP_MACOSX -include "mozilla-config.h" -Wno-ctor-dtor-privacy -Wno-non-virtual-dtor -fno-rtti
+LDFLAGS = -L@XULRUNNER_LIB_DIRECTORY@ -lxpcomglue_s -lxpcom -lnspr4 -lplds4 -lplc4 @RDFA_LIB_DIRECTORY@/librdfa.a @EXPAT_LIB_DIRECTORY@/libexpat.a @TIDY_LIB_DIRECTORY@/libtidy.a -Wl,-executable_path,/Library/Frameworks/XUL.framework/Versions/Current -framework XUL
+INCLUDES += -I @XULRUNNER_INCLUDE_DIRECTORY@
+XULIDL_INCLUDES= -I @XULRUNNER_IDL_DIRECTORY@
 endif
 
 BUILD_DIR = build
@@ -63,7 +71,15 @@ ifeq ($(OS),mingw32)
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/%.lib, $(LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dll, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dll, $(LIBRARIES))
-else 
+endif
+
+ifeq ($(OS),macos)
+ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/%.a, $(LIBRARIES))
+ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dylib, $(COMPONENT_LIBRARIES))
+ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.dylib, $(LIBRARIES))
+endif
+
+ifeq ($(OS),linux-gnu)
 ALL_LIBRARIES := $(patsubst %,$(DIST_DIR)/lib%.so, $(LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/%.so, $(COMPONENT_LIBRARIES))
 ALL_LIBRARIES += $(patsubst %,$(DIST_DIR)/lib%.a, $(LIBRARIES))
@@ -99,6 +115,12 @@ $(ALL_SOURCES):
 dist/%.so: $(OBJECTS)
 	@echo "Building $@..."
 	$(CXX) -shared -o $@ $(OBJECTS) $(LDFLAGS) $(DYNAMIC_LINK_LIBRARIES:%=-l%)
+	@mkdir -p $(LIB_DIR)
+	@ln -sf $(CURRENT_DIR)/$@ $(LIB_DIR)/$(@F)
+
+dist/%.dylib: $(OBJECTS)
+	@echo "Building $@..."
+	$(CXX) -dynamiclib -o $@ $(OBJECTS) $(LDFLAGS) $(DYNAMIC_LINK_LIBRARIES:%=-l%)
 	@mkdir -p $(LIB_DIR)
 	@ln -sf $(CURRENT_DIR)/$@ $(LIB_DIR)/$(@F)
 
