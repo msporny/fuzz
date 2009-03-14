@@ -4,7 +4,7 @@
 	Version="9.00"
 	Name="fuzz"
 	ProjectGUID="{92B3BEF2-3BEE-4B1B-9CF4-327497ED73DF}"
-	RootNamespace="test"
+	RootNamespace="fuzz"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
