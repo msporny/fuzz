@@ -15,9 +15,9 @@ endif
 
 LIBS_DIR = @FUZZDIR@/libs
 
-.PHONY: all verbose clean test docs
+.PHONY: all verbose clean test 
 
-all: docs
+all: 
 	@$(foreach dir,$(SUBDIRS),$(MAKE_DIR) build-executables &&) true
 
 clean:
@@ -27,9 +27,6 @@ clean:
 
 tests: all
 	@echo "No tests yet..."
-
-docs:
-	@$(MAKE_DIR) docs
 
 packages: all
 	@echo "Package building not implemented yet..."

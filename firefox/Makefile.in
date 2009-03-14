@@ -25,6 +25,7 @@ endif
 
 xpi-common:
 	echo "Building common XPI files..."
+	mkdir -p extension/components
 	cp $(CP_FLAGS) components/dist/*.xpt extension/components/
 	-$(RM) extension/chrome/$(NAME).jar
 	cd extension/chrome/$(NAME) && \
@@ -36,7 +37,6 @@ xpi-windows: xpi-common
 	$(RM) dist/fuzz-windows.xpi
 	mkdir -p extension/platform/WINNT_x86-msvc/content
 	mkdir -p extension/platform/WINNT_x86-msvc/components
-	mkdir -p extension/components
 	cp -a components/dist/fuzz-components.dll \
 		extension/platform/WINNT_x86-msvc/components
 	cd extension && \
@@ -52,7 +52,6 @@ xpi-macos: xpi-common
 	@$(RM) dist/fuzz-macosx-i386.xpi
 	@mkdir -p extension/platform/Darwin_x86-gcc3/content
 	@mkdir -p extension/platform/Darwin_x86-gcc3/components
-	@mkdir -p extension/components
 	@cp -p components/dist/fuzz-components.dylib \
 		extension/platform/Darwin_x86-gcc3/components
 	@cd extension && \
@@ -68,7 +67,6 @@ xpi-linux: xpi-common
 	@$(RM) dist/fuzz-linux.xpi
 	@mkdir -p extension/platform/Linux_x86-gcc3/content
 	@mkdir -p extension/platform/Linux_x86-gcc3/components
-	@mkdir -p extension/components
 	@cp -a components/dist/fuzz-components.so \
 		extension/platform/Linux_x86-gcc3/components
 	@cd extension && \

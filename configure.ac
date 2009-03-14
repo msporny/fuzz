@@ -170,7 +170,6 @@ AC_SUBST(XULRUNNER_IDL_DIRECTORY)
 # Generating files
 AC_OUTPUT(Makefile \
           setup/Makefile.base \
-          docs/Makefile \
           firefox/Makefile \
           firefox/extension/install.rdf \
 	  firefox/components/Makefile)
