@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="fuzzbot"
+	Name="fuzz"
 	ProjectGUID="{92B3BEF2-3BEE-4B1B-9CF4-327497ED73DF}"
 	RootNamespace="test"
 	Keyword="Win32Proj"
@@ -66,7 +66,7 @@
 				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="false"
 				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfa.lib tidy.lib libexpat.a"
-				OutputFile="$(OutDir)\..\..\..\firefox\components\dist\fuzzbot-components.dll"
+				OutputFile="$(OutDir)\..\..\..\firefox\components\dist\fuzz-components.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\3rdparty\expat;..\..\..\librdfa\libs;..\..\3rdparty\tidy;..\..\..\gecko-sdk\lib"
 				IgnoreAllDefaultLibraries="false"
@@ -149,7 +149,7 @@
 				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="true"
 				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfaMT.lib tidyMT.lib libexpatMT.lib"
-				OutputFile="..\..\firefox\components\dist\fuzzbot-components.dll"
+				OutputFile="..\..\firefox\components\dist\fuzz-components.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Program Files\Expat 2.0.1\Bin&quot;;..\..\..\librdfa\libs;..\..\3rdparty\tidy;&quot;..\..\..\gecko-sdk\lib&quot;"
 				IgnoreDefaultLibraryNames="msvcrt"
@@ -194,7 +194,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\firefox\components\FuzzbotExtension.cpp"
+				RelativePath="..\..\firefox\components\FuzzExtension.cpp"
 				>
 			</File>
 		</Filter>
@@ -204,11 +204,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\firefox\components\FuzzbotExtension.h"
+				RelativePath="..\..\firefox\components\FuzzExtension.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\firefox\build\IFuzzbotExtension.h"
+				RelativePath="..\..\firefox\build\IFuzzExtension.h"
 				>
 			</File>
 		</Filter>

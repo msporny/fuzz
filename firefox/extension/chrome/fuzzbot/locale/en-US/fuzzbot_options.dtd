@@ -1,4 +1,4 @@
-<!ENTITY  fuzzbotOptions.label             "Fuzzbot Options">
+<!ENTITY  fuzzOptions.label             "Fuzz Options">
 <!ENTITY  general.label                    "General">
 <!ENTITY  dataformats.label                "Data formats">
 <!ENTITY  dataformat.label                 "Data format">

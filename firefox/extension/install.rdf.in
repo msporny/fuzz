@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
-        <em:id>fuzzbot@digitalbazaar.com</em:id>
-        <em:name>Fuzzbot</em:name>
+        <em:id>fuzz@digitalbazaar.com</em:id>
+        <em:name>Fuzz</em:name>
         <em:version>@VERSION@</em:version>
-        <em:description>Fuzzbot - Semantic Web Processor.</em:description>
+        <em:description>Fuzz - Semantic Web Processor.</em:description>
         <em:creator>Manu Sporny (Digital Bazaar, Inc.)</em:creator>
-        <em:homepageURL>http://rdfa.digitalbazaar.com/fuzzbot</em:homepageURL>
-        <em:optionsURL>chrome://fuzzbot/content/fuzzbot_options.xul</em:optionsURL>
-        <em:iconURL>chrome://fuzzbot/content/fuzzbot32.png</em:iconURL>
-        <em:aboutURL>chrome://fuzzbot/content/about.xul</em:aboutURL>
+        <em:homepageURL>http://rdfa.digitalbazaar.com/fuzz</em:homepageURL>
+        <em:optionsURL>chrome://fuzz/content/fuzz_options.xul</em:optionsURL>
+        <em:iconURL>chrome://fuzz/content/fuzz32.png</em:iconURL>
+        <em:aboutURL>chrome://fuzz/content/about.xul</em:aboutURL>
         <em:targetPlatform>@FIREFOX_PLATFORM@</em:targetPlatform>
 
         <!-- Firefox -->

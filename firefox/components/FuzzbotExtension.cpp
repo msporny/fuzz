@@ -1,7 +1,7 @@
 /*
- * Implementation of the FuzzbotExtension.h and IFuzzbotExtension.h
+ * Implementation of the FuzzExtension.h and IFuzzExtension.h
  * headers. This class is the implementation for the XPCOM interfaces
- * which are called via Javascript to control the Fuzzbot components.
+ * which are called via Javascript to control the Fuzz components.
  */
 #if defined(__linux__)
 #include <sys/types.h>
@@ -20,7 +20,7 @@
 #include "nsIObserverService.h"
 #include "nsIGenericFactory.h"
 #include "nsIFile.h"
-#include "FuzzbotExtension.h"
+#include "FuzzExtension.h"
 
 #include "rdfa.h"
 #include "rdfa_utils.h"
@@ -42,7 +42,7 @@ typedef struct buffer_status
    const char* buffer;
    unsigned int current_offset;
    unsigned int total_length;
-   fuzzbotJSTripleHandlerCallback* javascript_callback;
+   fuzzJSTripleHandlerCallback* javascript_callback;
 } buffer_status;
 
 /**
@@ -59,7 +59,7 @@ void process_triple(rdftriple* triple, void* callback_data)
    rdfa_print_triple(triple);
 
    // Perform a Javascript callback using XPCOM
-   nsCOMPtr<fuzzbotJSTripleHandlerCallback> javascript_callback =
+   nsCOMPtr<fuzzJSTripleHandlerCallback> javascript_callback =
       status->javascript_callback;
    PRBool ret = PR_FALSE;
    //javascript_callback->HandleTriple(
@@ -101,33 +101,33 @@ size_t fill_buffer(char* buffer, size_t buffer_length, void* callback_data)
 
 /*
  * Magic Firefox macro that creates a default factory constructor for
- * the Fuzzbot extension.
+ * the Fuzz extension.
  */
-NS_GENERIC_FACTORY_CONSTRUCTOR(nsFuzzbotExtension)
+NS_GENERIC_FACTORY_CONSTRUCTOR(nsFuzzExtension)
 
 /*
- * Magic Firefox macro that states that the nsFuzzbotExtension class
- * supports the IDL defined in IFuzzbotExtension.
+ * Magic Firefox macro that states that the nsFuzzExtension class
+ * supports the IDL defined in IFuzzExtension.
  */
-NS_IMPL_ISUPPORTS1(nsFuzzbotExtension, nsIFuzzbotExtension)
+NS_IMPL_ISUPPORTS1(nsFuzzExtension, nsIFuzzExtension)
 
-nsFuzzbotExtension::nsFuzzbotExtension()
+nsFuzzExtension::nsFuzzExtension()
 {
   /* member initializers and constructor code */
 }
 
-nsFuzzbotExtension::~nsFuzzbotExtension()
+nsFuzzExtension::~nsFuzzExtension()
 {
   /* destructor code */
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRInt32 *_retval)
+NS_IMETHODIMP nsFuzzExtension::ProcessRdfaTriples(const char* uri, const char* html, fuzzJSTripleHandlerCallback* callback, PRInt32 *_retval)
 {
    nsresult rval = NS_OK;
    
    //printf("URI: %s\n", uri);
-   //FILE* hfile = fopen("/tmp/fuzzbot.html", "w");
+   //FILE* hfile = fopen("/tmp/fuzz.html", "w");
    //fprintf(hfile, "%s", html);
    //fclose(hfile);
    
@@ -153,7 +153,7 @@ NS_IMETHODIMP nsFuzzbotExtension::ProcessRdfaTriples(const char* uri, const char
 }
 
 /* boolean processRdfaTriples(); */
-NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, const char* html, fuzzbotJSTripleHandlerCallback* callback, PRInt32 *_retval)
+NS_IMETHODIMP nsFuzzExtension::TidyAndProcessRdfaTriples(const char* uri, const char* html, fuzzJSTripleHandlerCallback* callback, PRInt32 *_retval)
 {
    nsresult rval = NS_OK;
    TidyBuffer output;
@@ -161,7 +161,7 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    int rc = -1;
    Bool ok;
 
-   //FILE* hfile = fopen("/tmp/fuzzbot-untidied.html", "w");
+   //FILE* hfile = fopen("/tmp/fuzz-untidied.html", "w");
    //fprintf(hfile, "%s", html);
    //fclose(hfile);
    
@@ -195,7 +195,7 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
    else
       printf("A severe error (%d) occurred.\n", rc);
 
-   //FILE* tfile = fopen("/tmp/fuzzbot-tidied.html", "w");
+   //FILE* tfile = fopen("/tmp/fuzz-tidied.html", "w");
    //fprintf(tfile, "%s", (const char*)output.bp);
    //fclose(tfile);
    
@@ -210,22 +210,22 @@ NS_IMETHODIMP nsFuzzbotExtension::TidyAndProcessRdfaTriples(const char* uri, con
 }
 
 /* 
- * All of the Fuzzbot components that are a part of the Fuzzbot
+ * All of the Fuzz components that are a part of the Fuzz
  * extension. This is how the various services are registered in
- * Firefox for the Fuzzbot Extension.
+ * Firefox for the Fuzz Extension.
  */
-static const nsModuleComponentInfo gFuzzbotComponents[] =
+static const nsModuleComponentInfo gFuzzComponents[] =
 {
    {
-      FUZZBOT_CLASSNAME,
-      FUZZBOT_CID,
-      FUZZBOT_CONTRACTID,
-      nsFuzzbotExtensionConstructor
+      FUZZ_CLASSNAME,
+      FUZZ_CID,
+      FUZZ_CONTRACTID,
+      nsFuzzExtensionConstructor
 	}
 };
 
 // Create the method that will be called to register the extension.
-NS_IMPL_NSGETMODULE(nsFuzzbotExtension, gFuzzbotComponents)
+NS_IMPL_NSGETMODULE(nsFuzzExtension, gFuzzComponents)
 
 // This code is needed by Windows to specify an entry-point for the
 // DLL

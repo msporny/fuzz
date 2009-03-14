@@ -14,10 +14,10 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
-   sodipodi:docbase="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content"
-   sodipodi:docname="fuzzbot-offline.svg"
+   sodipodi:docbase="/home/msporny/work/fuzz/firefox/extension/chrome/fuzz/content"
+   sodipodi:docname="fuzz-offline.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot16-offline.png"
+   inkscape:export-filename="/home/msporny/work/fuzz/firefox/extension/chrome/fuzz/content/fuzz16-offline.png"
    inkscape:export-xdpi="2.5648854"
    inkscape:export-ydpi="2.5648854">
   <defs

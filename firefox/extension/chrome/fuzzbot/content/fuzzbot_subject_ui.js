@@ -1,9 +1,9 @@
 /**
- * The Fuzzbot extension Javascript functionality for the main Firefox UI.
+ * The Fuzz extension Javascript functionality for the main Firefox UI.
  *
  * @author Manu Sporny
  */
-var gFuzzbotButtonWidth = 12;
+var gFuzzButtonWidth = 12;
 
 /**
  * Gets the absolute X and Y position of an element on the page.
@@ -62,8 +62,8 @@ function generateSubjectDisplay(element, subject)
 {
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
-   var fuzzbotSubjectButton = element;
-   var position = getElementPosition(fuzzbotSubjectButton);
+   var fuzzSubjectButton = element;
+   var position = getElementPosition(fuzzSubjectButton);
    var tableIdString = element.getAttribute('id') + "-table";
 
    // Create the display table
@@ -73,9 +73,9 @@ function generateSubjectDisplay(element, subject)
    rval.style.position = "absolute";
    rval.style.top = position[1] + "px";
    rval.style.left = 
-      (position[0] + gFuzzbotButtonWidth + 16) + "px";
+      (position[0] + gFuzzButtonWidth + 16) + "px";
    rval.style.width = 
-      (winWidth - (position[0] + gFuzzbotButtonWidth)) + "px";
+      (winWidth - (position[0] + gFuzzButtonWidth)) + "px";
    
    // Retrieve all of the display-able values
    // TODO: This needs to be broken out into a more modular architecture
@@ -88,7 +88,7 @@ function generateSubjectDisplay(element, subject)
    {
       var triple = gTripleStore[subject][i];
       
-      _fuzzbotLog(subject + ": " + triple.predicate + " " + triple.object);
+      _fuzzLog(subject + ": " + triple.predicate + " " + triple.object);
       
       if(triple.predicate == "http://xmlns.com/foaf/0.1/name")
       {
@@ -120,7 +120,7 @@ function generateSubjectDisplay(element, subject)
    h1.style.textAlign = "center";
    h1.style.padding = "5px";
    h1.style.fontSize = "16px";
-   h1.style.backgroundImage = "url(chrome://fuzzbot/content/tabpanel-top.png)";
+   h1.style.backgroundImage = "url(chrome://fuzz/content/tabpanel-top.png)";
    h1.style.backgroundPosition = "top";
    h1.style.backgroundRepeat = "repeat-x";
 
@@ -142,7 +142,7 @@ function generateSubjectDisplay(element, subject)
       var imgdiv = cdoc.createElement('div');
       imgdiv.style.textAlign = "center";
       imgdiv.style.backgroundImage =
-         "url(chrome://fuzzbot/content/tabpanel-middle.png)";
+         "url(chrome://fuzz/content/tabpanel-middle.png)";
       imgdiv.style.backgroundPosition = "left";
       imgdiv.style.backgroundRepeat = "repeat-y";
    
@@ -160,7 +160,7 @@ function generateSubjectDisplay(element, subject)
    var divbody = cdoc.createElement('div');
    divbody.style.padding = "0 10px";
    divbody.style.backgroundImage =
-      "url(chrome://fuzzbot/content/tabpanel-middle.png)";
+      "url(chrome://fuzz/content/tabpanel-middle.png)";
    divbody.style.backgroundPosition = "left";
    divbody.style.backgroundRepeat = "repeat-y";
    rval.appendChild(divbody);
@@ -209,7 +209,7 @@ function generateSubjectDisplay(element, subject)
    var divbottom = cdoc.createElement('div');
    divbottom.style.height = "2px";
    divbottom.style.backgroundImage =
-      "url(chrome://fuzzbot/content/tabpanel-bottom.png)";
+      "url(chrome://fuzz/content/tabpanel-bottom.png)";
    divbottom.style.backgroundPosition = "bottom";
    divbottom.style.backgroundRepeat = "repeat-x";
    rval.appendChild(divbottom);
@@ -222,7 +222,7 @@ function generateSubjectDisplay(element, subject)
  *
  * @param event The click event that occurred in the DOM.
  */
-function fuzzbotHandleClickEvent(event)
+function fuzzHandleClickEvent(event)
 {
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
@@ -232,45 +232,45 @@ function fuzzbotHandleClickEvent(event)
 
    if((winWidth - position[0]) < 100)
    {
-      fuzzbotDisplaySubject(element, subject);
+      fuzzDisplaySubject(element, subject);
    }
    else
    {
-      fuzzbotHideSubject(element, subject);
+      fuzzHideSubject(element, subject);
    }
 }
 
 /**
- * Hides the Fuzzbot UI for a given subject.
+ * Hides the Fuzz UI for a given subject.
  *
  * @param element The element to use when manipulating the screen.
  * @param subject the subject that is associated with the element.
  */
-function fuzzbotHideSubject(element, subject)
+function fuzzHideSubject(element, subject)
 {
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
-   var fuzzbotSubjectButton = element;
+   var fuzzSubjectButton = element;
    var tableId = element.getAttribute('id') + "-table";
-   var fuzzbotSubjectDisplay = cdoc.getElementById(tableId);
+   var fuzzSubjectDisplay = cdoc.getElementById(tableId);
 
-   cdoc.body.removeChild(fuzzbotSubjectDisplay);
-   fuzzbotSubjectButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
+   cdoc.body.removeChild(fuzzSubjectDisplay);
+   fuzzSubjectButton.style.left = (winWidth - gFuzzButtonWidth) + "px";
 }
 
 /**
- * Displays a more complete Fuzzbot UI for a given subject.
+ * Displays a more complete Fuzz UI for a given subject.
  *
  * @param elementId The ID of the element to use when manipulating the screen.
  * @param subject the subject string for the triples to fetch from the triple
  *                store.
  */
-function fuzzbotDisplaySubject(element, subject)
+function fuzzDisplaySubject(element, subject)
 {
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
    var winHeight = cdoc.body.clientHeight;
-   var fuzzbotSubjectButton = element;
+   var fuzzSubjectButton = element;
    var horizontalShift = (winWidth / 5);
 
    // move the button to the left
@@ -278,18 +278,18 @@ function fuzzbotDisplaySubject(element, subject)
    {
       horizontalShift = 200;
    }
-   fuzzbotSubjectButton.style.left = (winWidth - horizontalShift) + "px";
+   fuzzSubjectButton.style.left = (winWidth - horizontalShift) + "px";
 
    // display the details panel
-   var fuzzbotSubjectDisplay = generateSubjectDisplay(element, subject);
-   cdoc.body.appendChild(fuzzbotSubjectDisplay);
+   var fuzzSubjectDisplay = generateSubjectDisplay(element, subject);
+   cdoc.body.appendChild(fuzzSubjectDisplay);
 }
 
    
 /**
- * Adds Fuzzbot Actions to all of the current elements on the page.
+ * Adds Fuzz Actions to all of the current elements on the page.
  */
-function addFuzzbotMarkup()
+function addFuzzMarkup()
 {
    var cdoc = gBrowser.contentDocument;
    var winWidth = cdoc.body.clientWidth;
@@ -299,31 +299,31 @@ function addFuzzbotMarkup()
    for(var i = 0; i < subjectElements.length; i++)
    {
       var element = subjectElements[i];
-      var idString = "fuzzbot-button-" + i;
+      var idString = "fuzz-button-" + i;
       var subject = cdoc.URL + element.getAttribute('about');
       var position = getElementPosition(element);
       
-      var fuzzbotUiButton = cdoc.createElement('img');
-      fuzzbotUiButton.setAttribute("id", idString);
-      fuzzbotUiButton.setAttribute("src",
-         "chrome://fuzzbot/content/ltab_open.png");
-      fuzzbotUiButton.setAttribute("alt", subject);
-      fuzzbotUiButton.setAttribute("title", subject);
+      var fuzzUiButton = cdoc.createElement('img');
+      fuzzUiButton.setAttribute("id", idString);
+      fuzzUiButton.setAttribute("src",
+         "chrome://fuzz/content/ltab_open.png");
+      fuzzUiButton.setAttribute("alt", subject);
+      fuzzUiButton.setAttribute("title", subject);
 
-      fuzzbotUiButton.addEventListener(
-         "click", fuzzbotHandleClickEvent, false);
+      fuzzUiButton.addEventListener(
+         "click", fuzzHandleClickEvent, false);
       
-      fuzzbotUiButton.style.position = "absolute";
-      fuzzbotUiButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
-      fuzzbotUiButton.style.top = (position[1] - 8) + "px";
-      cdoc.body.appendChild(fuzzbotUiButton);
+      fuzzUiButton.style.position = "absolute";
+      fuzzUiButton.style.left = (winWidth - gFuzzButtonWidth) + "px";
+      fuzzUiButton.style.top = (position[1] - 8) + "px";
+      cdoc.body.appendChild(fuzzUiButton);
    }
 }
 
 /**
- * Removes all Fuzzbot UI elements from the page.
+ * Removes all Fuzz UI elements from the page.
  */
-function removeFuzzbotMarkup()
+function removeFuzzMarkup()
 {
    var cdoc = gBrowser.contentDocument;
    var elementFound = false;
@@ -331,13 +331,13 @@ function removeFuzzbotMarkup()
 
    do
    {
-      var idString = "fuzzbot-button-" + i;
-      var fuzzbotUiButton = cdoc.getElementById(idString);
+      var idString = "fuzz-button-" + i;
+      var fuzzUiButton = cdoc.getElementById(idString);
 
-      if(fuzzbotUiButton)
+      if(fuzzUiButton)
       {
          elementFound = true;
-         cdoc.body.removeChild(fuzzbotUiButton);
+         cdoc.body.removeChild(fuzzUiButton);
       }
       else
       {

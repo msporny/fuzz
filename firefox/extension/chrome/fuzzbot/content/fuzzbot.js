@@ -1,5 +1,5 @@
 /**
- * The Fuzzbot extension Javascript functionality for the main Firefox UI.
+ * The Fuzz extension Javascript functionality for the main Firefox UI.
  *
  * @author Manu Sporny
  */
@@ -11,7 +11,7 @@ var RDFA_PARSE_UNKNOWN = 0;
 var RDFA_PARSE_SUCCESS = 1;
 
 /**
- * Open a new tab showing the status of the Fuzzbot software.
+ * Open a new tab showing the status of the Fuzz software.
  */
 function showStatus()
 {
@@ -23,13 +23,13 @@ function showStatus()
 
 /**
  * Sets a timer to update the interface from time to time to show the person
- * on the current system the status of the Fuzzbot software.
+ * on the current system the status of the Fuzz software.
  */
-function updateFuzzbotStatus()
+function updateFuzzStatus()
 {
    //mainWindow = getCurrentWindow();
 
-   window.setTimeout(updateFuzzbotStatus, 1000);
+   window.setTimeout(updateFuzzStatus, 1000);
 }
 
 /**
@@ -38,21 +38,21 @@ function updateFuzzbotStatus()
  */
 function addUrlBarIcons()
 {
-   //var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
-   var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
-   var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
-   var fuzzbotFoafPersonIcon = 
-      document.getElementById("fuzzbot-urlbar-foaf-person-icon");
+   //var fuzzIcon = document.getElementById("fuzz-urlbar-icon");
+   var fuzzAudioIcon = document.getElementById("fuzz-urlbar-audio-icon");
+   var fuzzVideoIcon = document.getElementById("fuzz-urlbar-video-icon");
+   var fuzzFoafPersonIcon = 
+      document.getElementById("fuzz-urlbar-foaf-person-icon");
 
    /* Display audio icon */
    if(gTripleRdfTypes["http://purl.org/media/audio#Recording"] ||
       gTripleRdfTypes["http://purl.org/media/audio#Album"])
    {
-       fuzzbotAudioIcon.setAttribute("objectsDetected", "true");
+       fuzzAudioIcon.setAttribute("objectsDetected", "true");
    }
    else
    {
-       fuzzbotAudioIcon.removeAttribute("objectsDetected");
+       fuzzAudioIcon.removeAttribute("objectsDetected");
    }
 
    /* Display video icon */
@@ -61,71 +61,71 @@ function addUrlBarIcons()
       gTripleRdfTypes["http://purl.org/media/video#Movie"] ||
       gTripleRdfTypes["http://purl.org/media/video#Series"])
    {
-       fuzzbotVideoIcon.setAttribute("objectsDetected", "true");
+       fuzzVideoIcon.setAttribute("objectsDetected", "true");
    }
    else
    {
-       fuzzbotVideoIcon.removeAttribute("objectsDetected");
+       fuzzVideoIcon.removeAttribute("objectsDetected");
    }
 
    /* Display FOAF Person icon */
    if(gTripleRdfTypes["http://xmlns.com/foaf/0.1/Person"])
    {
-       fuzzbotFoafPersonIcon.setAttribute("objectsDetected", "true");
+       fuzzFoafPersonIcon.setAttribute("objectsDetected", "true");
    }
    else
    {
-       fuzzbotFoafPersonIcon.removeAttribute("objectsDetected");
+       fuzzFoafPersonIcon.removeAttribute("objectsDetected");
    }
 
-   /* Display general Fuzzbot UI */
+   /* Display general Fuzz UI */
    //if(gNumTriples > 2)
    //{
-   //    fuzzbotIcon.setAttribute("objectsDetected", "true");
+   //    fuzzIcon.setAttribute("objectsDetected", "true");
    //}
 }
 
 /**
- * Removes all Fuzzbot icons from the URL bar.
+ * Removes all Fuzz icons from the URL bar.
  */
 function removeUrlBarIcons()
 {
-   //var fuzzbotIcon = document.getElementById("fuzzbot-urlbar-icon");
-   var fuzzbotAudioIcon = document.getElementById("fuzzbot-urlbar-audio-icon");
-   var fuzzbotVideoIcon = document.getElementById("fuzzbot-urlbar-video-icon");
-   var fuzzbotFoafPersonIcon = 
-      document.getElementById("fuzzbot-urlbar-foaf-person-icon");
+   //var fuzzIcon = document.getElementById("fuzz-urlbar-icon");
+   var fuzzAudioIcon = document.getElementById("fuzz-urlbar-audio-icon");
+   var fuzzVideoIcon = document.getElementById("fuzz-urlbar-video-icon");
+   var fuzzFoafPersonIcon = 
+      document.getElementById("fuzz-urlbar-foaf-person-icon");
 
-   //fuzzbotIcon.removeAttribute("objectsDetected");
-   fuzzbotAudioIcon.removeAttribute("objectsDetected");
-   fuzzbotVideoIcon.removeAttribute("objectsDetected");
-   fuzzbotFoafPersonIcon.removeAttribute("objectsDetected");
+   //fuzzIcon.removeAttribute("objectsDetected");
+   fuzzAudioIcon.removeAttribute("objectsDetected");
+   fuzzVideoIcon.removeAttribute("objectsDetected");
+   fuzzFoafPersonIcon.removeAttribute("objectsDetected");
 }
 
 /**
  * Updates the Firefox display window with the updated status.
  */
-function updateFuzzbotStatusDisplay()
+function updateFuzzStatusDisplay()
 {
-   var statusImage = document.getElementById("fuzzbot-status-image");
-   var ui = document.getElementById("fuzzbot-ui");
-   var disabled = document.getElementById("fuzzbot-ui-disable");
+   var statusImage = document.getElementById("fuzz-status-image");
+   var ui = document.getElementById("fuzz-ui");
+   var disabled = document.getElementById("fuzz-ui-disable");
 
    // update the image and the label
    if((gNumTriples > 2) && !disabled.hasAttribute("checked"))
    {
-      statusImage.src = "chrome://fuzzbot/content/fuzzbot16-online.png";
+      statusImage.src = "chrome://fuzz/content/fuzz16-online.png";
       // FIXME: Temporarily removed, don't know if this is the proper approach
-      //removeFuzzbotMarkup();
-      //addFuzzbotMarkup();
+      //removeFuzzMarkup();
+      //addFuzzMarkup();
       addUrlBarIcons();
    }
    else
    {
-      statusImage.src = "chrome://fuzzbot/content/fuzzbot16-offline.png";
+      statusImage.src = "chrome://fuzz/content/fuzz16-offline.png";
       // FIXME: Temporarily removed, don't know if this is the proper 
       //        approach.
-      //removeFuzzbotMarkup();
+      //removeFuzzMarkup();
       removeUrlBarIcons();
    }
 }
@@ -165,7 +165,7 @@ function tripleHandler(subject, predicate, object)
    }
    
    gTripleStore[subject].push(triple);
-   _fuzzbotLog("Stored: " + triple.subject + " " + triple.predicate + " " +
+   _fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
 
    //addTripleToUi(triple);
@@ -174,9 +174,9 @@ function tripleHandler(subject, predicate, object)
 };
 
 /**
- * Updates the list of triples in the Fuzzbot Triple UI.
+ * Updates the list of triples in the Fuzz Triple UI.
  */
-function updateFuzzbotTripleUi()
+function updateFuzzTripleUi()
 {
    // Populate the UI
    clearUiTriples();
@@ -190,13 +190,13 @@ function updateFuzzbotTripleUi()
 }
 
 /**
- * Hides or displays the Fuzzbot UI on the current page.
+ * Hides or displays the Fuzz UI on the current page.
  */
-function toggleFuzzbotTripleUi()
+function toggleFuzzTripleUi()
 {
-   var ui = document.getElementById("fuzzbot-ui");
-   var uiControl = document.getElementById("fuzzbot-ui-control");
-   var disable = document.getElementById("fuzzbot-ui-disable");
+   var ui = document.getElementById("fuzz-ui");
+   var uiControl = document.getElementById("fuzz-ui-control");
+   var disable = document.getElementById("fuzz-ui-disable");
 
    if(uiControl.label == "Hide Raw Triples" || disable.hasAttribute("checked"))
    {
@@ -205,7 +205,7 @@ function toggleFuzzbotTripleUi()
    }
    else
    {
-      updateFuzzbotTripleUi();
+      updateFuzzTripleUi();
       uiControl.setAttribute("label", "Hide Raw Triples");
       ui.hidden = false;
    }
@@ -218,7 +218,7 @@ function toggleFuzzbotTripleUi()
  */
 function addTripleToUi(triple)
 {
-   var lchildren = document.getElementById("fuzzbot-triples-listbox");
+   var lchildren = document.getElementById("fuzz-triples-listbox");
 
    // create Treerow with id (rowid is a global variable so that
    // we do not use the same id twice)
@@ -309,7 +309,7 @@ function clearTriples()
 function clearUiTriples()
 {
    // clear the current list of children
-   var lb = document.getElementById("fuzzbot-triples-listbox");
+   var lb = document.getElementById("fuzz-triples-listbox");
    while(lb.firstChild)
    {
       lb.removeChild(lb.firstChild);
@@ -321,11 +321,11 @@ function clearUiTriples()
  */
 function detectSemanticData()
 {
-   var disabled = document.getElementById("fuzzbot-ui-disable");
+   var disabled = document.getElementById("fuzz-ui-disable");
    if(disabled.hasAttribute("checked"))
    {      
-      toggleFuzzbotTripleUi();
-      updateFuzzbotStatusDisplay();
+      toggleFuzzTripleUi();
+      updateFuzzStatusDisplay();
       return;
    }
 
@@ -334,20 +334,20 @@ function detectSemanticData()
    var xml =
       serializer.serializeToString(gBrowser.selectedBrowser.contentDocument);
 
-   //_fuzzbotLog(xml);
+   //_fuzzLog(xml);
    
    var gPlugin = Components
-      .classes["@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"]
+      .classes["@rdfa.digitalbazaar.com/fuzz/xpcom;1"]
       .getService()
       .QueryInterface(
-         Components.interfaces.nsIFuzzbotExtension);
+         Components.interfaces.nsIFuzzExtension);
    
    clearTriples();
 
    var rval = gPlugin.processRdfaTriples(url, xml, tripleHandler);
 
    // if the previous parse failed, it is usually because the input
-   // document is malformed. Instruct Fuzzbot to use Tidy to clean up
+   // document is malformed. Instruct Fuzz to use Tidy to clean up
    // the incoming HTML/XHTML and retry.
    if(rval != RDFA_PARSE_SUCCESS)
    {
@@ -355,7 +355,7 @@ function detectSemanticData()
       gPlugin.tidyAndProcessRdfaTriples(url, xml, tripleHandler);
    }
    
-   updateFuzzbotStatusDisplay();
+   updateFuzzStatusDisplay();
 }
 
 /**
@@ -364,7 +364,7 @@ function detectSemanticData()
  */
 function attachDocumentListeners()
 {
-   _fuzzbotLog("attachDocumentListeners()");
+   _fuzzLog("attachDocumentListeners()");
    
    var container = gBrowser.tabContainer;
    gBrowser.addEventListener("load", tabSelected, false);
@@ -379,12 +379,12 @@ function attachDocumentListeners()
  */
 function tabSelected(event)
 {
-   _fuzzbotLog("tabSelected");
+   _fuzzLog("tabSelected");
    detectSemanticData();
 
-   var uiControl = document.getElementById("fuzzbot-ui-control");
+   var uiControl = document.getElementById("fuzz-ui-control");
    if(!uiControl.hidden)
    {
-      updateFuzzbotTripleUi();
+      updateFuzzTripleUi();
    }
 }

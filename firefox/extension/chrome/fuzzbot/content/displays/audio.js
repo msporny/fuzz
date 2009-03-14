@@ -1,5 +1,5 @@
 /**
- * The Fuzzbot extension Javascript functionality for the Audio vocabulary.
+ * The Fuzz extension Javascript functionality for the Audio vocabulary.
  *
  * @author Manu Sporny
  */
@@ -7,7 +7,7 @@
 /**
  * The processing data used for the audio details panel.
  */
-gFuzzbotAudioProcessingData = {
+gFuzzAudioProcessingData = {
    title : 
    { 
       properties : ["http://purl.org/dc/terms/title",
@@ -97,14 +97,14 @@ gFuzzbotAudioProcessingData = {
  */
 function buildAudioMenuPopup()
 {
-   var fuzzbotAudioMenu = document.getElementById("fuzzbot-audio-menu-popup");
+   var fuzzAudioMenu = document.getElementById("fuzz-audio-menu-popup");
    var audioSubjects = [];
 
    // Clear the current contents of the audio menu popup
-   fuzzbotAudioMenu.hidden = true;
-   while(fuzzbotAudioMenu.firstChild) 
+   fuzzAudioMenu.hidden = true;
+   while(fuzzAudioMenu.firstChild) 
    {
-       fuzzbotAudioMenu.removeChild(fuzzbotAudioMenu.firstChild);
+       fuzzAudioMenu.removeChild(fuzzAudioMenu.firstChild);
    }
 
    // Scan the triple store and collect the subjects that are audio
@@ -158,20 +158,20 @@ function buildAudioMenuPopup()
 	    if(triple.object == "http://purl.org/media/audio#Recording")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeAudioRecording.png");
+		   "chrome://fuzz/content/displays/rdfTypeAudioRecording.png");
 	    }
 	    else if(triple.object == "http://purl.org/media/audio#Album")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeAudioCollection.png");
+		   "chrome://fuzz/content/displays/rdfTypeAudioCollection.png");
             }
 	 }
       }
       
-      fuzzbotAudioMenu.appendChild(menuItem);
+      fuzzAudioMenu.appendChild(menuItem);
    }
 
-   fuzzbotAudioMenu.hidden = false;
+   fuzzAudioMenu.hidden = false;
 }
 
 /**
@@ -201,7 +201,7 @@ function audioSelected(event)
 
    // create and display the new window.
    var newWindow = window.openDialog(
-      "chrome://fuzzbot/content/displays/audio.xul", "",
+      "chrome://fuzz/content/displays/audio.xul", "",
       "chrome, dialog, resizable=yes", params);
    newWindow.focus();
    newWindow.document.title = title;
@@ -230,26 +230,26 @@ function initDialog()
       var triple = subjectTriples[i];
 
       // process every term in the processing model
-      for(var term in gFuzzbotAudioProcessingData)
+      for(var term in gFuzzAudioProcessingData)
       {
 	 // process every property for every term in the processing model
-         for(var p in gFuzzbotAudioProcessingData[term]["properties"])
+         for(var p in gFuzzAudioProcessingData[term]["properties"])
 	 {
-	    var property = gFuzzbotAudioProcessingData[term]["properties"][p];
+	    var property = gFuzzAudioProcessingData[term]["properties"][p];
 	    if(triple.predicate == property)
 	    {
-   	       gFuzzbotAudioProcessingData[term]["value"] = triple.object;
+   	       gFuzzAudioProcessingData[term]["value"] = triple.object;
 	    }
 	 }
       }
    }
 
    // set all of the UI elements given the processing model
-   for(var term in gFuzzbotAudioProcessingData)
+   for(var term in gFuzzAudioProcessingData)
    {
-       _fuzzbotLog("Searching for " + term);
-      var tval = gFuzzbotAudioProcessingData[term]["value"];
-      var widget = document.getElementById("fuzzbot-audio-details-" + term);
+       _fuzzLog("Searching for " + term);
+      var tval = gFuzzAudioProcessingData[term]["value"];
+      var widget = document.getElementById("fuzz-audio-details-" + term);
 
       // select which UI elements to modify based on the name of the attribute
       if(tval != null)
@@ -263,7 +263,7 @@ function initDialog()
 	  {
 	      // Set the button/label actions for URL data
 	     var button = 
-		 document.getElementById("fuzzbot-audio-details-" + term + 
+		 document.getElementById("fuzz-audio-details-" + term + 
 		    "-button");
              widget.setAttribute("href", tval);
              button.setAttribute("href", tval);
@@ -292,26 +292,26 @@ function initDialog()
       else
       {
           var row = 
-             document.getElementById("fuzzbot-audio-details-row-" + term);
+             document.getElementById("fuzz-audio-details-row-" + term);
 	  row.hidden = true;
       }
    }
 
    // build the action menus
    var serviceArguments = { type : "track" };
-   buildActionMenu("fuzzbot-audio-details-title-menupopup",
+   buildActionMenu("fuzz-audio-details-title-menupopup",
       "Search MusicBrainz", "musicbrainz", serviceArguments, 
-      gFuzzbotAudioProcessingData["title"]["value"]);
+      gFuzzAudioProcessingData["title"]["value"]);
 
    serviceArguments = { type : "artist" };
-   buildActionMenu("fuzzbot-audio-details-creator-menupopup",
+   buildActionMenu("fuzz-audio-details-creator-menupopup",
       "Search MusicBrainz", "musicbrainz", serviceArguments,
-      gFuzzbotAudioProcessingData["creator"]["value"]);
+      gFuzzAudioProcessingData["creator"]["value"]);
 
    serviceArguments = {};
-   buildActionMenu("fuzzbot-audio-details-creator-menupopup",
+   buildActionMenu("fuzz-audio-details-creator-menupopup",
       "Search Wikipedia", "wikipedia", serviceArguments,
-      gFuzzbotAudioProcessingData["creator"]["value"]);
+      gFuzzAudioProcessingData["creator"]["value"]);
 
    window.sizeToContent();
 }

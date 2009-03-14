@@ -1,20 +1,20 @@
 /**
- * The Interface for the Fuzzbot plugin/extension. 
+ * The Interface for the Fuzz plugin/extension. 
  */ 
 #include "nsISupports.idl"
 
 [scriptable, function, uuid(f5ebc90b-56b5-4bce-96c9-d2962c2af7f6)]
-interface fuzzbotJSTripleHandlerCallback : nsISupports {
+interface fuzzJSTripleHandlerCallback : nsISupports {
   boolean call(in string subject, in string predicate, in string object);
 };
 
 [scriptable, uuid(f5ebc90b-56b5-4bce-96c9-d2962c2af7f5)]
-interface nsIFuzzbotExtension : nsISupports {
+interface nsIFuzzExtension : nsISupports {
   long processRdfaTriples(
     in string uri, in string html,
-    in fuzzbotJSTripleHandlerCallback callback);
+    in fuzzJSTripleHandlerCallback callback);
    
   long tidyAndProcessRdfaTriples(
     in string uri, in string html,
-    in fuzzbotJSTripleHandlerCallback callback);
+    in fuzzJSTripleHandlerCallback callback);
 };

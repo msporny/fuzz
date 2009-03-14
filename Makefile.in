@@ -13,7 +13,7 @@ MAKE_CMD = $(MAKE) --no-print-directory -s
 MAKE_DIR = $(MAKE_CMD) -C $(dir)
 endif
 
-LIBS_DIR = @FUZZBOTDIR@/libs
+LIBS_DIR = @FUZZDIR@/libs
 
 .PHONY: all verbose clean test docs
 

@@ -1,4 +1,4 @@
-var gFuzzbotButtonWidth = 44;
+var gFuzzButtonWidth = 44;
 
 /**
  * Gets the absolute X and Y position of an element on the page.
@@ -54,8 +54,8 @@ function getAllSubjectElements()
  */
 function generateSubjectDisplay(elementId, subject)
 {
-   var fuzzbotSubjectButton = document.getElementById(elementId);
-   var position = getElementPosition(fuzzbotSubjectButton);
+   var fuzzSubjectButton = document.getElementById(elementId);
+   var position = getElementPosition(fuzzSubjectButton);
    var tableIdString = elementId + "-table";
 
    // Create the display table
@@ -66,9 +66,9 @@ function generateSubjectDisplay(elementId, subject)
    rval.style.position = "absolute";
    rval.style.top = position[1] + "px";
    rval.style.left = 
-      (position[0] + gFuzzbotButtonWidth - 16) + "px";
+      (position[0] + gFuzzButtonWidth - 16) + "px";
    rval.style.width = 
-      (winWidth - (position[0] + gFuzzbotButtonWidth)) + "px";
+      (winWidth - (position[0] + gFuzzButtonWidth)) + "px";
    //rval.style.height = 200 + "px";
 
    // Title
@@ -95,38 +95,38 @@ function generateSubjectDisplay(elementId, subject)
 }
 
 /**
- * Hides the Fuzzbot UI for a given subject.
+ * Hides the Fuzz UI for a given subject.
  *
  * @param elementId The ID of the element to use when manipulating the screen.
  * @param subject the subject that is associated with the element.
  */
-function fuzzbotHideSubject(elementId, subject)
+function fuzzHideSubject(elementId, subject)
 {
-   var fuzzbotSubjectButton = document.getElementById(elementId);
+   var fuzzSubjectButton = document.getElementById(elementId);
    var tableId = elementId + "-table"
-   var fuzzbotSubjectDisplay = document.getElementById(tableId);
+   var fuzzSubjectDisplay = document.getElementById(tableId);
 
-   fuzzbotSubjectDisplay.style.display = "none";
+   fuzzSubjectDisplay.style.display = "none";
 
-   fuzzbotSubjectButton.setAttribute("onclick",
-         "javascript:fuzzbotDisplaySubject('" + elementId + 
+   fuzzSubjectButton.setAttribute("onclick",
+         "javascript:fuzzDisplaySubject('" + elementId + 
          "', '" + subject + "')");
-   fuzzbotSubjectButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
+   fuzzSubjectButton.style.left = (winWidth - gFuzzButtonWidth) + "px";
 }
 
 /**
- * Displays a more complete Fuzzbot UI for a given subject.
+ * Displays a more complete Fuzz UI for a given subject.
  *
  * @param elementId The ID of the element to use when manipulating the screen.
  * @param subject the subject string for the triples to fetch from the triple
  *                store.
  */
-function fuzzbotDisplaySubject(elementId, subject)
+function fuzzDisplaySubject(elementId, subject)
 {
    var winWidth = document.all ? document.body.clientWidth : window.innerWidth;
    var winHeight = 
       document.all ? document.body.clientHeight : window.innerHeight;
-   var fuzzbotSubjectButton = document.getElementById(elementId);
+   var fuzzSubjectButton = document.getElementById(elementId);
    var horizontalShift = (winWidth/5);
 
    // move the button to the left
@@ -135,20 +135,20 @@ function fuzzbotDisplaySubject(elementId, subject)
       horizontalShift = 200;
    }
 
-   fuzzbotSubjectButton.setAttribute("onclick",
-         "javascript:fuzzbotHideSubject('" + elementId + 
+   fuzzSubjectButton.setAttribute("onclick",
+         "javascript:fuzzHideSubject('" + elementId + 
          "', '" + subject + "')");
-   fuzzbotSubjectButton.style.left = (winWidth - horizontalShift) + "px";
+   fuzzSubjectButton.style.left = (winWidth - horizontalShift) + "px";
 
    // display the details panel
-   var fuzzbotSubjectDisplay = generateSubjectDisplay(elementId, subject);
-   document.body.appendChild(fuzzbotSubjectDisplay);
+   var fuzzSubjectDisplay = generateSubjectDisplay(elementId, subject);
+   document.body.appendChild(fuzzSubjectDisplay);
 }
 
 /**
- * Adds Fuzzbot Actions to all of the current elements on the page.
+ * Adds Fuzz Actions to all of the current elements on the page.
  */
-function addFuzzbotMarkup()
+function addFuzzMarkup()
 {
    winWidth = document.all ? document.body.clientWidth : window.innerWidth;
    winHeight = document.all ? document.body.clientHeight : window.innerHeight;
@@ -159,22 +159,22 @@ function addFuzzbotMarkup()
    for(var i = 0; i < subjectElements.length; i++)
    {
       element = subjectElements[i];
-      idString = "fuzzbot-button-" + i;
+      idString = "fuzz-button-" + i;
       subject = document.URL + element.attributes['about'].value;
       position = getElementPosition(element);
 
-      fuzzbotUiButton = document.createElement('img');
-      fuzzbotUiButton.setAttribute("id", idString);
-      fuzzbotUiButton.setAttribute("src", "larrow.png");
-      fuzzbotUiButton.setAttribute("alt", subject);
-      fuzzbotUiButton.setAttribute("title", subject);
-      fuzzbotUiButton.setAttribute("onclick", 
-         "javascript:fuzzbotDisplaySubject('" + idString + 
+      fuzzUiButton = document.createElement('img');
+      fuzzUiButton.setAttribute("id", idString);
+      fuzzUiButton.setAttribute("src", "larrow.png");
+      fuzzUiButton.setAttribute("alt", subject);
+      fuzzUiButton.setAttribute("title", subject);
+      fuzzUiButton.setAttribute("onclick", 
+         "javascript:fuzzDisplaySubject('" + idString + 
          "', '" + subject + "')");
-      fuzzbotUiButton.style.position = "absolute";
-      fuzzbotUiButton.style.left = (winWidth - gFuzzbotButtonWidth) + "px";
-      fuzzbotUiButton.style.top = (position[1] - 8) + "px";
-      document.body.appendChild(fuzzbotUiButton);
+      fuzzUiButton.style.position = "absolute";
+      fuzzUiButton.style.left = (winWidth - gFuzzButtonWidth) + "px";
+      fuzzUiButton.style.top = (position[1] - 8) + "px";
+      document.body.appendChild(fuzzUiButton);
 
       text += element.attributes['about'].value + "<br />";
       text += "xpos:" + position[0] + "<br />";

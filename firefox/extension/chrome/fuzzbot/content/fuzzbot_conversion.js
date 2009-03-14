@@ -1,5 +1,5 @@
 /**
- * The Fuzzbot extension Javascript functionality for converting values into
+ * The Fuzz extension Javascript functionality for converting values into
  * displayable strings.
  *
  * @author Manu Sporny

@@ -3,10 +3,10 @@
 
 <dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" buttons="accept" buttonlabelaccept="OK" title="Audio Information" onload="initDialog();" style="overflow: auto;" >
 
-  <script type="application/x-javascript" src="chrome://fuzzbot/content/json2.js"/>
-  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_ui_helper.js"/>
-  <script type="application/x-javascript" src="chrome://fuzzbot/content/fuzzbot_conversion.js"/>
-  <script type="application/x-javascript" src="chrome://fuzzbot/content/displays/audio.js"/>
+  <script type="application/x-javascript" src="chrome://fuzz/content/json2.js"/>
+  <script type="application/x-javascript" src="chrome://fuzz/content/fuzz_ui_helper.js"/>
+  <script type="application/x-javascript" src="chrome://fuzz/content/fuzz_conversion.js"/>
+  <script type="application/x-javascript" src="chrome://fuzz/content/displays/audio.js"/>
 
   <groupbox>
     <caption label="Audio Details"/>
@@ -18,113 +18,113 @@
       </columns>
       <rows>
 
-        <row id="fuzzbot-audio-details-row-depiction">
+        <row id="fuzz-audio-details-row-depiction">
           <spacer flex="1"/>
           <hbox>
-            <image id="fuzzbot-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content/fuzzbot32.png" onclick="window.sizeToContent();"/>
+            <image id="fuzz-audio-details-depiction" maxheight="200" maxwidth="200" src="file:///home/msporny/work/fuzz/firefox/extension/chrome/fuzz/content/fuzz32.png" onclick="window.sizeToContent();"/>
           </hbox>
           <spacer flex="1"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-title">
+        <row id="fuzz-audio-details-row-title">
           <label value="Title"/>
-          <label id="fuzzbot-audio-details-title" value="TITLE_VALUE"/>
+          <label id="fuzz-audio-details-title" value="TITLE_VALUE"/>
           <button type="menu" label="Use Title to...">
-            <menupopup id="fuzzbot-audio-details-title-menupopup">
+            <menupopup id="fuzz-audio-details-title-menupopup">
             </menupopup>
           </button>
         </row>
 
-        <row id="fuzzbot-audio-details-row-creator">
+        <row id="fuzz-audio-details-row-creator">
           <label value="Creator"/>
-          <label id="fuzzbot-audio-details-creator" value="CREATOR_VALUE"/>
+          <label id="fuzz-audio-details-creator" value="CREATOR_VALUE"/>
           <button type="menu" label="Use Creator to...">
-            <menupopup id="fuzzbot-audio-details-creator-menupopup">
+            <menupopup id="fuzz-audio-details-creator-menupopup">
             </menupopup>
           </button>
         </row>
 
-        <!-- row id="fuzzbot-audio-details-row-contributor">
+        <!-- row id="fuzz-audio-details-row-contributor">
           <label value="Contributor"/>
-          <label id="fuzzbot-audio-details-contributor" 
+          <label id="fuzz-audio-details-contributor" 
                  value="CONTRIBUTOR_VALUE"/>
           <button type="menu" label="Use Contributor to...">
-            <menupopup id="fuzzbot-audio-details-contributor-menupopup">
+            <menupopup id="fuzz-audio-details-contributor-menupopup">
             </menupopup>
           </button>
         </row -->
 
-        <row id="fuzzbot-audio-details-row-published">
+        <row id="fuzz-audio-details-row-published">
           <label value="Published"/>
-          <label id="fuzzbot-audio-details-published" value="PUBLISHED_VALUE"/>
+          <label id="fuzz-audio-details-published" value="PUBLISHED_VALUE"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-description">
+        <row id="fuzz-audio-details-row-description">
           <label value="Description"/>
-          <description id="fuzzbot-audio-details-description" 
+          <description id="fuzz-audio-details-description" 
                        value="DESCRIPTION_VALUE"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-position">
+        <row id="fuzz-audio-details-row-position">
           <label value="Position"/>
-          <label id="fuzzbot-audio-details-position" value="POSITION_VALUE"/>
+          <label id="fuzz-audio-details-position" value="POSITION_VALUE"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-sample">
+        <row id="fuzz-audio-details-row-sample">
           <label value="Sample"/>
-          <label id="fuzzbot-audio-details-sample" style="text-link: true" 
+          <label id="fuzz-audio-details-sample" style="text-link: true" 
                  value="SAMPLE_VALUE"/>
-          <button id="fuzzbot-audio-details-sample-button" 
+          <button id="fuzz-audio-details-sample-button" 
                   label="Get Sample"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-download">
+        <row id="fuzz-audio-details-row-download">
           <label value="Download"/>
-          <label id="fuzzbot-audio-details-download" style="text-link: true"
+          <label id="fuzz-audio-details-download" style="text-link: true"
                  value="DOWNLOAD_VALUE"/>
-          <button id="fuzzbot-audio-details-download-button" 
+          <button id="fuzz-audio-details-download-button" 
                   label="Download"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-type">
+        <row id="fuzz-audio-details-row-type">
           <label value="Genre"/>
-          <label id="fuzzbot-audio-details-type" value="TYPE_VALUE"/>
+          <label id="fuzz-audio-details-type" value="TYPE_VALUE"/>
           <!--button type="menu" label="Use Genre to...">
-            <menupopup id="fuzzbot-audio-details-type-menupopup">
+            <menupopup id="fuzz-audio-details-type-menupopup">
             </menupopup>
           </button -->
         </row>
 
-        <row id="fuzzbot-audio-details-row-license">
+        <row id="fuzz-audio-details-row-license">
           <label value="License"/>
-          <label id="fuzzbot-audio-details-license" value="LICENSE_VALUE"/>
+          <label id="fuzz-audio-details-license" value="LICENSE_VALUE"/>
           <button type="menu" label="Use License to...">
-            <menupopup id="fuzzbot-audio-details-license-menupopup">
+            <menupopup id="fuzz-audio-details-license-menupopup">
             </menupopup>
           </button>
         </row>
 
-        <row id="fuzzbot-audio-details-row-duration">
+        <row id="fuzz-audio-details-row-duration">
           <label value="Duration"/>
-          <label id="fuzzbot-audio-details-duration" value="DURATION_VALUE"/>
+          <label id="fuzz-audio-details-duration" value="DURATION_VALUE"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-costs">
+        <row id="fuzz-audio-details-row-costs">
           <label value="Price"/>
-          <label id="fuzzbot-audio-details-costs" value="COSTS_VALUE"/>
+          <label id="fuzz-audio-details-costs" value="COSTS_VALUE"/>
         </row>
 
-        <row id="fuzzbot-audio-details-row-payment">
+        <row id="fuzz-audio-details-row-payment">
           <label value="Payment"/>
-          <label id="fuzzbot-audio-details-payment" style="text-link: true"
+          <label id="fuzz-audio-details-payment" style="text-link: true"
                  value="PAYMENT_VALUE"/>
-          <button id="fuzzbot-audio-details-payment-button" 
+          <button id="fuzz-audio-details-payment-button" 
                   label="Purchase"/>
         </row>
 
-        <row hidden="true" id="fuzzbot-audio-details-row-contains">
+        <row hidden="true" id="fuzz-audio-details-row-contains">
           <label value="Contains"/>
-          <label id="fuzzbot-audio-details-contains" value="CONTAINS_VALUE"/>
+          <label id="fuzz-audio-details-contains" value="CONTAINS_VALUE"/>
         </row>
 
        </rows>

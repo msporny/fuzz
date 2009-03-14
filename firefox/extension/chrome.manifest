@@ -1,5 +1,5 @@
-overlay	chrome://browser/content/browser.xul	chrome://fuzzbot/content/fuzzbot_overlay.xul
-style   chrome://browser/content/browser.xul    chrome://fuzzbot/content/fuzzbot.css
-style   chrome://global/content/customizeToolbar.xul    chrome://fuzzbot/content/fuzzbot.css
-content	fuzzbot jar:chrome/fuzzbot.jar!/content/
-locale  fuzzbot en-US jar:chrome/fuzzbot.jar!/locale/en-US/
+overlay	chrome://browser/content/browser.xul	chrome://fuzz/content/fuzz_overlay.xul
+style   chrome://browser/content/browser.xul    chrome://fuzz/content/fuzz.css
+style   chrome://global/content/customizeToolbar.xul    chrome://fuzz/content/fuzz.css
+content	fuzz jar:chrome/fuzz.jar!/content/
+locale  fuzz en-US jar:chrome/fuzz.jar!/locale/en-US/

@@ -1,6 +1,6 @@
 # This file contains basic Makefile includes that contain all building
 # instructions for all binaries and packages.
-FUZZBOT = @FUZZBOTDIR@
+FUZZ = @FUZZDIR@
 CURRENT_DIR = $(shell pwd)
 
 .PHONY: all build-directories build-objects build-xpts build-libraries build-executables clean clean-objects clean-libraries $(ALL_EXECUTABLES)
@@ -13,7 +13,7 @@ XPIDL = @XPIDL@
 CXX_FLAGS = -Wall -fPIC -g
 AR_FLAGS = cr
 
-LIB_DIR = $(FUZZBOT)/libs
+LIB_DIR = $(FUZZ)/libs
 INCLUDES = -I build \
            -I @XULRUNNER_INCLUDE_DIRECTORY@ \
            -I @XULRUNNER_INCLUDE_DIRECTORY@/java \

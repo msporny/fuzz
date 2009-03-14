@@ -1,4 +1,4 @@
-NAME=fuzzbot
+NAME=fuzz
 ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ \*.svg
 
 .PHONY: all xpi xpi-common xpi-windows xpi-darwin xpi-linux clean clean-xpi
@@ -31,17 +31,17 @@ xpi-common:
 		zip -q -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
 
 xpi-windows: xpi-common
-	echo "Building Windows Fuzzbot XPI..."
+	echo "Building Windows Fuzz XPI..."
 	mkdir -p dist
-	$(RM) dist/fuzzbot-windows.xpi
+	$(RM) dist/fuzz-windows.xpi
 	mkdir -p extension/platform/WINNT_x86-msvc/content
 	mkdir -p extension/platform/WINNT_x86-msvc/components
 	mkdir -p extension/components
-	cp -a components/dist/fuzzbot-components.dll \
+	cp -a components/dist/fuzz-components.dll \
 		extension/platform/WINNT_x86-msvc/components
 	cd extension && \
-	zip -q ../dist/fuzzbot-windows.xpi chrome.manifest chrome/$(NAME).jar \
-		defaults/preferences/fuzzbot.js \
+	zip -q ../dist/fuzz-windows.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
@@ -49,31 +49,31 @@ xpi-windows: xpi-common
 xpi-macos: xpi-common
 	@echo "Building MacOS XPI..."
 	mkdir -p dist
-	@$(RM) dist/fuzzbot-macosx-i386.xpi
+	@$(RM) dist/fuzz-macosx-i386.xpi
 	@mkdir -p extension/platform/Darwin_x86-gcc3/content
 	@mkdir -p extension/platform/Darwin_x86-gcc3/components
 	@mkdir -p extension/components
-	@cp -p components/dist/fuzzbot-components.dylib \
+	@cp -p components/dist/fuzz-components.dylib \
 		extension/platform/Darwin_x86-gcc3/components
 	@cd extension && \
-	zip -q ../dist/fuzzbot-macosx-i386.xpi chrome.manifest chrome/$(NAME).jar \
-		defaults/preferences/fuzzbot.js \
+	zip -q ../dist/fuzz-macosx-i386.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 xpi-linux: xpi-common
-	@echo "Building Linux Fuzzbot XPI..."
+	@echo "Building Linux Fuzz XPI..."
 	@mkdir -p dist
-	@$(RM) dist/fuzzbot-linux.xpi
+	@$(RM) dist/fuzz-linux.xpi
 	@mkdir -p extension/platform/Linux_x86-gcc3/content
 	@mkdir -p extension/platform/Linux_x86-gcc3/components
 	@mkdir -p extension/components
-	@cp -a components/dist/fuzzbot-components.so \
+	@cp -a components/dist/fuzz-components.so \
 		extension/platform/Linux_x86-gcc3/components
 	@cd extension && \
-	zip -q ../dist/fuzzbot-linux.xpi chrome.manifest chrome/$(NAME).jar \
-		defaults/preferences/fuzzbot.js \
+	zip -q ../dist/fuzz-linux.xpi chrome.manifest chrome/$(NAME).jar \
+		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
@@ -84,7 +84,7 @@ clean: clean-xpi
 	@rm -rf dist
 
 clean-xpi:
-	@$(RM) dist/fuzzbot-*.xpi
+	@$(RM) dist/fuzz-*.xpi
 	@$(RM) extension/chrome/$(NAME).jar
 	@$(RM) extension/components/*.xpt
 	@$(RM) -rf extension/platform/*

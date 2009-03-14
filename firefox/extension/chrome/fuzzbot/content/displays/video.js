@@ -1,5 +1,5 @@
 /**
- * The Fuzzbot extension Javascript functionality for the Video vocabulary.
+ * The Fuzz extension Javascript functionality for the Video vocabulary.
  *
  * @author Manu Sporny
  */
@@ -7,7 +7,7 @@
 /**
  * The processing data used for the video details panel.
  */
-gFuzzbotVideoProcessingData = {
+gFuzzVideoProcessingData = {
    title : 
    { 
       properties : ["http://purl.org/dc/terms/title",
@@ -102,14 +102,14 @@ gFuzzbotVideoProcessingData = {
  */
 function buildVideoMenuPopup()
 {
-   var fuzzbotVideoMenu = document.getElementById("fuzzbot-video-menu-popup");
+   var fuzzVideoMenu = document.getElementById("fuzz-video-menu-popup");
    var videoSubjects = [];
 
    // Clear the current contents of the video menu popup
-   fuzzbotVideoMenu.hidden = true;
-   while(fuzzbotVideoMenu.firstChild) 
+   fuzzVideoMenu.hidden = true;
+   while(fuzzVideoMenu.firstChild) 
    {
-       fuzzbotVideoMenu.removeChild(fuzzbotVideoMenu.firstChild);
+       fuzzVideoMenu.removeChild(fuzzVideoMenu.firstChild);
    }
 
    // Scan the triple store and collect the subjects that are video
@@ -165,30 +165,30 @@ function buildVideoMenuPopup()
 	    if(triple.object == "http://purl.org/media/video#Recording")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeVideoRecording.png");
+		   "chrome://fuzz/content/displays/rdfTypeVideoRecording.png");
 	    }
 	    else if(triple.object == "http://purl.org/media/video#Episode")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeVideoEpisode.png");
+		   "chrome://fuzz/content/displays/rdfTypeVideoEpisode.png");
             }
 	    else if(triple.object == "http://purl.org/media/video#Movie")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeVideoMovie.png");
+		   "chrome://fuzz/content/displays/rdfTypeVideoMovie.png");
             }
 	    else if(triple.object == "http://purl.org/media/video#Series")
 	    {
 		menuItem.setAttribute("image", 
-		   "chrome://fuzzbot/content/displays/rdfTypeVideoSeries.png");
+		   "chrome://fuzz/content/displays/rdfTypeVideoSeries.png");
             }
 	 }
       }
       
-      fuzzbotVideoMenu.appendChild(menuItem);
+      fuzzVideoMenu.appendChild(menuItem);
    }
 
-   fuzzbotVideoMenu.hidden = false;
+   fuzzVideoMenu.hidden = false;
 }
 
 /**
@@ -218,7 +218,7 @@ function videoSelected(event)
 
    // create and display the new window.
    var newWindow = 
-      window.openDialog("chrome://fuzzbot/content/displays/video.xul", "",
+      window.openDialog("chrome://fuzz/content/displays/video.xul", "",
          "chrome, dialog, resizable=yes", params);
    newWindow.focus();
    newWindow.title = title;
@@ -247,26 +247,26 @@ function initDialog()
       var triple = subjectTriples[i];
 
       // process every term in the processing model
-      for(var term in gFuzzbotVideoProcessingData)
+      for(var term in gFuzzVideoProcessingData)
       {
 	 // process every property for every term in the processing model
-         for(var p in gFuzzbotVideoProcessingData[term]["properties"])
+         for(var p in gFuzzVideoProcessingData[term]["properties"])
 	 {
-	    var property = gFuzzbotVideoProcessingData[term]["properties"][p];
+	    var property = gFuzzVideoProcessingData[term]["properties"][p];
 	    if(triple.predicate == property)
 	    {
-   	       gFuzzbotVideoProcessingData[term]["value"] = triple.object;
+   	       gFuzzVideoProcessingData[term]["value"] = triple.object;
 	    }
 	 }
       }
    }
 
    // set all of the UI elements given the processing model
-   for(var term in gFuzzbotVideoProcessingData)
+   for(var term in gFuzzVideoProcessingData)
    {
-       _fuzzbotLog("Searching for " + term);
-      var tval = gFuzzbotVideoProcessingData[term]["value"];
-      var widget = document.getElementById("fuzzbot-video-details-" + term);
+       _fuzzLog("Searching for " + term);
+      var tval = gFuzzVideoProcessingData[term]["value"];
+      var widget = document.getElementById("fuzz-video-details-" + term);
 
       // select which UI elements to modify based on the name of the attribute
       if(tval != null)
@@ -280,7 +280,7 @@ function initDialog()
 	  {
 	      // Set the button/label actions for URL data
 	     var button = 
-		 document.getElementById("fuzzbot-video-details-" + term + 
+		 document.getElementById("fuzz-video-details-" + term + 
 		    "-button");
              widget.setAttribute("href", tval);
              button.setAttribute("href", tval);
@@ -309,33 +309,33 @@ function initDialog()
       else
       {
           var row = 
-             document.getElementById("fuzzbot-video-details-row-" + term);
+             document.getElementById("fuzz-video-details-row-" + term);
 	  row.hidden = true;
       }
    }
 
    // build the action menus
-   clearActionMenu("fuzzbot-video-details-title-menupopup");
+   clearActionMenu("fuzz-video-details-title-menupopup");
 
    var serviceArguments = {"s":"tt"};
-   buildActionMenu("fuzzbot-video-details-title-menupopup",
+   buildActionMenu("fuzz-video-details-title-menupopup",
       "Search IMDB", "imdb", serviceArguments, 
-      gFuzzbotVideoProcessingData["title"]["value"]);
+      gFuzzVideoProcessingData["title"]["value"]);
 
    serviceArguments = {"tab":"Movies", repos:"Movies"};
-   buildActionMenu("fuzzbot-video-details-title-menupopup",
+   buildActionMenu("fuzz-video-details-title-menupopup",
      "Search Fandango", "fandango", serviceArguments, 
-      gFuzzbotVideoProcessingData["title"]["value"]);
+      gFuzzVideoProcessingData["title"]["value"]);
 
    serviceArguments = {"s":"nm"};
-   buildActionMenu("fuzzbot-video-details-creator-menupopup",
+   buildActionMenu("fuzz-video-details-creator-menupopup",
       "Search IMDB", "imdb", serviceArguments, 
-      gFuzzbotVideoProcessingData["creator"]["value"]);
+      gFuzzVideoProcessingData["creator"]["value"]);
 
    serviceArguments = {"searchby":"celebs"};
-   buildActionMenu("fuzzbot-video-details-creator-menupopup",
+   buildActionMenu("fuzz-video-details-creator-menupopup",
       "Search Rotten Tomatoes", "rotten-tomatoes", serviceArguments, 
-      gFuzzbotVideoProcessingData["creator"]["value"]);
+      gFuzzVideoProcessingData["creator"]["value"]);
 
    window.sizeToContent();
 }

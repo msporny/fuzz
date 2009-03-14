@@ -1,6 +1,6 @@
-SOURCES = FuzzbotExtension.cpp
-IDL_SOURCES = IFuzzbotExtension.idl
-COMPONENT_LIBRARIES = fuzzbot-components
+SOURCES = FuzzExtension.cpp
+IDL_SOURCES = IFuzzExtension.idl
+COMPONENT_LIBRARIES = fuzz-components
 
 # ----------- Standard Makefile
-include @FUZZBOTDIR@/setup/Makefile.base
+include @FUZZDIR@/setup/Makefile.base

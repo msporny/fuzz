@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzzbot", "test.vcproj", "{92B3BEF2-3BEE-4B1B-9CF4-327497ED73DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzz", "test.vcproj", "{92B3BEF2-3BEE-4B1B-9CF4-327497ED73DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

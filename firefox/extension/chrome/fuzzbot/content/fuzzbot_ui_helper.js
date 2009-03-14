@@ -1,12 +1,12 @@
 /**
- * The Fuzzbot extension Javascript functionality for user interface 
+ * The Fuzz extension Javascript functionality for user interface 
  *management.
  *
  * @author Manu Sporny
  */
 
 /* Global variables that track the state of this plugin */
-var gFuzzbotVisible = true;
+var gFuzzVisible = true;
 
 /* The triple store contains all of the triples on the current page. */
 var gTripleStore = {};
@@ -23,7 +23,7 @@ var gNumTriples = 0;
  *
  * @param msg the message to log to the console.
  */
-function _fuzzbotLog(msg)
+function _fuzzLog(msg)
 {
    debug_flag = true;
 

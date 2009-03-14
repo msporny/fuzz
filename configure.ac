@@ -1,13 +1,13 @@
-# Configure script for Digital Bazaar Fuzzbot Firefox extension
+# Configure script for Digital Bazaar Fuzz Firefox extension
 # Usage: Run ./configure once 
 # 
 # Author: Manu Sporny
 
-AC_INIT(fuzzbot, 0.8.4, support@digitalbazaar.com)
+AC_INIT(fuzz, 0.9, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables
-FUZZBOTDIR=`pwd`
+FUZZDIR=`pwd`
 RELEASE=`date +%Y%m%d`
 
 # Check for particular build options
@@ -41,7 +41,7 @@ AC_ARG_ENABLE([macos],
       esac
    ], [BUILD_FOR_MACOS=no])  dnl Default value
 
-echo -e "\n--------- Configuring Fuzzbot build environment -----------"
+echo -e "\n--------- Configuring Fuzz build environment -----------"
 
 # Check the system type
 AC_CANONICAL_BUILD()
@@ -74,16 +74,16 @@ fi
 
 # Check to see where the rdfa parser resides
 if test -e "../librdfa/libs/librdfa.so"; then
-   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
-   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+   RDFA_INCLUDE_DIRECTORY="$FUZZDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZDIR/../librdfa/libs"
 fi
 if test -e "../librdfa/libs/librdfa.dylib"; then
-   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
-   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+   RDFA_INCLUDE_DIRECTORY="$FUZZDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZDIR/../librdfa/libs"
 fi
 if test -e "../librdfa/libs/rdfa.dll"; then
-   RDFA_INCLUDE_DIRECTORY="$FUZZBOTDIR/../librdfa/c"
-   RDFA_LIB_DIRECTORY="$FUZZBOTDIR/../librdfa/libs"
+   RDFA_INCLUDE_DIRECTORY="$FUZZDIR/../librdfa/c"
+   RDFA_LIB_DIRECTORY="$FUZZDIR/../librdfa/libs"
 fi
 
 # Conditional setup for Windows build
@@ -95,13 +95,13 @@ if test "$BUILD_FOR_WINDOWS" = "yes" ; then
    AC_CHECK_PROGS(AS, i586-mingw32msvc-as as, not found)
    AC_CHECK_PROGS(XPIDL, xpidl, not found)
    FIREFOX_PLATFORM="WINNT_x86-msvc"
-   TIDY_LIB_DIRECTORY="$FUZZBOTDIR/3rdparty/tidy"
-   TIDY_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/tidy/include"
-   EXPAT_LIB_DIRECTORY="$FUZZBOTDIR/3rdparty/expat"
-   EXPAT_INCLUDE_DIRECTORY="$FUZZBOTDIR/3rdparty/expat/include"
-   XULRUNNER_LIB_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/lib"
-   XULRUNNER_INCLUDE_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/include"
-   XULRUNNER_IDL_DIRECTORY="$FUZZBOTDIR/../gecko-sdk/idl"
+   TIDY_LIB_DIRECTORY="$FUZZDIR/3rdparty/tidy"
+   TIDY_INCLUDE_DIRECTORY="$FUZZDIR/3rdparty/tidy/include"
+   EXPAT_LIB_DIRECTORY="$FUZZDIR/3rdparty/expat"
+   EXPAT_INCLUDE_DIRECTORY="$FUZZDIR/3rdparty/expat/include"
+   XULRUNNER_LIB_DIRECTORY="$FUZZDIR/../gecko-sdk/lib"
+   XULRUNNER_INCLUDE_DIRECTORY="$FUZZDIR/../gecko-sdk/include"
+   XULRUNNER_IDL_DIRECTORY="$FUZZDIR/../gecko-sdk/idl"
    OS="mingw32"
 fi
 
@@ -145,7 +145,7 @@ fi
 
 # Make all the proper substitutions
 VERSION="$PACKAGE_VERSION"
-AC_SUBST(FUZZBOTDIR)
+AC_SUBST(FUZZDIR)
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
@@ -176,7 +176,7 @@ AC_OUTPUT(Makefile \
 	  firefox/components/Makefile)
 
 # Dump the build configuration for the developer
-echo -e "\n--------- Fuzzbot build environment -----------"
+echo -e "\n--------- Fuzz build environment -----------"
 echo "Product        : $PACKAGE_STRING-$RELEASE"
 echo "Build system   : $build_cpu-$build_vendor-$build_os"
 echo "C++ compiler   : $CXX"

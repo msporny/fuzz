@@ -1,35 +1,35 @@
 /**
  * Copyright 2008 Digital Bazaar, Inc.
  */
-#ifndef _NS_FUZZBOT_EXTENSION_H
-#define _NS_FUZZBOT_EXTENSION_H
+#ifndef _NS_FUZZ_EXTENSION_H
+#define _NS_FUZZ_EXTENSION_H
 #include "xpcom-config.h"
 #include "nsStringAPI.h"
 #include "nsEmbedString.h"
-#include "IFuzzbotExtension.h"
+#include "IFuzzExtension.h"
 
 // f5ebc90b-56b5-4bce-96c9-d2962c2af7f5
-#define FUZZBOT_CID {0xf5ebc90b, 0x56b5, 0x4bce, \
+#define FUZZ_CID {0xf5ebc90b, 0x56b5, 0x4bce, \
    { 0x96, 0xc9, 0xd2, 0x96, 0x2c, 0x2a, 0xf7, 0xf5}}
-#define FUZZBOT_CONTRACTID "@rdfa.digitalbazaar.com/fuzzbot/xpcom;1"
-#define FUZZBOT_CLASSNAME "Fuzzbot Extension"
+#define FUZZ_CONTRACTID "@rdfa.digitalbazaar.com/fuzz/xpcom;1"
+#define FUZZ_CLASSNAME "Fuzz Extension"
 
 /**
- * The Fuzzbot Extension class implements the public XPCOM Fuzzbot
+ * The Fuzz Extension class implements the public XPCOM Fuzz
  * Extension interface for the Mozilla class of web browsers.
  *
  * @author Manu Sporny
  */
-class nsFuzzbotExtension : public nsIFuzzbotExtension
+class nsFuzzExtension : public nsIFuzzExtension
 {
 public:
    NS_DECL_ISUPPORTS
-   NS_DECL_NSIFUZZBOTEXTENSION
+   NS_DECL_NSIFUZZEXTENSION
 
-   nsFuzzbotExtension();
+   nsFuzzExtension();
 
 private:
-   ~nsFuzzbotExtension();
+   ~nsFuzzExtension();
 
 protected:
    /**

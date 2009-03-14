@@ -1,7 +1,7 @@
-<!ENTITY  fuzzbot.name             "Fuzzbot">
-<!ENTITY  fuzzbotToolbar.name      "Fuzzbot Toolbar">
-<!ENTITY  fuzzbotOptions.label     "Options">
-<!ENTITY  fuzzbotToolbar.accesskey "O">
-<!ENTITY  fuzzbotSidebar.name      "Fuzzbot Sidebar">
-<!ENTITY  fuzzbotSidebar.accesskey "O">
+<!ENTITY  fuzz.name             "Fuzz">
+<!ENTITY  fuzzToolbar.name      "Fuzz Toolbar">
+<!ENTITY  fuzzOptions.label     "Options">
+<!ENTITY  fuzzToolbar.accesskey "O">
+<!ENTITY  fuzzSidebar.name      "Fuzz Sidebar">
+<!ENTITY  fuzzSidebar.accesskey "O">
 

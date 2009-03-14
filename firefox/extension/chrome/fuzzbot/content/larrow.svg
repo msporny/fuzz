@@ -14,10 +14,10 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
-   sodipodi:docbase="/home/msporny/work/fuzzbot/firefox/extension/chrome/fuzzbot/content"
+   sodipodi:docbase="/home/msporny/work/fuzz/firefox/extension/chrome/fuzz/content"
    sodipodi:docname="larrow.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/msporny/work/fuzzbot/firefox/larrow.png"
+   inkscape:export-filename="/home/msporny/work/fuzz/firefox/larrow.png"
    inkscape:export-xdpi="24.421167"
    inkscape:export-ydpi="24.421167">
   <defs

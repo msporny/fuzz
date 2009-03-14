@@ -1,13 +1,13 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-#fuzzbot-urlbar-icon, 
-#fuzzbot-urlbar-icon:hover:active,
-#fuzzbot-urlbar-audio-icon, 
-#fuzzbot-urlbar-audio-icon:hover:active, 
-#fuzzbot-urlbar-video-icon, 
-#fuzzbot-urlbar-video-icon:hover:active, 
-#fuzzbot-urlbar-foaf-person-icon, 
-#fuzzbot-urlbar-foaf-person-icon:hover:active
+#fuzz-urlbar-icon, 
+#fuzz-urlbar-icon:hover:active,
+#fuzz-urlbar-audio-icon, 
+#fuzz-urlbar-audio-icon:hover:active, 
+#fuzz-urlbar-video-icon, 
+#fuzz-urlbar-video-icon:hover:active, 
+#fuzz-urlbar-foaf-person-icon, 
+#fuzz-urlbar-foaf-person-icon:hover:active
 {
   padding: 0px;
   margin: 0px;
@@ -15,22 +15,22 @@
   background-color: transparent;
 }
 
-#fuzzbot-urlbar-icon > hbox > .button-menu-dropmarker,
-#fuzzbot-urlbar-icon > hbox > .button-text,
-#fuzzbot-urlbar-audio-icon > hbox > .button-menu-dropmarker,
-#fuzzbot-urlbar-audio-icon > hbox > .button-text,
-#fuzzbot-urlbar-video-icon > hbox > .button-menu-dropmarker,
-#fuzzbot-urlbar-video-icon > hbox > .button-text,
-#fuzzbot-urlbar-foaf-person-icon > hbox > .button-menu-dropmarker,
-#fuzzbot-urlbar-foaf-person-icon > hbox > .button-text 
+#fuzz-urlbar-icon > hbox > .button-menu-dropmarker,
+#fuzz-urlbar-icon > hbox > .button-text,
+#fuzz-urlbar-audio-icon > hbox > .button-menu-dropmarker,
+#fuzz-urlbar-audio-icon > hbox > .button-text,
+#fuzz-urlbar-video-icon > hbox > .button-menu-dropmarker,
+#fuzz-urlbar-video-icon > hbox > .button-text,
+#fuzz-urlbar-foaf-person-icon > hbox > .button-menu-dropmarker,
+#fuzz-urlbar-foaf-person-icon > hbox > .button-text 
 {
   display: none;
 }
 
-#fuzzbot-urlbar-icon,
-#fuzzbot-urlbar-audio-icon,
-#fuzzbot-urlbar-video-icon,
-#fuzzbot-urlbar-foaf-person-icon
+#fuzz-urlbar-icon,
+#fuzz-urlbar-audio-icon,
+#fuzz-urlbar-video-icon,
+#fuzz-urlbar-foaf-person-icon
 {
   -moz-binding: url("chrome://global/content/bindings/button.xml#menu");
   -moz-appearance: none; 
@@ -38,26 +38,26 @@
   margin-right: 1px !important;
 }
 
-#fuzzbot-urlbar-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/fuzzbot16-online.png");
+#fuzz-urlbar-icon[objectsDetected] {
+  list-style-image: url("chrome://fuzz/content/fuzz16-online.png");
 }
 
-#fuzzbot-urlbar-foaf-person-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeFoafPerson.png");
+#fuzz-urlbar-foaf-person-icon[objectsDetected] {
+  list-style-image: url("chrome://fuzz/content/displays/rdfTypeFoafPerson.png");
 }
 
-#fuzzbot-urlbar-audio-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeAudio.png");
+#fuzz-urlbar-audio-icon[objectsDetected] {
+  list-style-image: url("chrome://fuzz/content/displays/rdfTypeAudio.png");
 }
 
-#fuzzbot-urlbar-video-icon[objectsDetected] {
-  list-style-image: url("chrome://fuzzbot/content/displays/rdfTypeVideo.png");
+#fuzz-urlbar-video-icon[objectsDetected] {
+  list-style-image: url("chrome://fuzz/content/displays/rdfTypeVideo.png");
 }
 
-#fuzzbot-status-image {
-   list-style-image: url("chrome://fuzzbot/content/fuzzbot16-online.png");
+#fuzz-status-image {
+   list-style-image: url("chrome://fuzz/content/fuzz16-online.png");
 }
 
-#fuzzbot-status-image[disabled="true"] {
-   list-style-image: url("chrome://fuzzbot/content/fuzzbot16-offline.png");
+#fuzz-status-image[disabled="true"] {
+   list-style-image: url("chrome://fuzz/content/fuzz16-offline.png");
 }
