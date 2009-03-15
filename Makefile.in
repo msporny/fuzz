@@ -3,7 +3,7 @@
 # State the platforms for which we are building
 VERSION = @VERSION@
 
-SUBDIRS := firefox
+SUBDIRS := fuzz-addon
 
 ifdef PRINT_DIRECTORIES
 MAKE_CMD = $(MAKE) 

@@ -170,9 +170,9 @@ AC_SUBST(XULRUNNER_IDL_DIRECTORY)
 # Generating files
 AC_OUTPUT(Makefile \
           setup/Makefile.base \
-          firefox/Makefile \
-          firefox/extension/install.rdf \
-	  firefox/components/Makefile)
+          fuzz-addon/Makefile \
+          fuzz-addon/extension/install.rdf \
+	  fuzz-addon/components/Makefile)
 
 # Dump the build configuration for the developer
 echo -e "\n--------- Fuzz build environment -----------"
