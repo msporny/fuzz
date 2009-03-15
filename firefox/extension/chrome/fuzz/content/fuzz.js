@@ -33,76 +33,6 @@ function updateFuzzStatus()
 }
 
 /**
- * Adds icons to the URL bar depending on what types of triples, if any, were
- * detected on the page.
- */
-function addUrlBarIcons()
-{
-   //var fuzzIcon = document.getElementById("fuzz-urlbar-icon");
-   var fuzzAudioIcon = document.getElementById("fuzz-urlbar-audio-icon");
-   var fuzzVideoIcon = document.getElementById("fuzz-urlbar-video-icon");
-   var fuzzFoafPersonIcon = 
-      document.getElementById("fuzz-urlbar-foaf-person-icon");
-
-   /* Display audio icon */
-   if(gTripleRdfTypes["http://purl.org/media/audio#Recording"] ||
-      gTripleRdfTypes["http://purl.org/media/audio#Album"])
-   {
-       fuzzAudioIcon.setAttribute("objectsDetected", "true");
-   }
-   else
-   {
-       fuzzAudioIcon.removeAttribute("objectsDetected");
-   }
-
-   /* Display video icon */
-   if(gTripleRdfTypes["http://purl.org/media/video#Recording"] ||
-      gTripleRdfTypes["http://purl.org/media/video#Episode"] ||
-      gTripleRdfTypes["http://purl.org/media/video#Movie"] ||
-      gTripleRdfTypes["http://purl.org/media/video#Series"])
-   {
-       fuzzVideoIcon.setAttribute("objectsDetected", "true");
-   }
-   else
-   {
-       fuzzVideoIcon.removeAttribute("objectsDetected");
-   }
-
-   /* Display FOAF Person icon */
-   if(gTripleRdfTypes["http://xmlns.com/foaf/0.1/Person"])
-   {
-       fuzzFoafPersonIcon.setAttribute("objectsDetected", "true");
-   }
-   else
-   {
-       fuzzFoafPersonIcon.removeAttribute("objectsDetected");
-   }
-
-   /* Display general Fuzz UI */
-   //if(gNumTriples > 2)
-   //{
-   //    fuzzIcon.setAttribute("objectsDetected", "true");
-   //}
-}
-
-/**
- * Removes all Fuzz icons from the URL bar.
- */
-function removeUrlBarIcons()
-{
-   //var fuzzIcon = document.getElementById("fuzz-urlbar-icon");
-   var fuzzAudioIcon = document.getElementById("fuzz-urlbar-audio-icon");
-   var fuzzVideoIcon = document.getElementById("fuzz-urlbar-video-icon");
-   var fuzzFoafPersonIcon = 
-      document.getElementById("fuzz-urlbar-foaf-person-icon");
-
-   //fuzzIcon.removeAttribute("objectsDetected");
-   fuzzAudioIcon.removeAttribute("objectsDetected");
-   fuzzVideoIcon.removeAttribute("objectsDetected");
-   fuzzFoafPersonIcon.removeAttribute("objectsDetected");
-}
-
-/**
  * Updates the Firefox display window with the updated status.
  */
 function updateFuzzStatusDisplay()
@@ -115,18 +45,10 @@ function updateFuzzStatusDisplay()
    if((gNumTriples > 2) && !disabled.hasAttribute("checked"))
    {
       statusImage.src = "chrome://fuzz/content/fuzz16-online.png";
-      // FIXME: Temporarily removed, don't know if this is the proper approach
-      //removeFuzzMarkup();
-      //addFuzzMarkup();
-      addUrlBarIcons();
    }
    else
    {
       statusImage.src = "chrome://fuzz/content/fuzz16-offline.png";
-      // FIXME: Temporarily removed, don't know if this is the proper 
-      //        approach.
-      //removeFuzzMarkup();
-      removeUrlBarIcons();
    }
 }
 
@@ -168,8 +90,6 @@ function tripleHandler(subject, predicate, object)
    _fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
 
-   //addTripleToUi(triple);
-   
    return true;
 };
 

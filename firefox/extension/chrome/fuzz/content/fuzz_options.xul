@@ -15,14 +15,9 @@
     <vbox flex="1">
       <separator class="thin"/>
       <hbox align="center">
-        <textbox id="dialog.input" flex="1"/>
-        <button label="Default Node URL"
-                oncommand="setDefaultNodeURL();"/>
-      </hbox>
-      <hbox align="center">
-        <radiogroup onchange="toggleLock();">
-          <radio label="lock"/>
-          <radio label="unlock"/>
+        <radiogroup onchange="updateStatusBarDebugIcon();">
+          <radio label="Enable Status Bar Debug Icon"/>
+          <radio label="Disable Status Bar Debug Icon"/>
         </radiogroup>
         <spacer flex="1"/>
       </hbox>

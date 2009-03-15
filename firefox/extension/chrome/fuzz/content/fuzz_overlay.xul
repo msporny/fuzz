@@ -5,54 +5,10 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/x-javascript"
-          src="chrome://fuzz/content/json2.js"/>
-
-  <script type="application/x-javascript"
-          src="chrome://fuzz/content/webservices.js"/>
-
-  <script type="application/x-javascript"
-          src="chrome://fuzz/content/fuzz_subject_ui.js"/>
-
-  <script type="application/x-javascript"
           src="chrome://fuzz/content/fuzz.js"/>
 
   <script type="application/x-javascript"
           src="chrome://fuzz/content/fuzz_ui_helper.js"/>
-
-  <script type="application/x-javascript"
-          src="chrome://fuzz/content/displays/audio.js"/>
-
-  <script type="application/x-javascript"
-          src="chrome://fuzz/content/displays/video.js"/>
-
-  <!-- Fuzz URLbar Icons -->
-  <hbox id="urlbar-icons">
-    <button insertbefore="feed-button" 
-     style="-moz-user-focus: none" class="plain"
-     id="fuzz-urlbar-icon" onclick="toggleFuzzTripleUi();">
-    </button>
-    <button insertbefore="feed-button" type="menu"
-     style="-moz-user-focus: none" class="plain"
-     id="fuzz-urlbar-audio-icon" 
-     tooltiptext="Click to see Audio info..."
-     onclick="buildAudioMenuPopup();">  
-       <menupopup id="fuzz-audio-menu-popup">
-       </menupopup>
-    </button>
-    <button insertbefore="feed-button"  type="menu"
-     style="-moz-user-focus: none" class="plain"
-     id="fuzz-urlbar-video-icon" 
-     tooltiptext="Click to see Video info..."
-     onclick="buildVideoMenuPopup();">
-       <menupopup id="fuzz-video-menu-popup">
-       </menupopup>
-    </button>
-    <button insertbefore="feed-button"  type="menu"
-     style="-moz-user-focus: none" class="plain"
-     tooltiptext="Click to see Contact info..."
-     id="fuzz-urlbar-foaf-person-icon" onclick="toggleFuzzTripleUi();">
-    </button>
-  </hbox>
 
   <!-- Fuzz panel -->
 

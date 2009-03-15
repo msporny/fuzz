@@ -2,6 +2,4 @@
 <!ENTITY  fuzzToolbar.name      "Fuzz Toolbar">
 <!ENTITY  fuzzOptions.label     "Options">
 <!ENTITY  fuzzToolbar.accesskey "O">
-<!ENTITY  fuzzSidebar.name      "Fuzz Sidebar">
-<!ENTITY  fuzzSidebar.accesskey "O">
 
