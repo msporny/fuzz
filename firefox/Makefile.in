@@ -25,6 +25,7 @@ endif
 
 xpi-common:
 	echo "Building common XPI files..."
+	mkdir -p ../dist
 	mkdir -p extension/components
 	cp $(CP_FLAGS) components/dist/*.xpt extension/components/
 	-$(RM) extension/chrome/$(NAME).jar
@@ -32,45 +33,43 @@ xpi-common:
 		zip -q -r ../$(NAME).jar content locale $(ZIPEXCLUDE)
 
 xpi-windows: xpi-common
-	echo "Building Windows Fuzz XPI..."
-	mkdir -p dist
-	$(RM) dist/fuzz-windows.xpi
+	echo "Building Windows Fuzz i386 XPI..."
+	mkdir -p ../dist
+	$(RM) ../dist/fuzz-windows-i386.xpi
 	mkdir -p extension/platform/WINNT_x86-msvc/content
 	mkdir -p extension/platform/WINNT_x86-msvc/components
 	cp -a components/dist/fuzz-components.dll \
 		extension/platform/WINNT_x86-msvc/components
 	cd extension && \
-	zip -q ../dist/fuzz-windows.xpi chrome.manifest chrome/$(NAME).jar \
+	zip -q ../dist/fuzz-windows-i386.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 xpi-macos: xpi-common
-	@echo "Building MacOS XPI..."
-	mkdir -p dist
-	@$(RM) dist/fuzz-macosx-i386.xpi
+	@echo "Building MacOS i386 XPI..."
+	@$(RM) ../dist/fuzz-macosx-i386.xpi
 	@mkdir -p extension/platform/Darwin_x86-gcc3/content
 	@mkdir -p extension/platform/Darwin_x86-gcc3/components
 	@cp -p components/dist/fuzz-components.dylib \
 		extension/platform/Darwin_x86-gcc3/components
 	@cd extension && \
-	zip -q ../dist/fuzz-macosx-i386.xpi chrome.manifest chrome/$(NAME).jar \
+	zip -q ../../dist/fuzz-macosx-i386.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
 		$(ZIPEXCLUDE)
 
 xpi-linux: xpi-common
-	@echo "Building Linux Fuzz XPI..."
-	@mkdir -p dist
-	@$(RM) dist/fuzz-linux.xpi
+	@echo "Building Linux Fuzz i386 XPI..."
+	@$(RM) ../dist/fuzz-linux-i386.xpi
 	@mkdir -p extension/platform/Linux_x86-gcc3/content
 	@mkdir -p extension/platform/Linux_x86-gcc3/components
 	@cp -a components/dist/fuzz-components.so \
 		extension/platform/Linux_x86-gcc3/components
 	@cd extension && \
-	zip -q ../dist/fuzz-linux.xpi chrome.manifest chrome/$(NAME).jar \
+	zip -q ../../dist/fuzz-linux-i386.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
@@ -82,7 +81,7 @@ clean: clean-xpi
 	@rm -rf dist
 
 clean-xpi:
-	@$(RM) dist/fuzz-*.xpi
+	@$(RM) ../dist/fuzz-*.xpi
 	@$(RM) extension/chrome/$(NAME).jar
 	@$(RM) extension/components/*.xpt
 	@$(RM) -rf extension/platform/*

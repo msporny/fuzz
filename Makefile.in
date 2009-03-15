@@ -23,6 +23,7 @@ all:
 clean:
 	@$(foreach dir,$(SUBDIRS),MAKE_CLEAN_ACTIVE=true $(MAKE_DIR) clean &&) true
 	@rm -rf libs/*
+	@rm -rf dist
 	@echo "Removed all objects and libraries."
 
 tests: all
