@@ -1,0 +1,9 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#fuzz-example-status-image {
+   list-style-image: url("chrome://fuzz-example/content/fuzz-example16-online.png");
+}
+
+#fuzz-example-status-image[disabled="true"] {
+   list-style-image: url("chrome://fuzz-example/content/fuzz-example16-offline.png");
+}

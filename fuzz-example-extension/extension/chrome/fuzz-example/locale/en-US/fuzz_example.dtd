@@ -1,0 +1,5 @@
+<!ENTITY  fuzzExample.name             "Fuzz Example">
+<!ENTITY  fuzzExampleToolbar.name      "Fuzz Example Toolbar">
+<!ENTITY  fuzzExampleOptions.label     "Options">
+<!ENTITY  fuzzExampleToolbar.accesskey "O">
+

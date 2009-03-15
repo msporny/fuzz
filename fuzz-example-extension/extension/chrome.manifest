@@ -1,0 +1,6 @@
+overlay	chrome://browser/content/browser.xul	chrome://fuzz-example/content/fuzz_example_overlay.xul
+style   chrome://browser/content/browser.xul    chrome://fuzz-example/content/fuzz-example.css
+style   chrome://global/content/customizeToolbar.xul    chrome://fuzz-example/content/fuzz-example.css
+content	fuzz-example jar:chrome/fuzz-example.jar!/content/
+locale  fuzz-example en-US jar:chrome/fuzz-example.jar!/locale/en-US/
+

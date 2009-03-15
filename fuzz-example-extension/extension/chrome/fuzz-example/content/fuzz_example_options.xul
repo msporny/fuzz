@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog id="fuzz_mgg"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	title="Fuzz Options"
+        style="width: 30em;"
+        persist="screenX screenY"
+        screenX="24" screenY="24">
+
+  <script src="chrome://fuzz/content/fuzz.js"/>
+
+  <hbox>
+    <separator orient="vertical" class="thin"/>
+    <vbox flex="1">
+      <separator class="thin"/>
+      <hbox align="center">
+        <radiogroup onchange="updateStatusBarDebugIcon();">
+          <radio label="Enable Status Bar Icon"/>
+          <radio label="Disable Status Bar Icon"/>
+        </radiogroup>
+        <spacer flex="1"/>
+      </hbox>
+    </vbox>
+  </hbox>
+
+</dialog> 

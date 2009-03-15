@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://fuzz/content/fuzz.css" type="text/css"?>
+
+<overlay id="fuzz-example-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript"
+          src="chrome://fuzz-example/content/fuzz_example.js"/>
+
+  <!-- Fuzz Example panel -->
+  <statusbar id="status-bar" >
+    <statusbarpanel class="statusbarpanel-iconic"
+                    id="fuzz-example-status">
+      <image id="fuzz-example-status-image" width="16" height="16"
+             src="chrome://fuzz-example/content/fuzz16-offline.png"
+             onclick="toggleFuzzExampleTripleUi();"/>
+    </statusbarpanel>
+  </statusbar>
+
+</overlay>
