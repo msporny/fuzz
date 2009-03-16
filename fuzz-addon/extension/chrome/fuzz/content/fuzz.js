@@ -10,12 +10,60 @@ var RDFA_PARSE_FAILED = -1;
 var RDFA_PARSE_UNKNOWN = 0;
 var RDFA_PARSE_SUCCESS = 1;
 
+/* Global list of all Fuzz event observers */
+var gFuzzObservers = new Array();
+
+/* Global variables that track the state of this plugin */
+var gFuzzVisible = true;
+
+/* The triple store contains all of the triples on the current page. */
+var gFuzzTripleStore = {};
+
+/* The triple RDF types contains all of the types of triples found in
+   the current document. */
+var gFuzzRdfTypes = {};
+
+/* The number of triples in the current document. */
+var gFuzzNumTriples = 0;
+
+/**
+ * Logs a message to the console.
+ *
+ * @param msg the message to log to the console.
+ */
+function _fuzzLog(msg)
+{
+   debug_flag = true;
+
+   // If debug mode is active, log the message to the console
+   if(debug_flag)
+   {
+      Components
+         .classes["@mozilla.org/consoleservice;1"]
+         .getService(Components.interfaces["nsIConsoleService"])
+         .logStringMessage(msg);
+  }
+}
+
+/**
+ * Gets the currently active window.
+ */
+function fuzzGetCurrentWindow()
+{
+   return window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+             .getInterface(Components.interfaces.nsIWebNavigation)
+             .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+             .rootTreeItem
+             .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+             .getInterface(Components.interfaces.nsIDOMWindow);
+}
+
 /**
  * Open a new tab showing the status of the Fuzz software.
  */
-function showStatus()
+function fuzzShowStatus()
 {
-   mainWindow = getCurrentWindow();
+   mainWindow = fuzzGetCurrentWindow();
    newTab = mainWindow.getBrowser().addTab(
       "about:");
    mainWindow.getBrowser().selectedTab = newTab;
@@ -25,24 +73,24 @@ function showStatus()
  * Sets a timer to update the interface from time to time to show the person
  * on the current system the status of the Fuzz software.
  */
-function updateFuzzStatus()
+function fuzzUpdateStatus()
 {
-   //mainWindow = getCurrentWindow();
+   //mainWindow = fuzzGetCurrentWindow();
 
-   window.setTimeout(updateFuzzStatus, 1000);
+   window.setTimeout(fuzzUpdateStatus, 1000);
 }
 
 /**
  * Updates the Firefox display window with the updated status.
  */
-function updateFuzzStatusDisplay()
+function fuzzUpdateStatusDisplay()
 {
    var statusImage = document.getElementById("fuzz-status-image");
    var ui = document.getElementById("fuzz-ui");
    var disabled = document.getElementById("fuzz-ui-disable");
 
    // update the image and the label
-   if((gNumTriples > 2) && !disabled.hasAttribute("checked"))
+   if((gFuzzNumTriples > 2) && !disabled.hasAttribute("checked"))
    {
       statusImage.src = "chrome://fuzz/content/fuzz16-online.png";
    }
@@ -54,11 +102,11 @@ function updateFuzzStatusDisplay()
 
 // This observer is responsible for detecting triples that are
 // generated via the C++ XPCOM librdfa parser.
-function tripleHandler(subject, predicate, object)
+function fuzzTripleHandler(subject, predicate, object)
 {
    if(subject != "@prefix")
    {
-      gNumTriples += 1;
+      gFuzzNumTriples += 1;
    }
 
    // strip any whitespace;
@@ -74,21 +122,29 @@ function tripleHandler(subject, predicate, object)
    triple.object = strippedObject;
 
    // If the subject doesn't exist in the triple store, create it.
-   if(!gTripleStore[subject])
+   if(!gFuzzTripleStore[subject])
    {
-      gTripleStore[subject] = new Array();
+      gFuzzTripleStore[subject] = new Array();
    }
 
    // If the type hasn't been saved in the rdf types hastable, save it.
    if(predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && 
-      !gTripleRdfTypes[object])
+      !gFuzzRdfTypes[object])
    {
-       gTripleRdfTypes[object] = true;
+       gFuzzRdfTypes[object] = true;
    }
    
-   gTripleStore[subject].push(triple);
+   gFuzzTripleStore[subject].push(triple);
    _fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
+
+   // broadcast the object
+   // register the Fuzz Triple observer.
+   for(observer in gFuzzObservers)
+   {
+       _fuzzLog("Observer.observe == " + typeof(observer));
+      observer.observe("fuzz-triple-detected", triple);
+   }
 
    return true;
 };
@@ -96,15 +152,15 @@ function tripleHandler(subject, predicate, object)
 /**
  * Updates the list of triples in the Fuzz Triple UI.
  */
-function updateFuzzTripleUi()
+function fuzzUpdateTripleUi()
 {
    // Populate the UI
-   clearUiTriples();
-   for(var i in gTripleStore)
+   fuzzClearUiTriples();
+   for(var i in gFuzzTripleStore)
    {
-      for(var j in gTripleStore[i])
+      for(var j in gFuzzTripleStore[i])
       {
-         addTripleToUi(gTripleStore[i][j]);
+         fuzzAddTripleToUi(gFuzzTripleStore[i][j]);
       }
    }
 }
@@ -112,20 +168,20 @@ function updateFuzzTripleUi()
 /**
  * Hides or displays the Fuzz UI on the current page.
  */
-function toggleFuzzTripleUi()
+function fuzzToggleTripleUi()
 {
    var ui = document.getElementById("fuzz-ui");
    var uiControl = document.getElementById("fuzz-ui-control");
    var disable = document.getElementById("fuzz-ui-disable");
 
-   if(uiControl.label == "Hide Raw Triples" || disable.hasAttribute("checked"))
+   if(uiControl.label == "Hide Raw Triples")
    {
       uiControl.setAttribute("label", "Examine Raw Triples");
       ui.hidden = true;
    }
    else
    {
-      updateFuzzTripleUi();
+      fuzzUpdateTripleUi();
       uiControl.setAttribute("label", "Hide Raw Triples");
       ui.hidden = false;
    }
@@ -136,7 +192,7 @@ function toggleFuzzTripleUi()
  *
  * @param triple the triple to add to the UI.
  */
-function addTripleToUi(triple)
+function fuzzAddTripleToUi(triple)
 {
    var lchildren = document.getElementById("fuzz-triples-listbox");
 
@@ -184,9 +240,9 @@ function addTripleToUi(triple)
    
    // correct the predicate for display
    var predicateCurie = triple.predicate;
-   for(var i in gTripleStore["@prefix"])
+   for(var i in gFuzzTripleStore["@prefix"])
    {
-      var prefixTriple = gTripleStore["@prefix"][i];
+      var prefixTriple = gFuzzTripleStore["@prefix"][i];
       var prefix = prefixTriple.predicate;
       var uri = prefixTriple.object;
       var replacement = prefix + ":";
@@ -211,22 +267,22 @@ function addTripleToUi(triple)
 /**
  * Clears the currently tracked triples.
  */
-function clearTriples()
+function fuzzClearTriples()
 {
    // re-initialize the triple-store
-   gTripleStore = {};
-   gTripleRdfTypes = {};
-   gNumTriples = 0;
-   tripleHandler(
+   gFuzzTripleStore = {};
+   gFuzzRdfTypes = {};
+   gFuzzNumTriples = 0;
+   fuzzTripleHandler(
       "@prefix", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-   tripleHandler(
+   fuzzTripleHandler(
       "@prefix", "xhv", "http://www.w3.org/1999/xhtml/vocab#");
 }
 
 /**
  * Clears the triples that are being shown on the screen.
  */
-function clearUiTriples()
+function fuzzClearUiTriples()
 {
    // clear the current list of children
    var lb = document.getElementById("fuzz-triples-listbox");
@@ -239,13 +295,13 @@ function clearUiTriples()
 /**
  * Starts a thread to perform semantic data detection on the page.
  */
-function detectSemanticData()
+function fuzzDetectSemanticData()
 {
    var disabled = document.getElementById("fuzz-ui-disable");
    if(disabled.hasAttribute("checked"))
    {      
-      toggleFuzzTripleUi();
-      updateFuzzStatusDisplay();
+      fuzzToggleTripleUi();
+      fuzzUpdateStatusDisplay();
       return;
    }
 
@@ -262,29 +318,29 @@ function detectSemanticData()
       .QueryInterface(
          Components.interfaces.nsIFuzzExtension);
    
-   clearTriples();
+   fuzzClearTriples();
 
-   var rval = gPlugin.processRdfaTriples(url, xml, tripleHandler);
+   var rval = gPlugin.processRdfaTriples(url, xml, fuzzTripleHandler);
 
    // if the previous parse failed, it is usually because the input
    // document is malformed. Instruct Fuzz to use Tidy to clean up
    // the incoming HTML/XHTML and retry.
    if(rval != RDFA_PARSE_SUCCESS)
    {
-      clearTriples();
-      gPlugin.tidyAndProcessRdfaTriples(url, xml, tripleHandler);
+      fuzzClearTriples();
+      gPlugin.tidyAndProcessRdfaTriples(url, xml, fuzzTripleHandler);
    }
    
-   updateFuzzStatusDisplay();
+   fuzzUpdateStatusDisplay();
 }
 
 /**
  * Attaches the HTML document listeners to ensure proper detection and
  * parsing of RDFa.
  */
-function attachDocumentListeners()
+function fuzzAttachDocumentListeners()
 {
-   _fuzzLog("attachDocumentListeners()");
+   _fuzzLog("fuzzAttachDocumentListeners()");
    
    var container = gBrowser.tabContainer;
    gBrowser.addEventListener("load", tabSelected, false);
@@ -297,14 +353,34 @@ function attachDocumentListeners()
  *
  * @event the event to use when the HTML document is loaded.
  */
-function tabSelected(event)
+function fuzzTabSelected(event)
 {
-   _fuzzLog("tabSelected");
-   detectSemanticData();
+   _fuzzLog("fuzzTabSelected");
+   fuzzDetectSemanticData();
 
    var uiControl = document.getElementById("fuzz-ui-control");
    if(!uiControl.hidden)
    {
-      updateFuzzTripleUi();
+      fuzzUpdateTripleUi();
    }
 }
+
+/**
+ * The Fuzz object is used for interacting with the Fuzz extension.
+ */
+/**
+ * The Fuzz Triple Observer is used to listen to RDF triple events created by
+ * the Fuzz Firefox Add On. 
+ */
+Fuzz = 
+{
+   addObserver: function(observer)
+   {
+       _fuzzLog("Adding observer: " + observer + " " + typeof(observer));
+      gFuzzObservers.push(observer);
+      for(obs in gFuzzObservers)
+      {
+	  _fuzzLog("observer: " + obs + " " + typeof(obs));
+      }
+   }
+};

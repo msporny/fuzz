@@ -7,9 +7,6 @@
   <script type="application/x-javascript"
           src="chrome://fuzz/content/fuzz.js"/>
 
-  <script type="application/x-javascript"
-          src="chrome://fuzz/content/fuzz_ui_helper.js"/>
-
   <!-- Fuzz panel -->
 
   <vbox id="appcontent">
@@ -31,16 +28,14 @@
     <statusbarpanel class="statusbarpanel-iconic"
                     id="fuzz-status"
                     context="fuzz-status-context-menu"
-                    oncommand="detectSemanticData(); toggleFuzzTripleUi();">
+                    oncommand="fuzzDetectSemanticData(); fuzzToggleTripleUi();">
       <image id="fuzz-status-image" width="16" height="16"
              src="chrome://fuzz/content/fuzz16-offline.png"
-             onload="attachDocumentListeners();"/>
+             onload="fuzzAttachDocumentListeners();"/>
     </statusbarpanel>
     <menupopup id="fuzz-status-context-menu">
-      <!-- menuitem id="fuzz-ui-find-triples" 
-                label="Display Triples" oncommand="detectSemanticData();"/ -->
       <menuitem id="fuzz-ui-control" 
-                label="Examine Raw Triples" oncommand="toggleFuzzTripleUi();"/>
+                label="Examine Raw Triples" oncommand="fuzzToggleTripleUi();"/>
       <menuitem id="fuzz-ui-disable" 
                 label="Fuzz Disabled" type="checkbox"/>
     </menupopup>

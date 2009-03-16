@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <dialog id="fuzz-example-triple-dialog" title="Fuzz Example Extension"
-   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-   buttons="accept"
-   buttonlabelaccept="Ok"
-   ondialogaccept="return doOk();"
-   ondialogcancel="return doCancel();">
-    
-    <dialogheader title="RDF Triples" description="Fuzz-generated RDF Triples"/>
-    <vbox>
-       <textbox id="fuzz-example-triple-textbox" multiline="true" 
-                rows="50" cols="80" value="foo"/>
-    </vbox>
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  buttons="accept"
+  buttonlabelaccept="Ok"
+  ondialogaccept="return toggleFuzzExampleTripleUi();"
+  hidden="true">
+
+  <script type="application/x-javascript"
+     src="chrome://fuzz-example/content/fuzz_example.js"/>
+
+  <dialogheader title="RDF Triples" description="Fuzz-generated RDF Triples"/>
+  <vbox>
+     <textbox id="fuzz-example-triple-textbox" multiline="true" readonly="true"
+        rows="24" cols="80" value="foo"/>
+  </vbox>
 </dialog>

@@ -11,14 +11,6 @@
         <em:iconURL>chrome://fuzz-example/content/fuzz-example32.png</em:iconURL>
         <em:aboutURL>chrome://fuzz-example/content/about.xul</em:aboutURL>
 
-        <em:requires>
-           <Description>
-              <!-- Fuzz -->
-              <em:id>fuzz@digitalbazaar.com</em:id>
-              <em:minVersion>0.9</em:minVersion>
-           </Description>
-        </em:requires>
-
         <!-- Firefox -->
         <em:targetApplication>
             <Description>

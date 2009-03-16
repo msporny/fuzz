@@ -7,13 +7,16 @@
   <script type="application/x-javascript"
           src="chrome://fuzz-example/content/fuzz_example.js"/>
 
+  <script type="application/x-javascript"
+          src="chrome://fuzz-example/content/json2.js"/>
+
   <!-- Fuzz Example panel -->
   <statusbar id="status-bar" >
     <statusbarpanel class="statusbarpanel-iconic"
-                    id="fuzz-example-status">
+                    id="fuzz-example-status"
+                    onclick="toggleFuzzExampleTripleUi();">
       <image id="fuzz-example-status-image" width="16" height="16"
-             src="chrome://fuzz-example/content/fuzz16-offline.png"
-             onclick="toggleFuzzExampleTripleUi();"/>
+             src="chrome://fuzz-example/content/fuzz-example16-offline.png"/>
     </statusbarpanel>
   </statusbar>
 

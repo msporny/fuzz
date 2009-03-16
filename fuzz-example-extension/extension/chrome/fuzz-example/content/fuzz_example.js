@@ -47,8 +47,10 @@ function updateFuzzExampleStatusDisplay()
 
 // This function is called whenever triples are generated via the
 // Fuzz extension.
-function tripleHandler(data)
+function fuzzExampleTripleHandler(data)
 {
+   _fuzzExampleLog("Fuzz Example Data: " + JSON.stringify(data));
+
    if(data.subject != "@prefix")
    {
       gNumTriples += 1;
@@ -105,16 +107,16 @@ function toggleFuzzExampleTripleUi()
    if(gFuzzExampleTripleUi == null)
    {
       gFuzzExampleTripleUi = window.openDialog(
-         "chrome://fuzz-example/content/example_triple_display.xul", 
+         "chrome://fuzz-example/content/fuzz_example_triple_display.xul", 
          "Fuzz Example Triple Display");
-   }
-
-   if(gFuzzExampleTripleUi.hidden)
-   {
       updateFuzzExampleTripleUi();
+      gFuzzExampleTripleUi.hidden = false;
    }
-
-   gFuzzExampleTripleUi.hidden = !gFuzzExampleTripleUi.hidden;
+   else
+   {
+      gFuzzExampleTripleUi.hidden = true;
+      gFuzzExampleTripleUi = null;
+   }
 }
 
 /**
@@ -124,12 +126,19 @@ function toggleFuzzExampleTripleUi()
  */
 function addTripleToUi(triple)
 {
-   var textBox = document.getElementById("fuzz-example-triple-textbox");
+   _fuzzExampleLog("addTripleToUi(" + triple.subject + " " + triple.predicate + " " + triple.object + ");");
 
-   textBox.value = textBox.value + 
-                   "<" + triple.subject + ">\n" +
-                   "   <" + triple.predicate + ">\n" +
-                   "      " + triple.object + "\n\n";
+   if(gFuzzExampleTripleUi != null)
+   {
+      var textBox = 
+         gFuzzExampleTripleUi.document.getElementById(
+            "fuzz-example-triple-textbox");
+
+      textBox.value = textBox.value + 
+         "<" + triple.subject + ">\n" +
+         "   <" + triple.predicate + ">\n" +
+         "      " + triple.object + "\n\n";
+   }
 }
 
 /**
@@ -147,22 +156,32 @@ function clearTriples()
  */
 function clearUiTriples()
 {
-   var textBox = document.getElementById("fuzz-example-triple-textbox");
+   _fuzzExampleLog("clearUiTriples();");
 
-   textBox.value = "";
+   if(gFuzzExampleTripleUi != null)
+   {
+      var textBox = 
+         gFuzzExampleTripleUi.document.getElementById(
+            "fuzz-example-triple-textbox");
+
+      if(textBox != null)
+      {
+         textBox.value = "";
+      }
+   }
 }
 
 /**
  * The Fuzz Triple Observer is used to listen to RDF triple events created by
  * the Fuzz Firefox Add On. 
  */
-const FuzzTripleObserver = 
+FuzzExampleTripleObserver = 
 {
-   observe: function(subject, topic, data)
+   observe: function(topic, data)
    {
       if(topic == "fuzz-triple-detected")
       {
-         tripleHandler(data);
+         fuzzExampleTripleHandler(data);
       }
       else if(topic == "fuzz-triple-extraction-start")
       {
@@ -174,13 +193,10 @@ const FuzzTripleObserver =
       }
       else if(topic == "fuzz-triple-warning")
       {
+         _fuzzExampleLog("fuzz-triple-warning not implemented!");
       }
    }
 };
 
 // register the Fuzz Triple observer.
-const service = Components.classes["@mozilla.org/observer-service;1"]
-   .getService(Components.interfaces.nsIObserverService);
-service.addObserver(RdfTripleObserver, "fuzz-triple-detected", false);
-service.addObserver(RdfTripleObserver, "fuzz-triple-extraction-start", false);
-service.addObserver(RdfTripleObserver, "fuzz-triple-warning", false);
+Fuzz.addObserver(FuzzExampleTripleObserver);

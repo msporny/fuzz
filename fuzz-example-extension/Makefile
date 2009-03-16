@@ -14,7 +14,7 @@ xpi:
 	cd extension && \
 	zip -q ../dist/fuzz-example.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzz-example.js \
-		install.rdf 
+		install.rdf \
 		$(ZIPEXCLUDE)
 
 clean:
