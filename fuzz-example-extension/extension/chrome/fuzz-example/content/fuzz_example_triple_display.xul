@@ -3,12 +3,7 @@
 <dialog id="fuzz-example-triple-dialog" title="Fuzz Example Extension"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   buttons="accept"
-  buttonlabelaccept="Ok"
-  ondialogaccept="return toggleFuzzExampleTripleUi();"
-  hidden="true">
-
-  <script type="application/x-javascript"
-     src="chrome://fuzz-example/content/fuzz_example.js"/>
+  buttonlabelaccept="Ok">
 
   <dialogheader title="RDF Triples" description="Fuzz-generated RDF Triples"/>
   <vbox>

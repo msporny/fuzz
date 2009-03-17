@@ -32,16 +32,17 @@ function _fuzzExampleLog(msg)
 function updateFuzzExampleStatusDisplay()
 {
    var statusImage = document.getElementById("fuzz-example-status-image");
-   var ui = document.getElementById("fuzz-example-ui");
 
    // update the image and the label
-   if((gNumTriples > 2))
+   if(gFuzzExampleNumTriples > 2)
    {
-      statusImage.src = "chrome://fuzz-example/content/fuzz16-online.png";
+      statusImage.src = 
+         "chrome://fuzz-example/content/fuzz-example16-online.png";
    }
    else
    {
-      statusImage.src = "chrome://fuzz-example/content/fuzz16-offline.png";
+      statusImage.src = 
+         "chrome://fuzz-example/content/fuzz-example16-offline.png";
    }
 }
 
@@ -53,7 +54,7 @@ function fuzzExampleTripleHandler(data)
 
    if(data.subject != "@prefix")
    {
-      gNumTriples += 1;
+      gFuzzExampleNumTriples += 1;
    }
 
    // strip any whitespace
@@ -77,7 +78,7 @@ function fuzzExampleTripleHandler(data)
    }
 
    gFuzzExampleTripleStore[data.subject].push(triple);
-   _fuzzExampleLog("Fuzz Example Stored: " + 
+   _fuzzExampleLog("Fuzz Example Stored (" + gFuzzExampleNumTriples + "): " + 
       triple.subject + " " + triple.predicate + " " + triple.object + " .");
 
    return true;
@@ -88,15 +89,57 @@ function fuzzExampleTripleHandler(data)
  */
 function updateFuzzExampleTripleUi()
 {
-   // Populate the UI
-   clearUiTriples();
+try{
+   var triples = "";
+   _fuzzExampleLog("updateFuzzExampleTripleUi(): " + gFuzzExampleNumTriples);
+
+   // Build the triple text
    for(var i in gFuzzExampleTripleStore)
    {
       for(var j in gFuzzExampleTripleStore[i])
       {
-         addTripleToUi(gFuzzExampleTripleStore[i][j]);
+	 var triple = gFuzzExampleTripleStore[i][j];
+         var subject = triple.subject;
+         var predicate = triple.predicate;
+         var object = triple.object;
+
+         // surround any URL with angle brackets
+	 if(subject.indexOf("http://") == 0)
+	 {
+	    subject = "<" + subject + ">";
+	 }
+	 if(predicate.indexOf("http://") == 0)
+	 {
+	    predicate = "<" + predicate + ">";
+	 }
+	 if(object.indexOf("http://") == 0)
+	 {
+	    object = "<" + object + ">";
+	 }
+         else
+         {
+	    object = "\"" + object + "\"";
+	 }
+
+         triples = triples +
+            subject + "\n   " + 
+            predicate + "\n      " + 
+            object + " .\n\n";
       }
    }
+
+   // add the triple text to the text box
+   if(gFuzzExampleTripleUi != null)
+   {
+      var textBox = gFuzzExampleTripleUi.document.getElementById(
+         "fuzz-example-triple-textbox");
+      textBox.value = triples;
+   }
+}
+catch(err)
+{
+    _fuzzExampleLog("ERR:" + err.name + ": " + err.message);
+}
 }
 
 /**
@@ -108,36 +151,14 @@ function toggleFuzzExampleTripleUi()
    {
       gFuzzExampleTripleUi = window.openDialog(
          "chrome://fuzz-example/content/fuzz_example_triple_display.xul", 
-         "Fuzz Example Triple Display");
-      updateFuzzExampleTripleUi();
-      gFuzzExampleTripleUi.hidden = false;
+         "Fuzz Example Triple Display", "chrome,centerscreen");
+      gFuzzExampleTripleUi.ondialogaccept = toggleFuzzExampleTripleUi;
+      gFuzzExampleTripleUi.onload = updateFuzzExampleTripleUi;
    }
    else
    {
-      gFuzzExampleTripleUi.hidden = true;
+      gFuzzExampleTripleUi.close();
       gFuzzExampleTripleUi = null;
-   }
-}
-
-/**
- * Adds a triple to the UI given a triple object.
- *
- * @param triple the triple to add to the UI.
- */
-function addTripleToUi(triple)
-{
-   _fuzzExampleLog("addTripleToUi(" + triple.subject + " " + triple.predicate + " " + triple.object + ");");
-
-   if(gFuzzExampleTripleUi != null)
-   {
-      var textBox = 
-         gFuzzExampleTripleUi.document.getElementById(
-            "fuzz-example-triple-textbox");
-
-      textBox.value = textBox.value + 
-         "<" + triple.subject + ">\n" +
-         "   <" + triple.predicate + ">\n" +
-         "      " + triple.object + "\n\n";
    }
 }
 
@@ -146,29 +167,10 @@ function addTripleToUi(triple)
  */
 function clearTriples()
 {
+   _fuzzExampleLog("clearTriples();");
    // re-initialize the triple-store
    gFuzzExampleTripleStore = {};
    gFuzzExampleNumTriples = 0;
-}
-
-/**
- * Clears the triples that are being shown on the screen.
- */
-function clearUiTriples()
-{
-   _fuzzExampleLog("clearUiTriples();");
-
-   if(gFuzzExampleTripleUi != null)
-   {
-      var textBox = 
-         gFuzzExampleTripleUi.document.getElementById(
-            "fuzz-example-triple-textbox");
-
-      if(textBox != null)
-      {
-         textBox.value = "";
-      }
-   }
 }
 
 /**
@@ -186,6 +188,7 @@ FuzzExampleTripleObserver =
       else if(topic == "fuzz-triple-extraction-start")
       {
          clearTriples();
+	 updateFuzzExampleStatusDisplay();
       }
       else if(topic == "fuzz-triple-extraction-complete")
       {

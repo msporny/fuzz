@@ -109,17 +109,12 @@ function fuzzTripleHandler(subject, predicate, object)
       gFuzzNumTriples += 1;
    }
 
-   // strip any whitespace;
-   var strippedObject = object.replace(/\r/g, " ");
-   strippedObject = strippedObject.replace(/\n/g, " ");
-   strippedObject = strippedObject.replace(/\t/g, " ");
-   strippedObject = strippedObject.replace(/ +/g, " ");
-   strippedObject = strippedObject.replace(/^ +/g, "");
-   
    triple = new Object();
    triple.subject = subject;
    triple.predicate = predicate;
-   triple.object = strippedObject;
+   triple.object = object;
+   triple.language = null;
+   triple.datatype = null;
 
    // If the subject doesn't exist in the triple store, create it.
    if(!gFuzzTripleStore[subject])
@@ -138,13 +133,8 @@ function fuzzTripleHandler(subject, predicate, object)
    _fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
                triple.object + " .");
 
-   // broadcast the object
-   // register the Fuzz Triple observer.
-   for(observer in gFuzzObservers)
-   {
-       _fuzzLog("Observer.observe == " + typeof(observer));
-      observer.observe("fuzz-triple-detected", triple);
-   }
+   // broadcast the triple detection to any triple observers
+   fuzzBroadcastToObservers("fuzz-triple-detected", triple);
 
    return true;
 };
@@ -250,8 +240,14 @@ function fuzzAddTripleToUi(triple)
       predicateCurie = predicateCurie.replace(uri, replacement);
    }
    lp.setAttribute("value", predicateCurie);
-   
-   lo.setAttribute("value", triple.object);
+
+   // clean up the object if there are multiple lines or whitespace
+   var strippedObject = triple.object.replace(/\r/g, " ");
+   strippedObject = strippedObject.replace(/\n/g, " ");
+   strippedObject = strippedObject.replace(/\t/g, " ");
+   strippedObject = strippedObject.replace(/ +/g, " ");
+   strippedObject = strippedObject.replace(/^ +/g, "");
+   lo.setAttribute("value", strippedObject);
    
    lhs.appendChild(ls);
    lhp.appendChild(lp);
@@ -273,6 +269,10 @@ function fuzzClearTriples()
    gFuzzTripleStore = {};
    gFuzzRdfTypes = {};
    gFuzzNumTriples = 0;
+
+   // broadcast the parse start to any triple observers
+   fuzzBroadcastToObservers("fuzz-triple-extraction-start", null);
+
    fuzzTripleHandler(
       "@prefix", "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
    fuzzTripleHandler(
@@ -310,8 +310,6 @@ function fuzzDetectSemanticData()
    var xml =
       serializer.serializeToString(gBrowser.selectedBrowser.contentDocument);
 
-   //_fuzzLog(xml);
-   
    var gPlugin = Components
       .classes["@rdfa.digitalbazaar.com/fuzz/xpcom;1"]
       .getService()
@@ -330,7 +328,9 @@ function fuzzDetectSemanticData()
       fuzzClearTriples();
       gPlugin.tidyAndProcessRdfaTriples(url, xml, fuzzTripleHandler);
    }
-   
+ 
+   // broadcast the parse completion to any triple observers
+   fuzzBroadcastToObservers("fuzz-triple-extraction-complete", null);
    fuzzUpdateStatusDisplay();
 }
 
@@ -340,8 +340,6 @@ function fuzzDetectSemanticData()
  */
 function fuzzAttachDocumentListeners()
 {
-   _fuzzLog("fuzzAttachDocumentListeners()");
-   
    var container = gBrowser.tabContainer;
    gBrowser.addEventListener("load", tabSelected, false);
    container.addEventListener("TabSelect", tabSelected, false);
@@ -355,7 +353,6 @@ function fuzzAttachDocumentListeners()
  */
 function fuzzTabSelected(event)
 {
-   _fuzzLog("fuzzTabSelected");
    fuzzDetectSemanticData();
 
    var uiControl = document.getElementById("fuzz-ui-control");
@@ -366,21 +363,35 @@ function fuzzTabSelected(event)
 }
 
 /**
- * The Fuzz object is used for interacting with the Fuzz extension.
+ * Broadcasts a message and an object to all observers that are listening
+ * to Fuzz triple events.
  */
+function fuzzBroadcastToObservers(message, obj)
+{
+   for(var i = 0; i < gFuzzObservers.length; i++)
+   {
+      var observer = gFuzzObservers[i];
+      try
+      {
+         observer.observe(message, obj);
+      }
+      catch(error)
+      {
+	 _fuzzLog("Fuzz Error: " +
+            "There was an error notifying a Fuzz triple event observer \n" +
+            "while processing a '" + message + "' message: " + 
+            error.name + " - " + error.message);
+      }
+   }
+}
+
 /**
- * The Fuzz Triple Observer is used to listen to RDF triple events created by
- * the Fuzz Firefox Add On. 
+ * The Fuzz object is used for interacting with the Fuzz extension.
  */
 Fuzz = 
 {
    addObserver: function(observer)
    {
-       _fuzzLog("Adding observer: " + observer + " " + typeof(observer));
       gFuzzObservers.push(observer);
-      for(obs in gFuzzObservers)
-      {
-	  _fuzzLog("observer: " + obs + " " + typeof(obs));
-      }
    }
 };
