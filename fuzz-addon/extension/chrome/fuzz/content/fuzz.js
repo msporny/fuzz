@@ -130,8 +130,8 @@ function fuzzTripleHandler(subject, predicate, object)
    }
    
    gFuzzTripleStore[subject].push(triple);
-   _fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
-               triple.object + " .");
+   //_fuzzLog("Stored: " + triple.subject + " " + triple.predicate + " " +
+   //            triple.object + " .");
 
    // broadcast the triple detection to any triple observers
    fuzzBroadcastToObservers("fuzz-triple-detected", triple);

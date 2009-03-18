@@ -14,7 +14,7 @@
   <statusbar id="status-bar" >
     <statusbarpanel class="statusbarpanel-iconic"
                     id="fuzz-example-status"
-                    onclick="toggleFuzzExampleTripleUi();">
+                    onclick="fuzzExampleToggleTripleUi();">
       <image id="fuzz-example-status-image" width="16" height="16"
              src="chrome://fuzz-example/content/fuzz-example16-offline.png"/>
     </statusbarpanel>
