@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\firefox\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\fuzz-addon\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;XP_WIN;XP_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,7 +66,7 @@
 				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="false"
 				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfa.lib tidy.lib libexpat.a"
-				OutputFile="$(OutDir)\..\..\..\firefox\components\dist\fuzz-components.dll"
+				OutputFile="$(OutDir)\..\..\..\fuzz-addon\components\dist\fuzz-components.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\3rdparty\expat;..\..\..\librdfa\libs;..\..\3rdparty\tidy;..\..\..\gecko-sdk\lib"
 				IgnoreAllDefaultLibraries="false"
@@ -127,7 +127,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="..\..\..\librdfa\c;&quot;..\..\..\gecko-sdk\include&quot;;..\..\firefox\components\build;&quot;C:\Program Files\Expat 2.0.1\Source\lib&quot;;..\..\3rdparty\tidy\include"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;&quot;..\..\..\gecko-sdk\include&quot;;..\..\fuzz-addon\components\build;&quot;C:\Program Files\Expat 2.0.1\Source\lib&quot;;..\..\..\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;XP_WIN32;MOZILLA_STRICT_API;XPCOM_GLUE;XP_WIN;_X86_;NPSIMPLE_EXPORTS;XML_STATIC;TIDY_WIN32_MLANG_SUPPORT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -149,9 +149,9 @@
 				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="true"
 				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfaMT.lib tidyMT.lib libexpatMT.lib"
-				OutputFile="..\..\firefox\components\dist\fuzz-components.dll"
+				OutputFile="..\..\fuzz-addon\components\dist\fuzz-components.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Expat 2.0.1\Bin&quot;;..\..\..\librdfa\libs;..\..\3rdparty\tidy;&quot;..\..\..\gecko-sdk\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Expat 2.0.1\Bin&quot;;..\..\..\librdfa\libs;..\..\..\tidy\build\msvc9\tidyMT\Release;&quot;..\..\..\gecko-sdk\lib&quot;"
 				IgnoreDefaultLibraryNames="msvcrt"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="false"
@@ -194,7 +194,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\firefox\components\FuzzExtension.cpp"
+				RelativePath="..\..\fuzz-addon\components\FuzzExtension.cpp"
 				>
 			</File>
 		</Filter>
@@ -204,11 +204,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\firefox\components\FuzzExtension.h"
+				RelativePath="..\..\fuzz-addon\components\FuzzExtension.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\firefox\build\IFuzzExtension.h"
+				RelativePath="..\..\fuzz-addon\components\build\IFuzzExtension.h"
 				>
 			</File>
 		</Filter>

@@ -1,5 +1,5 @@
 NAME=fuzz
-ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ \*.svg
+ZIPEXCLUDE=-x \*.swp -x \*.svn/\* -x \*~ -x \*.svg
 
 .PHONY: all xpi xpi-common xpi-windows xpi-darwin xpi-linux clean clean-xpi
 
@@ -34,14 +34,13 @@ xpi-common:
 
 xpi-windows: xpi-common
 	echo "Building Windows Fuzz i386 XPI..."
-	mkdir -p ../dist
 	$(RM) ../dist/fuzz-windows-i386.xpi
 	mkdir -p extension/platform/WINNT_x86-msvc/content
 	mkdir -p extension/platform/WINNT_x86-msvc/components
 	cp -a components/dist/fuzz-components.dll \
 		extension/platform/WINNT_x86-msvc/components
 	cd extension && \
-	zip -q ../dist/fuzz-windows-i386.xpi chrome.manifest chrome/$(NAME).jar \
+	zip -q ../../dist/fuzz-windows-i386.xpi chrome.manifest chrome/$(NAME).jar \
 		defaults/preferences/fuzz.js \
 		install.rdf components/*.xpt \
 		`find platform` \
