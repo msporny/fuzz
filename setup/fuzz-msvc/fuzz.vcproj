@@ -114,38 +114,48 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Building headers using xpidl"
+				CommandLine="..\..\..\gecko-sdk\bin\xpidl -m header -I..\..\..\gecko-sdk\idl -e ..\..\fuzz-addon\components\IFuzzExtension.h ..\..\fuzz-addon\components\IFuzzExtension.idl&#x0D;&#x0A;"
+				Outputs="..\..\fuzz-addon\components\IFuzzExtension.h"
+				ExecutionBucket="2"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				ExecutionBucket="3"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
+				ExecutionBucket="4"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				ExecutionBucket="5"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\..\..\librdfa\c;&quot;..\..\..\gecko-sdk\include&quot;;..\..\fuzz-addon\components\build;&quot;C:\Program Files\Expat 2.0.1\Source\lib&quot;;..\..\..\tidy\include"
-				PreprocessorDefinitions="WIN32;_WINDOWS;XP_WIN32;MOZILLA_STRICT_API;XPCOM_GLUE;XP_WIN;_X86_;NPSIMPLE_EXPORTS;XML_STATIC;TIDY_WIN32_MLANG_SUPPORT"
+				PreprocessorDefinitions="WIN32;_WINDOWS;XP_WIN32;MOZILLA_STRICT_API;XP_WIN;_X86_;NPSIMPLE_EXPORTS;XML_STATIC;TIDY_WIN32_MLANG_SUPPORT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
+				ExecutionBucket="6"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				ExecutionBucket="7"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				ExecutionBucket="8"
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				ExecutionBucket="9"
 				LinkLibraryDependencies="true"
 				UseLibraryDependencyInputs="true"
 				AdditionalDependencies="nspr4.lib xpcom.lib xpcomglue_s.lib rdfaMT.lib tidyMT.lib libexpatMT.lib"
@@ -164,24 +174,30 @@
 			/>
 			<Tool
 				Name="VCALinkTool"
+				ExecutionBucket="10"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				ExecutionBucket="11"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				ExecutionBucket="12"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				ExecutionBucket="13"
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
+				ExecutionBucket="14"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				ExecutionBucket="15"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 		</Configuration>
 	</Configurations>
@@ -208,7 +224,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\fuzz-addon\components\build\IFuzzExtension.h"
+				RelativePath="..\..\fuzz-addon\components\IFuzzExtension.h"
 				>
 			</File>
 		</Filter>
