@@ -3,7 +3,7 @@
 # 
 # Author: Manu Sporny
 
-AC_INIT(fuzz, 0.9, support@digitalbazaar.com)
+AC_INIT(fuzz, 0.10, support@digitalbazaar.com)
 AC_CONFIG_AUX_DIR(setup)
 
 # Setup standard build environment variables
