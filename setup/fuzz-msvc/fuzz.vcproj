@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\librdfa\c;..\..\..\gecko-sdk\include;..\..\fuzz-addon\components\build;..\..\3rdparty\expat\include;..\..\3rdparty\tidy\include"
+				AdditionalIncludeDirectories="..\..\..\librdfa\c;&quot;..\..\..\gecko-sdk\include&quot;;..\..\fuzz-addon\components\build;&quot;C:\Program Files\Expat 2.0.1\Source\lib&quot;;..\..\..\tidy\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;XP_WIN;XP_WIN32"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -114,9 +114,8 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Building headers using xpidl"
-				CommandLine="..\..\..\gecko-sdk\bin\xpidl -m header -I..\..\..\gecko-sdk\idl -e ..\..\fuzz-addon\components\IFuzzExtension.h ..\..\fuzz-addon\components\IFuzzExtension.idl&#x0D;&#x0A;"
-				Outputs="..\..\fuzz-addon\components\IFuzzExtension.h"
+				CommandLine=""
+				Outputs=""
 				ExecutionBucket="2"
 			/>
 			<Tool
